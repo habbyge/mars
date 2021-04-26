@@ -33,9 +33,8 @@ using std::any_of;      // Section 25.2.2
 /// \param p     A predicate for testing the elements of the sequence
 ///
 template<typename InputIterator, typename Predicate> 
-bool any_of ( InputIterator first, InputIterator last, Predicate p ) 
-{
-    for ( ; first != last; ++first )
+bool any_of (InputIterator first, InputIterator last, Predicate p)  {
+    for (; first != last; ++first)
         if ( p(*first)) 
             return true;
     return false; 
@@ -50,8 +49,7 @@ bool any_of ( InputIterator first, InputIterator last, Predicate p )
 /// \param p    A predicate for testing the elements of the range
 ///
 template<typename Range, typename Predicate> 
-bool any_of ( const Range &r, Predicate p )
-{
+bool any_of (const Range &r, Predicate p) {
     return mars_boost::algorithm::any_of (mars_boost::begin (r), mars_boost::end (r), p);
 } 
 

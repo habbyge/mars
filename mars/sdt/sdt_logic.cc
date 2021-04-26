@@ -40,49 +40,53 @@ static const std::string kLibName = "sdt";
         xwarn2(TSF"sdt uncreate");\
         return;\
     }\
-	sdt_ptr->func
+  sdt_ptr->func
 
 static void onCreate() {
-    xinfo2(TSF"sdt oncreate");
-    SdtCore::Singleton::Instance();
+  xinfo2(TSF
+  "sdt oncreate");
+  SdtCore::Singleton::Instance();
 }
 
 static void onDestroy() {
-    xinfo2(TSF"sdt onDestroy");
-    SdtCore::Singleton::AsyncRelease();
+  xinfo2(TSF
+  "sdt onDestroy");
+  SdtCore::Singleton::AsyncRelease();
 }
 
 static void __initbind_baseprjevent() {
 
 #ifdef ANDROID
-	mars::baseevent::addLoadModule(kLibName);
+  mars::baseevent::addLoadModule(kLibName);
 #endif
-	GetSignalOnCreate().connect(&onCreate);
-	GetSignalOnDestroy().connect(5, &onDestroy);
+  GetSignalOnCreate().connect(&onCreate);
+  GetSignalOnDestroy().connect(5, &onDestroy);
 }
 
 BOOT_RUN_STARTUP(__initbind_baseprjevent);
 
 //active netcheck interface
-void StartActiveCheck(CheckIPPorts& _longlink_check_items, CheckIPPorts& _shortlink_check_items, int _mode, int _timeout) {
-	SDT_WEAK_CALL(StartCheck(_longlink_check_items, _shortlink_check_items, _mode, _timeout));
+void
+StartActiveCheck(CheckIPPorts& _longlink_check_items, CheckIPPorts& _shortlink_check_items, int _mode, int _timeout) {
+  SDT_WEAK_CALL(StartCheck(_longlink_check_items, _shortlink_check_items, _mode, _timeout));
 }
 
 void CancelActiveCheck() {
-	SDT_WEAK_CALL(CancelCheck());
+  SDT_WEAK_CALL(CancelCheck());
 }
 
 void SetCallBack(Callback* const callback) {
-	sg_callback = callback;
+  sg_callback = callback;
 }
 
 #ifndef ANDROID
 
-void (*ReportNetCheckResult)(const std::vector<CheckResultProfile>& _check_results)
-= [](const std::vector<CheckResultProfile>& _check_results) {
+void (* ReportNetCheckResult)(const std::vector <CheckResultProfile>& _check_results)
+= [](const std::vector <CheckResultProfile>& _check_results) {
 
 };
 
 #endif
 
-}}
+}
+}

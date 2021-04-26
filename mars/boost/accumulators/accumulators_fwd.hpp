@@ -52,14 +52,12 @@
 #define BOOST_ACCUMULATORS_GCC_VERSION                                                              \
   (__GNUC__ * 10000 + __GNUC_MINOR__ * 100 + __GNUC_PATCHLEVEL__)
 
-namespace mars_boost {} namespace boost = mars_boost; namespace mars_boost { namespace accumulators
-{
+namespace mars_boost {} namespace boost = mars_boost; namespace mars_boost { namespace accumulators {
 
 ///////////////////////////////////////////////////////////////////////////////
 // Named parameters tags
 //
-namespace tag
-{
+namespace tag {
     struct sample;
     struct weight;
     struct accumulator;
@@ -69,8 +67,7 @@ namespace tag
 ///////////////////////////////////////////////////////////////////////////////
 // User-level features
 //
-namespace tag
-{
+namespace tag {
     template<typename ValueType, typename Tag>
     struct value;
 

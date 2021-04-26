@@ -38,42 +38,47 @@ namespace sdt {
 class BaseChecker;
 
 class SdtCore {
-  public:
-    SINGLETON_INTRUSIVE(SdtCore, new SdtCore, delete);
+public:
+  SINGLETON_INTRUSIVE(SdtCore,
+  new SdtCore, delete);
 
-  public:
+public:
+  void StartCheck(CheckIPPorts& _longlink_items, CheckIPPorts& _shortlink_items, int _mode, int _timeout = UNUSE_TIMEOUT);
 
-    void StartCheck(CheckIPPorts& _longlink_items, CheckIPPorts& _shortlink_items, int _mode, int _timeout = UNUSE_TIMEOUT);
-    /*
-     * Stop and cancel net check.
-     */
-    void CancelCheck();
-    void CancelAndWait();
+  /*
+   * Stop and cancel net check.
+   */
+  void CancelCheck();
 
-  private:
-    SdtCore();
-    virtual ~SdtCore();
+  void CancelAndWait();
 
-    void __InitCheckReq(CheckIPPorts& _longlink_items, CheckIPPorts& _shortlink_items, int _mode, int _timeout);
-    void __Reset();
+private:
+  SdtCore();
 
-    // Run on.
-    void __RunOn();
-    
-    void __DumpCheckResult();
+  virtual ~SdtCore();
 
-  private:
-    //  MessageQueue::ScopeRegister     async_reg_;
-    Thread thread_;
+  void __InitCheckReq(CheckIPPorts& _longlink_items, CheckIPPorts& _shortlink_items, int _mode, int _timeout);
 
-    std::list<BaseChecker*>   check_list_;
+  void __Reset();
 
-    CheckRequestProfile		  check_request_;
-    volatile bool             cancel_;
-    volatile bool             checking_;
-    Mutex					  checking_mutex_;
+  // Run on.
+  void __RunOn();
+
+  void __DumpCheckResult();
+
+private:
+  //  MessageQueue::ScopeRegister     async_reg_;
+  Thread thread_;
+
+  std::list<BaseChecker*> check_list_;
+
+  CheckRequestProfile check_request_;
+  volatile bool cancel_;
+  volatile bool checking_;
+  Mutex checking_mutex_;
 };
 
-}}
+}
+}
 
 #endif /* SDT_SRC_ACTIVECHECK_NETCHECKER_SERVICE_H_ */

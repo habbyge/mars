@@ -1,5 +1,7 @@
 {
-  "files.associations": {
-    "*.ipp": "cpp"
-  }
+  "editor.detectIndentation": false,
+"editor.tabSize": 4,
+"editor.formatOnPaste": true,
+"editor.formatOnSave": true,
+"C_Cpp.default.configurationProvider": "go2sh.cmake-integration"
 }

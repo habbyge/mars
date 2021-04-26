@@ -34,9 +34,8 @@ using std::find_if_not;      // Section 25.2.5
 ///  We will use the standard one if it is available, 
 ///  otherwise we have our own implementation.
 template<typename InputIterator, typename Predicate> 
-InputIterator find_if_not ( InputIterator first, InputIterator last, Predicate p )
-{
-    for ( ; first != last; ++first )
+InputIterator find_if_not(InputIterator first, InputIterator last, Predicate p) {
+    for (; first != last; ++first)
         if ( !p(*first))
             break;
     return first;
@@ -51,8 +50,7 @@ InputIterator find_if_not ( InputIterator first, InputIterator last, Predicate p
 /// \param p        A predicate for testing the elements of the range
 ///
 template<typename Range, typename Predicate>
-typename mars_boost::range_iterator<const Range>::type find_if_not ( const Range &r, Predicate p )
-{
+typename mars_boost::range_iterator<const Range>::type find_if_not(const Range &r, Predicate p) {
     return mars_boost::algorithm::find_if_not (mars_boost::begin (r), mars_boost::end(r), p);
 }
 

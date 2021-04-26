@@ -33,12 +33,14 @@
 struct ZombieTask;
 
 namespace mars {
-    namespace stn {
+namespace stn {
 
 class ZombieTaskManager {
   public:
     boost::function<void (const Task& _task)> fun_start_task_;
-    boost::function<int (ErrCmdType _errtype, int _errcode, int _fail_handle, const Task& _task, unsigned int _taskcosttime)> fun_callback_;
+
+    boost::function<int (ErrCmdType _errtype, int _errcode, int _fail_handle,
+                    const Task& _task, unsigned int _taskcosttime)> fun_callback_;
 
   public:
     ZombieTaskManager(MessageQueue::MessageQueue_t _messagequeueid);
@@ -65,7 +67,8 @@ class ZombieTaskManager {
     uint64_t net_core_last_start_task_time_;
 };
         
-    }
+}
+
 }
 
 #endif // STN_SRC_ZOMBIE_TASK_MANAGER_H_

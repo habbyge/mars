@@ -26,36 +26,27 @@ namespace mars_boost {} namespace boost = mars_boost; namespace mars_boost {
 namespace date_time {
 
   //! Formats a month as as string into an ostream
-  template<class facet_type,
-           class charT = char>
-  class ostream_month_formatter
-  {
+  template<class facet_type, class charT = char>
+  class ostream_month_formatter {
   public:
     typedef typename facet_type::month_type month_type;
     typedef std::basic_ostream<charT> ostream_type;
 
     //! Formats a month as as string into an output iterator
-    static void format_month(const month_type& month,
-                             ostream_type& os,
-                             const facet_type& f)
-    {
+    static void format_month(const month_type& month, ostream_type& os, const facet_type& f) {
 
-      switch (f.month_format())
-      {
-        case month_as_short_string:
-        {
+      switch (f.month_format()) {
+        case month_as_short_string: {
           std::ostreambuf_iterator<charT> oitr(os);
           f.put_month_short(oitr, month.as_enum());
           break;
         }
-        case month_as_long_string:
-        {
+        case month_as_long_string: {
           std::ostreambuf_iterator<charT> oitr(os);
           f.put_month_long(oitr, month.as_enum());
           break;
         }
-        case month_as_integer:
-        {
+        case month_as_integer: {
           charT fill_char = '0';
           os << std::setw(2) << std::setfill(fill_char) << month.as_number();
           break;

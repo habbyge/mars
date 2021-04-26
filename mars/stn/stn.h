@@ -107,142 +107,150 @@ public:
 
 struct LonglinkConfig {
 public:
-    LonglinkConfig(const std::string& _name, const std::string& _group = DEFAULT_LONGLINK_GROUP, bool _isMain = false)
-        :name(_name),is_keep_alive(false), group(_group), longlink_encoder(nullptr), isMain(_isMain), dns_func(nullptr) {}
-    bool IsMain() const {
-        return isMain;
-    }
-    std::string     name;   //channel_id
-    std::vector<std::string> host_list;
-    bool            is_keep_alive;     //if false, reconnect trig by task    
-    std::string     group;   
-    LongLinkEncoder* longlink_encoder;
-    bool            isMain;
-    std::vector<std::string> (*dns_func)(const std::string& host);
+  LonglinkConfig(const std::string& _name,
+                 const std::string& _group = DEFAULT_LONGLINK_GROUP,
+                 bool _isMain = false)
+                 : name(_name),
+                 is_keep_alive(false),
+                 group(_group),
+                 longlink_encoder(nullptr),
+                 isMain(_isMain),
+                 dns_func(nullptr) {}
+
+  bool IsMain() const {
+    return isMain;
+  }
+  std::string     name;   //channel_id
+  std::vector<std::string> host_list;
+  bool            is_keep_alive;     //if false, reconnect trig by task
+  std::string     group;
+  LongLinkEncoder* longlink_encoder;
+  bool            isMain;
+  std::vector<std::string> (*dns_func)(const std::string& host);
 };
 
 enum TaskFailHandleType {
-	kTaskFailHandleNormal = 0,
-	kTaskFailHandleNoError = 0,
-    
-	kTaskFailHandleDefault = -1,
-	kTaskFailHandleRetryAllTasks = -12,
-	kTaskFailHandleSessionTimeout = -13,
-    
-	kTaskFailHandleTaskEnd = -14,
-	kTaskFailHandleTaskTimeout = -15,
-    kTaskSlientHandleTaskEnd = -16,
+  kTaskFailHandleNormal = 0,
+  kTaskFailHandleNoError = 0,
+
+  kTaskFailHandleDefault = -1,
+  kTaskFailHandleRetryAllTasks = -12,
+  kTaskFailHandleSessionTimeout = -13,
+
+  kTaskFailHandleTaskEnd = -14,
+  kTaskFailHandleTaskTimeout = -15,
+  kTaskSlientHandleTaskEnd = -16,
 };
         
 //error type
 enum ErrCmdType {
-	kEctOK = 0,
-	kEctFalse = 1,
-	kEctDial = 2,
-	kEctDns = 3,
-	kEctSocket = 4,
-	kEctHttp = 5,
-	kEctNetMsgXP = 6,
-	kEctEnDecode = 7,
-	kEctServer = 8,
-	kEctLocal = 9,
-    kEctCanceld = 10,
+  kEctOK = 0,
+  kEctFalse = 1,
+  kEctDial = 2,
+  kEctDns = 3,
+  kEctSocket = 4,
+  kEctHttp = 5,
+  kEctNetMsgXP = 6,
+  kEctEnDecode = 7,
+  kEctServer = 8,
+  kEctLocal = 9,
+  kEctCanceld = 10,
 };
 
 //error code
 enum {
-	kEctLocalTaskTimeout = -1,
-    kEctLocalTaskRetry = -2,
-	kEctLocalStartTaskFail = -3,
-	kEctLocalAntiAvalanche = -4,
-	kEctLocalChannelSelect = -5,
-	kEctLocalNoNet = -6,
-    kEctLocalCancel = -7,
-    kEctLocalClear = -8,
-    kEctLocalReset = -9,
-	kEctLocalTaskParam = -12,
-	kEctLocalCgiFrequcencyLimit = -13,
-	kEctLocalChannelID = -14,
-    kEctLocalLongLinkReleased = -15,
+  kEctLocalTaskTimeout = -1,
+  kEctLocalTaskRetry = -2,
+  kEctLocalStartTaskFail = -3,
+  kEctLocalAntiAvalanche = -4,
+  kEctLocalChannelSelect = -5,
+  kEctLocalNoNet = -6,
+  kEctLocalCancel = -7,
+  kEctLocalClear = -8,
+  kEctLocalReset = -9,
+  kEctLocalTaskParam = -12,
+  kEctLocalCgiFrequcencyLimit = -13,
+  kEctLocalChannelID = -14,
+  kEctLocalLongLinkReleased = -15,
 };
 
 // -600 ~ -500
 enum {
-    kEctLongFirstPkgTimeout = -500,
-    kEctLongPkgPkgTimeout = -501,
-    kEctLongReadWriteTimeout = -502,
-    kEctLongTaskTimeout = -503,
+  kEctLongFirstPkgTimeout = -500,
+  kEctLongPkgPkgTimeout = -501,
+  kEctLongReadWriteTimeout = -502,
+  kEctLongTaskTimeout = -503,
 };
 
 // -600 ~ -500
 enum {
-    kEctHttpFirstPkgTimeout = -500,
-    kEctHttpPkgPkgTimeout = -501,
-    kEctHttpReadWriteTimeout = -502,
-    kEctHttpLongPollingTimeout = -503,
-  //  kEctHttpTaskTimeout = -503,
+  kEctHttpFirstPkgTimeout = -500,
+  kEctHttpPkgPkgTimeout = -501,
+  kEctHttpReadWriteTimeout = -502,
+  kEctHttpLongPollingTimeout = -503,
+//  kEctHttpTaskTimeout = -503,
 };
 
 // -20000 ~ -10000
 enum {
-    kEctSocketNetworkChange = -10086,
-    kEctSocketMakeSocketPrepared = -10087,
-    kEctSocketWritenWithNonBlock = -10088,
-    kEctSocketReadOnce = -10089,
-    kEctSocketShutdown = -10090,
-    kEctSocketRecvErr = -10091,
-    kEctSocketSendErr = -10092,
-    kEctSocketNoopTimeout = -10093,
-    kEctSocketNoopAlarmTooLate = -10094,
-    kEctSocketUserBreak = -10095,
+  kEctSocketNetworkChange = -10086,
+  kEctSocketMakeSocketPrepared = -10087,
+  kEctSocketWritenWithNonBlock = -10088,
+  kEctSocketReadOnce = -10089,
+  kEctSocketShutdown = -10090,
+  kEctSocketRecvErr = -10091,
+  kEctSocketSendErr = -10092,
+  kEctSocketNoopTimeout = -10093,
+  kEctSocketNoopAlarmTooLate = -10094,
+  kEctSocketUserBreak = -10095,
 
-    kEctHttpSplitHttpHeadAndBody = -10194,
-    kEctHttpParseStatusLine = -10195,
+  kEctHttpSplitHttpHeadAndBody = -10194,
+  kEctHttpParseStatusLine = -10195,
 
-    kEctNetMsgXPHandleBufferErr = -10504,
+  kEctNetMsgXPHandleBufferErr = -10504,
 
-    kEctDnsMakeSocketPrepared = -10606,
+  kEctDnsMakeSocketPrepared = -10606,
 };
 
 enum NetStatus {
-    kNetworkUnkown = -1,
-    kNetworkUnavailable = 0,
-    kGateWayFailed = 1,
-    kServerFailed = 2,
-    kConnecting = 3,
-    kConnected = 4,
-    kServerDown = 5
+  kNetworkUnkown = -1,
+  kNetworkUnavailable = 0,
+  kGateWayFailed = 1,
+  kServerFailed = 2,
+  kConnecting = 3,
+  kConnected = 4,
+  kServerDown = 5
 };
 
 enum IdentifyMode {
-    kCheckNow = 0,
-    kCheckNext,
-    kCheckNever
+  kCheckNow = 0,
+  kCheckNext,
+  kCheckNever
 };
         
 enum IPSourceType {
-    kIPSourceNULL = 0,
-    kIPSourceDebug,
-    kIPSourceDNS,
-    kIPSourceNewDns,
-    kIPSourceProxy,
-    kIPSourceBackup,
+  kIPSourceNULL = 0,
+  kIPSourceDebug,
+  kIPSourceDNS,
+  kIPSourceNewDns,
+  kIPSourceProxy,
+  kIPSourceBackup,
 };
 
 const char* const IPSourceTypeString[] = {
-    "NullIP",
-    "DebugIP",
-    "DNSIP",
-    "NewDNSIP",
-    "ProxyIP",
-    "BackupIP",
+  "NullIP",
+  "DebugIP",
+  "DNSIP",
+  "NewDNSIP",
+  "ProxyIP",
+  "BackupIP",
 };
 
 struct IPPortItem {
-    std::string		str_ip;
-    uint16_t 		port;
-    IPSourceType 	source_type;
-    std::string 	str_host;
+  std::string		str_ip;
+  uint16_t 		port;
+  IPSourceType 	source_type;
+  std::string 	str_host;
 };
         
 extern bool MakesureAuthed(const std::string& _host, const std::string& _user_id);
@@ -252,26 +260,63 @@ extern void TrafficData(ssize_t _send, ssize_t _recv);
         
 //底层询问上层该host对应的ip列表 
 extern std::vector<std::string> OnNewDns(const std::string& host);
-//网络层收到push消息回调 
-extern void OnPush(const std::string& _channel_id, uint32_t _cmdid, uint32_t _taskid, const AutoBuffer& _body, const AutoBuffer& _extend);
+
+//网络层收到push消息回调
+extern void OnPush(const std::string& _channel_id,
+                   uint32_t _cmdid,
+                   uint32_t _taskid,
+                   const AutoBuffer& _body,
+                   const AutoBuffer& _extend);
+
 //底层获取task要发送的数据 
-extern bool Req2Buf(uint32_t taskid, void* const user_context, const std::string& _user_id, AutoBuffer& outbuffer, AutoBuffer& extend, int& error_code, const int channel_select, const std::string& host);
+extern bool Req2Buf(uint32_t taskid,
+                    void* const user_context,
+                    const std::string& _user_id,
+                    AutoBuffer& outbuffer,
+                    AutoBuffer& extend,
+                    int& error_code,
+                    const int channel_select,
+                    const std::string& host);
+
 //底层回包返回给上层解析 
-extern int Buf2Resp(uint32_t taskid, void* const user_context, const std::string& _user_id, const AutoBuffer& inbuffer, const AutoBuffer& extend, int& error_code, const int channel_select);
+extern int Buf2Resp(uint32_t taskid,
+                    void* const user_context,
+                    const std::string& _user_id,
+                    const AutoBuffer& inbuffer,
+                    const AutoBuffer& extend,
+                    int& error_code,
+                    const int channel_select);
 //任务执行结束 
-extern int  OnTaskEnd(uint32_t taskid, void* const user_context, const std::string& _user_id, int error_type, int error_code);
+extern int  OnTaskEnd(uint32_t taskid,
+                      void* const user_context,
+                      const std::string& _user_id,
+                      int error_type,
+                      int error_code);
 
 //上报网络连接状态 
 extern void ReportConnectStatus(int status, int longlink_status);
         
-extern void OnLongLinkNetworkError(ErrCmdType _err_type, int _err_code, const std::string& _ip, uint16_t _port);
-extern void OnShortLinkNetworkError(ErrCmdType _err_type, int _err_code, const std::string& _ip, const std::string& _host, uint16_t _port);
+extern void OnLongLinkNetworkError(ErrCmdType _err_type,
+                                   int _err_code,
+                                   const std::string& _ip,
+                                   uint16_t _port);
+
+extern void OnShortLinkNetworkError(ErrCmdType _err_type,
+                                    int _err_code,
+                                    const std::string& _ip,
+                                    const std::string& _host,
+                                    uint16_t _port);
     
 extern void OnLongLinkStatusChange(int _status);
 //长连信令校验 ECHECK_NOW = 0, ECHECK_NEVER = 1, ECHECK_NEXT = 2
-extern int  GetLonglinkIdentifyCheckBuffer(const std::string& _channel_id, AutoBuffer& identify_buffer, AutoBuffer& buffer_hash, int32_t& cmdid);
+extern int  GetLonglinkIdentifyCheckBuffer(const std::string& _channel_id,
+                                           AutoBuffer& identify_buffer,
+                                           AutoBuffer& buffer_hash,
+                                           int32_t& cmdid);
 //长连信令校验回包 
-extern bool OnLonglinkIdentifyResponse(const std::string& _channel_id, const AutoBuffer& response_buffer, const AutoBuffer& identify_buffer_hash);
+extern bool OnLonglinkIdentifyResponse(const std::string& _channel_id,
+                                       const AutoBuffer& response_buffer,
+                                       const AutoBuffer& identify_buffer_hash);
 
 extern void RequestSync();
 //验证是否已登录

@@ -20,15 +20,27 @@
 #include "shortlink_packer.h"
 #include "mars/comm/http.h"
 
-
 using namespace http;
-namespace mars { namespace stn {
 
-shortlink_tracker* (*shortlink_tracker::Create)()
-=  []() { return new shortlink_tracker; };
+namespace mars {
 
-void (*shortlink_pack)(const std::string& _url, const std::map<std::string, std::string>& _headers, const AutoBuffer& _body, const AutoBuffer& _extension, AutoBuffer& _out_buff, shortlink_tracker* _tracker)
-= [](const std::string& _url, const std::map<std::string, std::string>& _headers, const AutoBuffer& _body, const AutoBuffer& _extension, AutoBuffer& _out_buff, shortlink_tracker* _tracker) {
+namespace stn {
+
+shortlink_tracker* (*shortlink_tracker::Create)() =  []() {
+  return new shortlink_tracker;
+};
+
+void (*shortlink_pack)(const std::string& _url,
+                       const std::map<std::string, std::string>& _headers,
+                       const AutoBuffer& _body,
+                       const AutoBuffer& _extension,
+                       AutoBuffer& _out_buff,
+                       shortlink_tracker* _tracker) = [](const std::string& _url,
+                                                         const std::map<std::string, std::string>& _headers,
+                                                         const AutoBuffer& _body,
+                                                         const AutoBuffer& _extension,
+                                                         AutoBuffer& _out_buff,
+                                                         shortlink_tracker* _tracker) {
 
 	Builder req_builder(kRequest);
 	req_builder.Request().Method(RequestLine::kPost);
@@ -40,7 +52,7 @@ void (*shortlink_pack)(const std::string& _url, const std::map<std::string, std:
 	req_builder.Fields().HeaderFiled(HeaderFields::MakeContentTypeOctetStream());
 	req_builder.Fields().HeaderFiled(HeaderFields::MakeConnectionClose());
 
-    char len_str[32] = {0};
+	char len_str[32] = {0};
 	snprintf(len_str, sizeof(len_str), "%u", (unsigned int)_body.Length());
 	req_builder.Fields().HeaderFiled(HeaderFields::KStringContentLength, len_str);
 
