@@ -38,8 +38,8 @@ extern "C" {
  *       sequences.
  */
 size_t ZSTD_ldm_generateSequences(
-            ldmState_t* ldms, rawSeqStore_t* sequences,
-            ldmParams_t const* params, void const* src, size_t srcSize);
+    ldmState_t* ldms, rawSeqStore_t* sequences,
+    ldmParams_t const* params, void const* src, size_t srcSize);
 
 /**
  * ZSTD_ldm_blockCompress():
@@ -60,8 +60,8 @@ size_t ZSTD_ldm_generateSequences(
  * NOTE: This function does not return any errors.
  */
 size_t ZSTD_ldm_blockCompress(rawSeqStore_t* rawSeqStore,
-            ZSTD_matchState_t* ms, seqStore_t* seqStore, U32 rep[ZSTD_REP_NUM],
-            void const* src, size_t srcSize);
+                              ZSTD_matchState_t* ms, seqStore_t* seqStore, U32 rep[ZSTD_REP_NUM],
+                              void const* src, size_t srcSize);
 
 /**
  * ZSTD_ldm_skipSequences():
@@ -71,7 +71,7 @@ size_t ZSTD_ldm_blockCompress(rawSeqStore_t* rawSeqStore,
  * Must be called for data with is not passed to ZSTD_ldm_blockCompress().
  */
 void ZSTD_ldm_skipSequences(rawSeqStore_t* rawSeqStore, size_t srcSize,
-    U32 const minMatch);
+                            U32 const minMatch);
 
 
 /** ZSTD_ldm_getTableSize() :

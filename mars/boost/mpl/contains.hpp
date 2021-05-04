@@ -21,21 +21,23 @@
 #include <boost/mpl/aux_/na_spec.hpp>
 #include <boost/mpl/aux_/lambda_support.hpp>
 
-namespace mars_boost {} namespace boost = mars_boost; namespace mars_boost { namespace mpl {
+namespace mars_boost {}
+namespace boost = mars_boost;
+namespace mars_boost {
+namespace mpl {
 
 template<
-      typename BOOST_MPL_AUX_NA_PARAM(Sequence)
-    , typename BOOST_MPL_AUX_NA_PARAM(T)
-    >
+    typename BOOST_MPL_AUX_NA_PARAM(Sequence), typename BOOST_MPL_AUX_NA_PARAM(T)
+>
 struct contains
-    : contains_impl< typename sequence_tag<Sequence>::type >
-        ::template apply< Sequence,T >
-{
-    BOOST_MPL_AUX_LAMBDA_SUPPORT(2,contains,(Sequence,T))
+    : contains_impl<typename sequence_tag<Sequence>::type>
+      ::template apply<Sequence, T> {
+  BOOST_MPL_AUX_LAMBDA_SUPPORT(2, contains, (Sequence, T))
 };
 
 BOOST_MPL_AUX_NA_SPEC(2, contains)
 
-}}
+}
+}
 
 #endif // BOOST_MPL_CONTAINS_HPP_INCLUDED

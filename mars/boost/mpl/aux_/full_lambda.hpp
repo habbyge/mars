@@ -19,6 +19,7 @@
 // $Revision$
 
 #if !defined(BOOST_MPL_PREPROCESSING_MODE)
+
 #   include <boost/mpl/lambda_fwd.hpp>
 #   include <boost/mpl/bind_fwd.hpp>
 #   include <boost/mpl/protect.hpp>
@@ -29,8 +30,11 @@
 #   include <boost/mpl/aux_/template_arity.hpp>
 #   include <boost/mpl/aux_/na_spec.hpp>
 #   include <boost/mpl/aux_/config/ttp.hpp>
+
 #   if defined(BOOST_MPL_CFG_EXTENDED_TEMPLATE_PARAMETERS_MATCHING)
+
 #       include <boost/mpl/if.hpp>
+
 #   endif
 #endif
 
@@ -38,9 +42,10 @@
 #include <boost/mpl/aux_/config/use_preprocessed.hpp>
 
 #if !defined(BOOST_MPL_CFG_NO_PREPROCESSED_HEADERS) \
-    && !defined(BOOST_MPL_PREPROCESSING_MODE)
+ && !defined(BOOST_MPL_PREPROCESSING_MODE)
 
 #   define BOOST_MPL_PREPROCESSED_HEADER full_lambda.hpp
+
 #   include <boost/mpl/aux_/include_preprocessed.hpp>
 
 #else

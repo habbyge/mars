@@ -19,26 +19,28 @@
 #include <boost/mpl/list/aux_/tag.hpp>
 #include <boost/mpl/list/aux_/item.hpp>
 
-namespace mars_boost {} namespace boost = mars_boost; namespace mars_boost { namespace mpl {
+namespace mars_boost {}
+namespace boost = mars_boost;
+namespace mars_boost {
+namespace mpl {
 
 template<>
-struct begin_impl< aux::list_tag >
-{
-    template< typename List > struct apply
-    {
-        typedef l_iter<typename List::type> type;
-    };
+struct begin_impl<aux::list_tag> {
+  template<typename List>
+  struct apply {
+    typedef l_iter<typename List::type> type;
+  };
 };
 
 template<>
-struct end_impl< aux::list_tag >
-{
-    template< typename > struct apply
-    {
-        typedef l_iter<l_end> type;
-    };
+struct end_impl<aux::list_tag> {
+  template<typename>
+  struct apply {
+    typedef l_iter<l_end> type;
+  };
 };
 
-}}
+}
+}
 
 #endif // BOOST_MPL_LIST_AUX_BEGIN_END_HPP_INCLUDED

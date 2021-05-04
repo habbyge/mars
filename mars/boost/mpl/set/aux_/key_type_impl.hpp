@@ -18,17 +18,20 @@
 #include <boost/mpl/key_type_fwd.hpp>
 #include <boost/mpl/set/aux_/tag.hpp>
 
-namespace mars_boost {} namespace boost = mars_boost; namespace mars_boost { namespace mpl {
+namespace mars_boost {}
+namespace boost = mars_boost;
+namespace mars_boost {
+namespace mpl {
 
 template<>
-struct key_type_impl< aux::set_tag >
-{
-    template< typename Set, typename T > struct apply
-    {
-        typedef T type;
-    };
+struct key_type_impl<aux::set_tag> {
+  template<typename Set, typename T>
+  struct apply {
+    typedef T type;
+  };
 };
 
-}}
+}
+}
 
 #endif // BOOST_MPL_SET_AUX_KEY_TYPE_IMPL_HPP_INCLUDED

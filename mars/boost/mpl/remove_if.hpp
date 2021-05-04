@@ -24,60 +24,50 @@
 #include <boost/mpl/apply.hpp>
 #include <boost/mpl/aux_/inserter_algorithm.hpp>
 
-namespace mars_boost {} namespace boost = mars_boost; namespace mars_boost { namespace mpl {
+namespace mars_boost {}
+namespace boost = mars_boost;
+namespace mars_boost {
+namespace mpl {
 
 namespace aux {
 
-template< typename Pred, typename InsertOp > struct remove_if_helper
-{
-    template< typename Sequence, typename U > struct apply
-    {
-        typedef typename eval_if<
-              typename apply1<Pred,U>::type
-            , identity<Sequence>
-            , apply2<InsertOp,Sequence,U>
-            >::type type;
-    };
+template<typename Pred, typename InsertOp>
+struct remove_if_helper {
+  template<typename Sequence, typename U>
+  struct apply {
+    typedef typename eval_if<
+        typename apply1<Pred, U>::type, identity<Sequence>, apply2 < InsertOp, Sequence, U>
+    >::type type;
+  };
 };
 
 template<
-      typename Sequence
-    , typename Predicate
-    , typename Inserter
-    >
+    typename Sequence, typename Predicate, typename Inserter
+>
 struct remove_if_impl
     : fold<
-          Sequence
-        , typename Inserter::state
-        , protect< aux::remove_if_helper<
-              typename lambda<Predicate>::type
-            , typename Inserter::operation
-            > >
-        >
-{
+        Sequence, typename Inserter::state, protect<aux::remove_if_helper<
+            typename lambda<Predicate>::type, typename Inserter::operation
+        >>
+    > {
 };
 
 template<
-      typename Sequence
-    , typename Predicate
-    , typename Inserter
-    >
+    typename Sequence, typename Predicate, typename Inserter
+>
 struct reverse_remove_if_impl
     : reverse_fold<
-          Sequence
-        , typename Inserter::state
-        , protect< aux::remove_if_helper<
-              typename lambda<Predicate>::type
-            , typename Inserter::operation
-            > >
-        >
-{
+        Sequence, typename Inserter::state, protect<aux::remove_if_helper<
+            typename lambda<Predicate>::type, typename Inserter::operation
+        >>
+    > {
 };
 
 } // namespace aux
 
 BOOST_MPL_AUX_INSERTER_ALGORITHM_DEF(3, remove_if)
 
-}}
+}
+}
 
 #endif // BOOST_MPL_REMOVE_IF_HPP_INCLUDED

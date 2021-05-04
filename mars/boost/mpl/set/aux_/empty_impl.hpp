@@ -18,17 +18,20 @@
 #include <boost/mpl/not.hpp>
 #include <boost/mpl/set/aux_/tag.hpp>
 
-namespace mars_boost {} namespace boost = mars_boost; namespace mars_boost { namespace mpl {
+namespace mars_boost {}
+namespace boost = mars_boost;
+namespace mars_boost {
+namespace mpl {
 
 template<>
-struct empty_impl< aux::set_tag >
-{
-    template< typename Set > struct apply
-        : not_< typename Set::size >
-    {
-    };
+struct empty_impl<aux::set_tag> {
+  template<typename Set>
+  struct apply
+      : not_<typename Set::size> {
+  };
 };
 
-}}
+}
+}
 
 #endif // BOOST_MPL_SET_AUX_EMPTY_IMPL_HPP_INCLUDED

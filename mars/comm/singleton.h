@@ -134,101 +134,112 @@ namespace design_patterns {
 namespace SingletonHelper {
 template<typename T>
 class CreateInstanceHelper {
-  public:
-    T* operator()() {
-        return new T();
-    }
+public:
+  T* operator()() {
+    return new T();
+  }
 };
 
 template<typename T>
 class DestoryInstanceHelper {
-  public:
-    void operator()(T* _instance) {
-        delete _instance;
-    }
+public:
+  void operator()(T* _instance) {
+    delete _instance;
+  }
 };
 }
 
 class Singleton {
-  protected:
-    class SingletonInfo {
-      public:
-        virtual ~SingletonInfo() {}
-        virtual void DoRelease() = 0;
-        virtual void* GetInstance() const = 0;
-    };
-
-  private:
-    template<typename T>
-    class SingletonInstance {
-      public:
-        //static boost::shared_ptr<T> instance_shared_ptr;
-        
-        static boost::shared_ptr<T>& instance_shared_ptr() {
-            static boost::shared_ptr<T> ptr;
-            return ptr;
-        }
-        static Mutex& singleton_mutex() {
-            static Mutex s_mutex;
-            return s_mutex;
-        }
-    };
-
-    template<typename T>
-    class SingletonInfoImpl : public SingletonInfo {
-      public:
-        SingletonInfoImpl() {}
-        virtual void DoRelease() {
-            ScopedLock    lock(SingletonInstance<T>::singleton_mutex());
-
-            if (SingletonInstance<T>::instance_shared_ptr()) {
-                SingletonInstance<T>::instance_shared_ptr().reset();
-            }
-        }
-
-        virtual void* GetInstance() const {
-            return const_cast<T*>(SingletonInstance<T>::instance_shared_ptr().get());
-        }
-    };
-
-  private:
-    Singleton();
-    ~Singleton();
-    Singleton(const Singleton&);
-    Singleton& operator=(const Singleton&);
-
+protected:
+  class SingletonInfo {
   public:
-    static void ReleaseAll();
+    virtual ~SingletonInfo() {}
 
-    template<typename T> static
-    void Release() { _ReleaseSigleton(const_cast<T*>(SingletonInstance<T>::instance_shared_ptr().get())); }
+    virtual void DoRelease() = 0;
 
-    template<typename T, typename CREATER, typename DESTORYER> static
-    boost::shared_ptr<T> Instance(CREATER _creater, DESTORYER _destoryer) {
-        boost::shared_ptr<T> ret = SingletonInstance<T>::instance_shared_ptr();
+    virtual void* GetInstance() const = 0;
+  };
 
-        if (ret) return ret;
+private:
+  template<typename T>
+  class SingletonInstance {
+  public:
+    //static boost::shared_ptr<T> instance_shared_ptr;
 
-        ScopedLock    lock(SingletonInstance<T>::singleton_mutex());
-
-        if (!SingletonInstance<T>::instance_shared_ptr()) {
-            _AddSigleton(new SingletonInfoImpl<T>());
-            SingletonInstance<T>::instance_shared_ptr().reset(const_cast<T*>(_creater()), _destoryer);
-        }
-
-        return (SingletonInstance<T>::instance_shared_ptr());
+    static boost::shared_ptr<T>& instance_shared_ptr() {
+      static boost::shared_ptr<T> ptr;
+      return ptr;
     }
 
-    template<typename T> static
-    boost::weak_ptr<T> Instance_Weak() { return SingletonInstance<T>::instance_shared_ptr(); }
+    static Mutex& singleton_mutex() {
+      static Mutex s_mutex;
+      return s_mutex;
+    }
+  };
+
+  template<typename T>
+  class SingletonInfoImpl : public SingletonInfo {
+  public:
+    SingletonInfoImpl() {}
+
+    virtual void DoRelease() {
+      ScopedLock lock(SingletonInstance<T>::singleton_mutex());
+
+      if (SingletonInstance<T>::instance_shared_ptr()) {
+        SingletonInstance<T>::instance_shared_ptr().reset();
+      }
+    }
+
+    virtual void* GetInstance() const {
+      return const_cast<T*>(SingletonInstance<T>::instance_shared_ptr().get());
+    }
+  };
+
+private:
+  Singleton();
+
+  ~Singleton();
+
+  Singleton(const Singleton&);
+
+  Singleton& operator=(const Singleton&);
+
+public:
+  static void ReleaseAll();
+
+  template<typename T>
+  static
+  void Release() { _ReleaseSigleton(const_cast<T*>(SingletonInstance<T>::instance_shared_ptr().get())); }
+
+  template<typename T, typename CREATER, typename DESTORYER>
+  static
+  boost::shared_ptr<T> Instance(CREATER _creater, DESTORYER _destoryer) {
+    boost::shared_ptr<T> ret = SingletonInstance<T>::instance_shared_ptr();
+
+    if (ret) return ret;
+
+    ScopedLock lock(SingletonInstance<T>::singleton_mutex());
+
+    if (!SingletonInstance<T>::instance_shared_ptr()) {
+      _AddSigleton(new SingletonInfoImpl<T>());
+      SingletonInstance<T>::instance_shared_ptr().reset(const_cast<T*>(_creater()), _destoryer);
+    }
+
+    return (SingletonInstance<T>::instance_shared_ptr());
+  }
+
+  template<typename T>
+  static
+  boost::weak_ptr<T> Instance_Weak() { return SingletonInstance<T>::instance_shared_ptr(); }
 
 
-  protected:
-    static void _AddSigleton(SingletonInfo* _helper);
-    static void _ReleaseSigleton(void* _instance);
+protected:
+  static void _AddSigleton(SingletonInfo* _helper);
 
-  private:
-    static std::list<SingletonInfo*> lst_singleton_releasehelper_;
+  static void _ReleaseSigleton(void* _instance);
+
+private:
+  static std::list<SingletonInfo*> lst_singleton_releasehelper_;
 };
 
 //template<typename T>
@@ -239,5 +250,4 @@ class Singleton {
 }
 
 
-
-#endif	// COMM_SINGLETON_H_
+#endif  // COMM_SINGLETON_H_

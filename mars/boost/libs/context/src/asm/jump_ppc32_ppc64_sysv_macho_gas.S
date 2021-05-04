@@ -8,9 +8,9 @@
 // Stub file for universal binary
 
 #if defined(__ppc__)
-    #include "jump_ppc32_sysv_macho_gas.S"
+#include "jump_ppc32_sysv_macho_gas.S"
 #elif defined(__ppc64__)
-    #include "jump_ppc64_sysv_macho_gas.S"
+#include "jump_ppc64_sysv_macho_gas.S"
 #else
-    #error "No arch's"
+#error "No arch's"
 #endif

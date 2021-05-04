@@ -15,15 +15,18 @@
 // $Revision$
 
 #if !defined(BOOST_MPL_PREPROCESSING_MODE)
+
 #   include <boost/mpl/list/list0.hpp>
+
 #endif
 
 #include <boost/mpl/aux_/config/use_preprocessed.hpp>
 
 #if !defined(BOOST_MPL_CFG_NO_PREPROCESSED_HEADERS) \
-    && !defined(BOOST_MPL_PREPROCESSING_MODE)
+ && !defined(BOOST_MPL_PREPROCESSING_MODE)
 
 #   define BOOST_MPL_PREPROCESSED_HEADER list10.hpp
+
 #   include <boost/mpl/list/aux_/include_preprocessed.hpp>
 
 #else

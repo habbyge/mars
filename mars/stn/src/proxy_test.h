@@ -30,31 +30,37 @@
 
 
 namespace mars {
-    
+
 namespace comm {
-    class ProxyInfo;
+class ProxyInfo;
 }
-    
+
 namespace stn {
 
 class ProxyTest {
-    
+
 public:
-    SINGLETON_INTRUSIVE(ProxyTest, new ProxyTest, delete);
-    bool ProxyIsAvailable(const mars::comm::ProxyInfo _proxy_info, const std::string& _host, const std::vector<std::string>& _hardcode_ips);
-    
+  SINGLETON_INTRUSIVE(ProxyTest, new ProxyTest, delete);
+
+  bool ProxyIsAvailable(const mars::comm::ProxyInfo _proxy_info, const std::string& _host,
+                        const std::vector<std::string>& _hardcode_ips);
+
 private:
-    ProxyTest() {}
-    ~ProxyTest();
-    
-    SOCKET __Connect(const mars::comm::ProxyInfo& _proxy_info, const std::string& _host, const std::vector<std::string>& _hardcode_ips);
-    int __ReadWrite(SOCKET _sock, const mars::comm::ProxyInfo& _proxy_info, const std::string& _host);
-    
+  ProxyTest() {}
+
+  ~ProxyTest();
+
+  SOCKET __Connect(const mars::comm::ProxyInfo& _proxy_info, const std::string& _host,
+                   const std::vector<std::string>& _hardcode_ips);
+
+  int __ReadWrite(SOCKET _sock, const mars::comm::ProxyInfo& _proxy_info, const std::string& _host);
+
 private:
-    SocketBreaker testproxybreak_;
+  SocketBreaker testproxybreak_;
 
 };
-        
-}}
+
+}
+}
 
 #endif // STN_SRC_PROXYTEST_H_

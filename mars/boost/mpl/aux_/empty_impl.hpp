@@ -19,25 +19,27 @@
 #include <boost/mpl/aux_/traits_lambda_spec.hpp>
 #include <boost/type_traits/is_same.hpp>
 
-namespace mars_boost {} namespace boost = mars_boost; namespace mars_boost { namespace mpl {
+namespace mars_boost {}
+namespace boost = mars_boost;
+namespace mars_boost {
+namespace mpl {
 
 // default implementation; conrete sequences might override it by 
 // specializing either the 'empty_impl' or the primary 'empty' template
 
-template< typename Tag >
-struct empty_impl
-{
-    template< typename Sequence > struct apply
-        : is_same<
-              typename begin<Sequence>::type
-            , typename end<Sequence>::type
-            >
-    {
-    };
+template<typename Tag>
+struct empty_impl {
+  template<typename Sequence>
+  struct apply
+      : is_same<
+          typename begin<Sequence>::type, typename end<Sequence>::type
+      > {
+  };
 };
 
-BOOST_MPL_ALGORITM_TRAITS_LAMBDA_SPEC(1,empty_impl)
+BOOST_MPL_ALGORITM_TRAITS_LAMBDA_SPEC(1, empty_impl)
 
-}}
+}
+}
 
 #endif // BOOST_MPL_AUX_EMPTY_IMPL_HPP_INCLUDED

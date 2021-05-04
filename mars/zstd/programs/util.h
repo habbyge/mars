@@ -120,10 +120,10 @@ extern int g_utilDisplayLevel;
 *  File functions
 ******************************************/
 #if defined(_MSC_VER)
-    #define chmod _chmod
-    typedef struct __stat64 stat_t;
+#define chmod _chmod
+typedef struct __stat64 stat_t;
 #else
-    typedef struct stat stat_t;
+typedef struct stat stat_t;
 #endif
 
 
@@ -133,8 +133,8 @@ int UTIL_setFileStat(const char* filename, stat_t* statbuf);
 U32 UTIL_isDirectory(const char* infilename);
 int UTIL_getFileStat(const char* infilename, stat_t* statbuf);
 int UTIL_isSameFile(const char* file1, const char* file2);
-int UTIL_compareStr(const void *p1, const void *p2);
-int UTIL_isCompressedFile(const char* infilename, const char *extensionList[]);
+int UTIL_compareStr(const void* p1, const void* p2);
+int UTIL_isCompressedFile(const char* infilename, const char* extensionList[]);
 const char* UTIL_getFileExtension(const char* infilename);
 
 #ifndef _MSC_VER
@@ -144,18 +144,17 @@ U32 UTIL_isLink(const char* infilename);
 #define UTIL_FILESIZE_UNKNOWN  ((U64)(-1))
 U64 UTIL_getFileSize(const char* infilename);
 
-U64 UTIL_getTotalFileSize(const char* const * const fileNamesTable, unsigned nbFiles);
+U64 UTIL_getTotalFileSize(const char* const* const fileNamesTable, unsigned nbFiles);
 
 /*
  * A modified version of realloc().
  * If UTIL_realloc() fails the original block is freed.
 */
-UTIL_STATIC void* UTIL_realloc(void *ptr, size_t size)
-{
-    void *newptr = realloc(ptr, size);
-    if (newptr) return newptr;
-    free(ptr);
-    return NULL;
+UTIL_STATIC void* UTIL_realloc(void* ptr, size_t size) {
+  void* newptr = realloc(ptr, size);
+  if (newptr) return newptr;
+  free(ptr);
+  return NULL;
 }
 
 int UTIL_prepareFileList(const char* dirName, char** bufStart, size_t* pos, char** bufEnd, int followLinks);
@@ -175,14 +174,13 @@ int UTIL_prepareFileList(const char* dirName, char** bufStart, size_t* pos, char
  * In case of error UTIL_createFileList returns NULL and UTIL_freeFileList should not be called.
  */
 const char**
-UTIL_createFileList(const char **inputNames, unsigned inputNamesNb,
+UTIL_createFileList(const char** inputNames, unsigned inputNamesNb,
                     char** allocatedBuffer, unsigned* allocatedNamesNb,
                     int followLinks);
 
-UTIL_STATIC void UTIL_freeFileList(const char** filenameTable, char* allocatedBuffer)
-{
-    if (allocatedBuffer) free(allocatedBuffer);
-    if (filenameTable) free((void*)filenameTable);
+UTIL_STATIC void UTIL_freeFileList(const char** filenameTable, char* allocatedBuffer) {
+  if (allocatedBuffer) free(allocatedBuffer);
+  if (filenameTable) free((void*) filenameTable);
 }
 
 int UTIL_countPhysicalCores(void);

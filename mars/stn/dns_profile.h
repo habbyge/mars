@@ -28,42 +28,42 @@ namespace mars {
 namespace stn {
 
 enum DnsType {
-	kType_NewDns = 1,
-	kType_Dns = 2
+  kType_NewDns = 1,
+  kType_Dns = 2
 };
 
 struct DnsProfile {
 
-	DnsProfile() {
-		Reset();
-	}
+  DnsProfile() {
+    Reset();
+  }
 
-	void Reset() {
-		start_time = gettickcount();
-		end_time = 0;
+  void Reset() {
+    start_time = gettickcount();
+    end_time = 0;
 
-		host.clear();
+    host.clear();
 
-		err_type = 0;
-		err_code = 0;
+    err_type = 0;
+    err_code = 0;
 
-		dnstype = kType_NewDns;
-	}
+    dnstype = kType_NewDns;
+  }
 
-	void OnFailed() {
-		err_type = kEctLocal;
-		err_code = -1;
-	}
+  void OnFailed() {
+    err_type = kEctLocal;
+    err_code = -1;
+  }
 
-	uint64_t start_time;
-	uint64_t end_time;
+  uint64_t start_time;
+  uint64_t end_time;
 
-	std::string host;
+  std::string host;
 
-	int err_type;
-	int err_code;
+  int err_type;
+  int err_code;
 
-	int dnstype;
+  int dnstype;
 
 };
 

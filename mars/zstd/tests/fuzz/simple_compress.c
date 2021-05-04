@@ -21,32 +21,32 @@
 #include "zstd_helpers.h"
 #include "fuzz_data_producer.h"
 
-static ZSTD_CCtx *cctx = NULL;
+static ZSTD_CCtx* cctx = NULL;
 
-int LLVMFuzzerTestOneInput(const uint8_t *src, size_t size)
-{
-    /* Give a random portion of src data to the producer, to use for
-    parameter generation. The rest will be used for (de)compression */
-    FUZZ_dataProducer_t *producer = FUZZ_dataProducer_create(src, size);
-    size = FUZZ_dataProducer_reserveDataPrefix(producer);
+int LLVMFuzzerTestOneInput(const uint8_t* src, size_t size) {
+  /* Give a random portion of src data to the producer, to use for
+  parameter generation. The rest will be used for (de)compression */
+  FUZZ_dataProducer_t* producer = FUZZ_dataProducer_create(src, size);
+  size = FUZZ_dataProducer_reserveDataPrefix(producer);
 
-    size_t const maxSize = ZSTD_compressBound(size);
-    size_t const bufSize = FUZZ_dataProducer_uint32Range(producer, 0, maxSize);
+  size_t const maxSize = ZSTD_compressBound(size);
+  size_t const bufSize = FUZZ_dataProducer_uint32Range(producer, 0, maxSize);
 
-    int const cLevel = FUZZ_dataProducer_int32Range(producer, kMinClevel, kMaxClevel);
+  int const cLevel = FUZZ_dataProducer_int32Range(producer, kMinClevel, kMaxClevel);
 
-    if (!cctx) {
-        cctx = ZSTD_createCCtx();
-        FUZZ_ASSERT(cctx);
-    }
+  if (!cctx) {
+    cctx = ZSTD_createCCtx();
+    FUZZ_ASSERT(cctx);
+  }
 
-    void *rBuf = malloc(bufSize);
-    FUZZ_ASSERT(rBuf);
-    ZSTD_compressCCtx(cctx, rBuf, bufSize, src, size, cLevel);
-    free(rBuf);
-    FUZZ_dataProducer_free(producer);
+  void* rBuf = malloc(bufSize);
+  FUZZ_ASSERT(rBuf);
+  ZSTD_compressCCtx(cctx, rBuf, bufSize, src, size, cLevel);
+  free(rBuf);
+  FUZZ_dataProducer_free(producer);
 #ifndef STATEFUL_FUZZING
-    ZSTD_freeCCtx(cctx); cctx = NULL;
+  ZSTD_freeCCtx(cctx);
+  cctx = NULL;
 #endif
-    return 0;
+  return 0;
 }

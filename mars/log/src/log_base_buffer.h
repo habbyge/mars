@@ -30,37 +30,51 @@
 class LogCrypt;
 
 class LogBaseBuffer {
-    
+
 public:
-    LogBaseBuffer(void* _pbuffer, size_t _len, bool _is_compress, const char* _pubkey);
-    virtual ~LogBaseBuffer();
+  LogBaseBuffer(void* _pbuffer, size_t _len, bool _is_compress, const char* _pubkey);
+
+  virtual ~LogBaseBuffer();
 
 
 public:
-    static bool GetPeriodLogs(const char* _log_path, int _begin_hour, int _end_hour, unsigned long& _begin_pos, unsigned long& _end_pos, std::string& _err_msg);
+  static bool GetPeriodLogs(const char* _log_path, int _begin_hour, int _end_hour, unsigned long& _begin_pos,
+                            unsigned long& _end_pos, std::string& _err_msg);
 
 public:
-    PtrBuffer& GetData();
-    virtual size_t Compress(const void* src, size_t inLen, void* dst, size_t outLen) = 0;
-    virtual void Flush(AutoBuffer& _buff);
-    bool Write(const void* _data, size_t _length);
-    bool Write(const void* _data, size_t _inputlen, AutoBuffer& _out_buff);
+  PtrBuffer& GetData();
+
+  virtual size_t Compress(const void* src, size_t inLen, void* dst, size_t outLen) = 0;
+
+  virtual void Flush(AutoBuffer& _buff);
+
+  bool Write(const void* _data, size_t _length);
+
+  bool Write(const void* _data, size_t _inputlen, AutoBuffer& _out_buff);
 
 protected:
-    virtual bool __Reset();
-    void __Flush();
-    void __Clear();
-    void __Fix();
-    char __GetMagicEnd();
-    virtual char __GetMagicSyncStart() = 0;
-    virtual char __GetMagicAsyncStart() = 0;
+  virtual bool __Reset();
+
+  void __Flush();
+
+  void __Clear();
+
+  void __Fix();
+
+  char __GetMagicEnd();
+
+  virtual char __GetMagicSyncStart() = 0;
+
+  virtual char __GetMagicAsyncStart() = 0;
 
 protected:
-    PtrBuffer buff_;
-    bool is_compress_;
-    class LogCrypt* log_crypt_;
-    bool is_crypt_;
-    size_t remain_nocrypt_len_;
+  PtrBuffer buff_;
+  bool is_compress_;
+
+  class LogCrypt* log_crypt_;
+
+  bool is_crypt_;
+  size_t remain_nocrypt_len_;
 };
 
 

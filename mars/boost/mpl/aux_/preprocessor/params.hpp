@@ -60,6 +60,6 @@
         ) \
     /**/
 
-#endif 
+#endif
 
 #endif // BOOST_MPL_AUX_PREPROCESSOR_PARAMS_HPP_INCLUDED

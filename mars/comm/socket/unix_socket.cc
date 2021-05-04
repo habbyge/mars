@@ -12,7 +12,9 @@
 
 
 #ifndef _WIN32
+
 #include <fcntl.h>
+
 #endif
 
 #include "socket/unix_socket.h"
@@ -24,14 +26,15 @@
 #ifndef _WIN32
 
 int socket_set_nobio(SOCKET fd) {
-    int ret = fcntl(fd, F_GETFL, 0);
-    if(ret >= 0) {
-        long flags = ret | O_NONBLOCK;
-        ret = fcntl(fd, F_SETFL, flags);
-    }
+  int ret = fcntl(fd, F_GETFL, 0);
+  if (ret >= 0) {
+    long flags = ret | O_NONBLOCK;
+    ret = fcntl(fd, F_SETFL, flags);
+  }
 
-    return ret;
+  return ret;
 }
+
 #else
 int socket_set_nobio(SOCKET fd) {
     static const int noblock = 1;
@@ -321,7 +324,7 @@ const char * socket_inet_ntop(int af, const void *src, char *dst, unsigned int s
     switch (af) {
     case AF_INET :
         return inet_ntop_v4 (src, dst, size);
-	  case AF_INET6 :
+    case AF_INET6 :
         return inet_ntop_v6 (src, dst, size);		
     default :
         //xerror("EAFNOSUPPORT");
@@ -333,92 +336,91 @@ const char * socket_inet_ntop(int af, const void *src, char *dst, unsigned int s
 //not support in windows
 int socket_set_tcp_mss(SOCKET sockfd, int size) {
 #ifdef _WIN32
-    return 0;
+  return 0;
 #else
-    return setsockopt(sockfd, IPPROTO_TCP, TCP_MAXSEG, &size, sizeof(size));
+  return setsockopt(sockfd, IPPROTO_TCP, TCP_MAXSEG, &size, sizeof(size));
 #endif
 }
 
 int socket_get_tcp_mss(SOCKET sockfd, int* size) {
 #ifdef _WIN32
-    return 0;
+  return 0;
 #else
-    if (size == NULL)
-        return -1;
-    socklen_t len = sizeof(int);
-    return getsockopt(sockfd, IPPROTO_TCP, TCP_MAXSEG, (void*)size, &len);
+  if (size == NULL)
+    return -1;
+  socklen_t len = sizeof(int);
+  return getsockopt(sockfd, IPPROTO_TCP, TCP_MAXSEG, (void*) size, &len);
 #endif
 }
 
 int socket_fix_tcp_mss(SOCKET sockfd) {
-    return socket_set_tcp_mss(sockfd, 1400);
+  return socket_set_tcp_mss(sockfd, 1400);
 }
 
 int socket_disable_nagle(SOCKET sock, int nagle) {
-    return setsockopt(sock, IPPROTO_TCP, TCP_NODELAY, (char *)&nagle, sizeof(nagle));
+  return setsockopt(sock, IPPROTO_TCP, TCP_NODELAY, (char*) &nagle, sizeof(nagle));
 }
 
 
 int socket_error(SOCKET sock) {
-    int error = 0;
-    socklen_t len = sizeof(error);
-    if (0 != getsockopt(sock, SOL_SOCKET, SO_ERROR, &error, &len))
-    { error = socket_errno; }
-    return error;
+  int error = 0;
+  socklen_t len = sizeof(error);
+  if (0 != getsockopt(sock, SOL_SOCKET, SO_ERROR, &error, &len)) { error = socket_errno; }
+  return error;
 }
 
 int socket_isnonetwork(int error) {
-    if (error==SOCKET_ERRNO(ENETDOWN)) return 1;
-    if (error==SOCKET_ERRNO(ENETUNREACH)) return 1;
+  if (error == SOCKET_ERRNO(ENETDOWN)) return 1;
+  if (error == SOCKET_ERRNO(ENETUNREACH)) return 1;
 
-    return 0;
+  return 0;
 }
 
 int socket_reuseaddr(SOCKET sock, int optval) {
-    return setsockopt(sock, SOL_SOCKET, SO_REUSEADDR, (const char *)&optval , sizeof(int));
+  return setsockopt(sock, SOL_SOCKET, SO_REUSEADDR, (const char*) &optval, sizeof(int));
 }
 
 int socket_get_nwrite(SOCKET _sock, int* _nwriteLen) {
 #if defined(__APPLE__)
-    socklen_t len = sizeof(int);
-    return getsockopt(_sock, SOL_SOCKET, SO_NWRITE, _nwriteLen, &len);
+  socklen_t len = sizeof(int);
+  return getsockopt(_sock, SOL_SOCKET, SO_NWRITE, _nwriteLen, &len);
 #elif defined(ANDROID)
-    return ioctl(_sock, SIOCOUTQ, _nwriteLen);
+  return ioctl(_sock, SIOCOUTQ, _nwriteLen);
 #else
-    *_nwriteLen = -1;
-    return 0;
+  *_nwriteLen = -1;
+  return 0;
 #endif
 }
 
 int socket_get_nread(SOCKET _sock, int* _nreadLen) {
 #if defined(__APPLE__)
-    socklen_t len = sizeof(int);
-    return getsockopt(_sock, SOL_SOCKET, SO_NREAD, _nreadLen, &len);
+  socklen_t len = sizeof(int);
+  return getsockopt(_sock, SOL_SOCKET, SO_NREAD, _nreadLen, &len);
 #elif defined(ANDROID)
-    return ioctl(_sock, SIOCINQ, _nreadLen);
+  return ioctl(_sock, SIOCINQ, _nreadLen);
 #else
-    *_nreadLen = -1;
-    return 0;
+  *_nreadLen = -1;
+  return 0;
 #endif
 
 }
 
 int socket_nwrite(SOCKET _sock) {
-    int value = 0;
-    int ret = socket_get_nwrite(_sock, &value);
+  int value = 0;
+  int ret = socket_get_nwrite(_sock, &value);
 
-    if (0==ret) return value;
-    else return ret;
+  if (0 == ret) return value;
+  else return ret;
 }
 
 int socket_nread(SOCKET _sock) {
-    int value = 0;
-    int ret = socket_get_nread(_sock, &value);
+  int value = 0;
+  int ret = socket_get_nread(_sock, &value);
 
-    if (0==ret) return value;
-    else return ret;
+  if (0 == ret) return value;
+  else return ret;
 }
 
 int socket_ipv6only(SOCKET _sock, int _only) {
-    return  setsockopt(_sock, IPPROTO_IPV6, IPV6_V6ONLY, (char*)&_only, sizeof(_only));
+  return setsockopt(_sock, IPPROTO_IPV6, IPV6_V6ONLY, (char*) &_only, sizeof(_only));
 }

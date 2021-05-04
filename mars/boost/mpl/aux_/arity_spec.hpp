@@ -40,16 +40,16 @@ struct arity< \
 } \
 /**/
 #else
-#   define BOOST_MPL_AUX_NONTYPE_ARITY_SPEC(i,type,name) /**/
+#   define BOOST_MPL_AUX_NONTYPE_ARITY_SPEC(i, type, name) /**/
 #endif
 
-#   define BOOST_MPL_AUX_ARITY_SPEC(i,name) \
+#   define BOOST_MPL_AUX_ARITY_SPEC(i, name) \
     BOOST_MPL_AUX_NONTYPE_ARITY_SPEC(i,typename,name) \
 /**/
 
 
 #if defined(BOOST_MPL_CFG_EXTENDED_TEMPLATE_PARAMETERS_MATCHING) \
-    && !defined(BOOST_MPL_CFG_NO_FULL_LAMBDA_SUPPORT)
+ && !defined(BOOST_MPL_CFG_NO_FULL_LAMBDA_SUPPORT)
 #   define BOOST_MPL_AUX_TEMPLATE_ARITY_SPEC(i, name) \
 namespace aux { \
 template< BOOST_MPL_PP_PARAMS(i,typename T) > \

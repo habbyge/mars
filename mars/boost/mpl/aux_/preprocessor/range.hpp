@@ -18,7 +18,7 @@
 #include <boost/preprocessor/repetition/repeat.hpp>
 #include <boost/preprocessor/arithmetic/add.hpp>
 
-#define BOOST_MPL_PP_RANGE_ITEM(z,n,_) (n)
+#define BOOST_MPL_PP_RANGE_ITEM(z, n, _) (n)
 
 #define BOOST_MPL_PP_RANGE(first, length) \
     BOOST_PP_SEQ_SUBSEQ( \

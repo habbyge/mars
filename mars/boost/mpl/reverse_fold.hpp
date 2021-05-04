@@ -21,26 +21,21 @@
 #include <boost/mpl/aux_/reverse_fold_impl.hpp>
 #include <boost/mpl/aux_/na_spec.hpp>
 
-namespace mars_boost {} namespace boost = mars_boost; namespace mars_boost { namespace mpl {
+namespace mars_boost {}
+namespace boost = mars_boost;
+namespace mars_boost {
+namespace mpl {
 
 template<
-      typename BOOST_MPL_AUX_NA_PARAM(Sequence)
-    , typename BOOST_MPL_AUX_NA_PARAM(State)
-    , typename BOOST_MPL_AUX_NA_PARAM(BackwardOp)
-    , typename ForwardOp = arg<1>
-    >
-struct reverse_fold
-{
-    typedef typename aux::reverse_fold_impl<
-          ::mars_boost::mpl::O1_size<Sequence>::value
-        , typename begin<Sequence>::type
-        , typename end<Sequence>::type
-        , State
-        , BackwardOp
-        , ForwardOp
-        >::state type;
+    typename BOOST_MPL_AUX_NA_PARAM(Sequence), typename BOOST_MPL_AUX_NA_PARAM(State), typename BOOST_MPL_AUX_NA_PARAM(
+        BackwardOp), typename ForwardOp = arg<1>
+>
+struct reverse_fold {
+  typedef typename aux::reverse_fold_impl<
+      ::mars_boost::mpl::O1_size<Sequence>::value, typename begin<Sequence>::type, typename end<Sequence>::type, State, BackwardOp, ForwardOp
+  >::state type;
 
-    BOOST_MPL_AUX_LAMBDA_SUPPORT(3,reverse_fold,(Sequence,State,BackwardOp))
+  BOOST_MPL_AUX_LAMBDA_SUPPORT(3, reverse_fold, (Sequence, State, BackwardOp))
 };
 
 BOOST_MPL_AUX_NA_SPEC(3, reverse_fold)

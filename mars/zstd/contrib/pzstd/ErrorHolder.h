@@ -20,7 +20,7 @@ class ErrorHolder {
   std::atomic<bool> error_;
   std::string message_;
 
- public:
+public:
   ErrorHolder() : error_(false) {}
 
   bool hasError() noexcept {

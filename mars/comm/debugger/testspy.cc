@@ -23,19 +23,16 @@
 #include "comm/debugger/test_spy_sample.h"
 
 
-bool TSpy::SpyHookLogFunc(XLoggerInfo_t& _info, std::string& _log)
-{
-    __attribute__((unused)) int i = 0;
-    return true;
+bool TSpy::SpyHookLogFunc(XLoggerInfo_t& _info, std::string& _log) {
+  __attribute__((unused)) int i = 0;
+  return true;
 }
 
-void TSpy::TestFun0()
-{
-    return reinterpret_cast<Test_Spy_Sample*>(This())->TestFun0();
+void TSpy::TestFun0() {
+  return reinterpret_cast<Test_Spy_Sample*>(This())->TestFun0();
 }
 
-int TSpy::__TestFun1(int i)
-{
-    return reinterpret_cast<Test_Spy_Sample*>(This())->__TestFun1(i);
+int TSpy::__TestFun1(int i) {
+  return reinterpret_cast<Test_Spy_Sample*>(This())->__TestFun1(i);
 }
 

@@ -16,5 +16,7 @@
 #include <boost/system/error_code.hpp>
 
 #ifndef BOOST_ERROR_CODE_HEADER_ONLY
+
 #include <boost/system/detail/error_code.ipp>
+
 #endif

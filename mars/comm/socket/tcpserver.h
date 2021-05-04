@@ -28,48 +28,59 @@
 #include "comm/thread/thread.h"
 
 class XLogger;
+
 class SocketSelect;
+
 class TcpServer;
 
 class MTcpServer {
-  public:
-    virtual ~MTcpServer() {}
-    virtual void OnCreate(TcpServer* _server) = 0;
-    virtual void OnAccept(TcpServer* _server, SOCKET _sock, const sockaddr_in& _addr) = 0;
-    virtual void OnError(TcpServer* _server, int _error) = 0;
+public:
+  virtual ~MTcpServer() {}
+
+  virtual void OnCreate(TcpServer* _server) = 0;
+
+  virtual void OnAccept(TcpServer* _server, SOCKET _sock, const sockaddr_in& _addr) = 0;
+
+  virtual void OnError(TcpServer* _server, int _error) = 0;
 };
 
 class TcpServer {
-  public:
-    TcpServer(const char* _ip, uint16_t _port, MTcpServer& _observer, int _backlog = 256);
-    TcpServer(uint16_t _port, MTcpServer& _observer, int _backlog = 256);
-    TcpServer(const sockaddr_in& _bindaddr, MTcpServer& _observer, int _backlog = 256);
-    ~TcpServer();
+public:
+  TcpServer(const char* _ip, uint16_t _port, MTcpServer& _observer, int _backlog = 256);
 
-    SOCKET Socket() const;
-    const sockaddr_in& Address() const;
+  TcpServer(uint16_t _port, MTcpServer& _observer, int _backlog = 256);
 
-    bool StartAndWait(bool* _newone = NULL);
-    void StopAndWait();
+  TcpServer(const sockaddr_in& _bindaddr, MTcpServer& _observer, int _backlog = 256);
 
-  private:
-    TcpServer(const TcpServer&);
-    TcpServer& operator=(const TcpServer&);
+  ~TcpServer();
 
-  private:
-    void __ListenThread();
+  SOCKET Socket() const;
 
-  protected:
-    MTcpServer&         observer_;
-    Thread              thread_;
-    Mutex                  mutex_;
-    Condition            cond_;
+  const sockaddr_in& Address() const;
 
-    SOCKET                 listen_sock_;
-    sockaddr_in         bind_addr_;
-    const int             backlog_;
+  bool StartAndWait(bool* _newone = NULL);
 
-    SocketBreaker breaker_;
+  void StopAndWait();
+
+private:
+  TcpServer(const TcpServer&);
+
+  TcpServer& operator=(const TcpServer&);
+
+private:
+  void __ListenThread();
+
+protected:
+  MTcpServer& observer_;
+  Thread thread_;
+  Mutex mutex_;
+  Condition cond_;
+
+  SOCKET listen_sock_;
+  sockaddr_in bind_addr_;
+  const int backlog_;
+
+  SocketBreaker breaker_;
 };
 
 #endif /* TcpServer_H_ */

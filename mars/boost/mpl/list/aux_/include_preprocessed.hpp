@@ -27,7 +27,9 @@
 #   include AUX778076_INCLUDE_STRING
 #   undef AUX778076_INCLUDE_STRING
 #else
-#   include BOOST_PP_STRINGIZE(boost/mpl/list/AUX778076_HEADER)
+
+#   include BOOST_PP_STRINGIZE(boost / mpl / list / AUX778076_HEADER)
+
 #endif
 
 #   undef AUX778076_HEADER

@@ -17,18 +17,16 @@
 
 #include <vector>
 
-template <typename T>
-std::vector<T>& BOOT_REGISTER_CONTAINER()
-{
-    static std::vector<T> s_register;
-    return s_register;
+template<typename T>
+std::vector<T>& BOOT_REGISTER_CONTAINER() {
+  static std::vector<T> s_register;
+  return s_register;
 }
 
-template <typename T>
-bool BootRegister_Add(const T& _data)
-{
-    BOOT_REGISTER_CONTAINER<T>().push_back(_data);
-    return true;
+template<typename T>
+bool BootRegister_Add(const T& _data) {
+  BOOT_REGISTER_CONTAINER<T>().push_back(_data);
+  return true;
 }
 
 #define BOOT_REGISTER(data) BOOT_REGISTER_IMPL_I(data, __LINE__)
@@ -36,4 +34,4 @@ bool BootRegister_Add(const T& _data)
 #define BOOT_REGISTER_IMPL_II(data, line) VARIABLE_IS_NOT_USED static bool __int_anonymous_##line = BootRegister_Add(data)
 #define BOOT_REGISTER_CHECK(name, data) VARIABLE_IS_NOT_USED bool __test_##name##_check = BootRegister_Add(data)
 
-#endif	// COMM_BOOTREGISTER_H_
+#endif  // COMM_BOOTREGISTER_H_

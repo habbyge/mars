@@ -18,16 +18,19 @@
 #include <boost/mpl/push_front.hpp>
 #include <boost/mpl/inserter.hpp>
 
-namespace mars_boost {} namespace boost = mars_boost; namespace mars_boost { namespace mpl {
+namespace mars_boost {}
+namespace boost = mars_boost;
+namespace mars_boost {
+namespace mpl {
 
 template<
-      typename Sequence
-    >
+    typename Sequence
+>
 struct front_inserter
-    : inserter< Sequence,push_front<> >
-{
+    : inserter<Sequence, push_front<>> {
 };
 
-}}
+}
+}
 
 #endif // BOOST_MPL_FRONT_INSERTER_HPP_INCLUDED

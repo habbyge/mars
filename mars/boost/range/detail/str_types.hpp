@@ -14,25 +14,23 @@
 #include <boost/range/size_type.hpp>
 #include <boost/range/iterator.hpp>
 
-namespace mars_boost {} namespace boost = mars_boost; namespace mars_boost
-{
-    template< class T >
-    struct range_mutable_iterator<T*>
-    {
-        typedef T* type;
-    };
+namespace mars_boost {}
+namespace boost = mars_boost;
+namespace mars_boost {
+template<class T>
+struct range_mutable_iterator<T*> {
+  typedef T* type;
+};
 
-    template< class T >
-    struct range_const_iterator<T*>
-    {
-        typedef const T* type;
-    };
+template<class T>
+struct range_const_iterator<T*> {
+  typedef const T* type;
+};
 
-    template< class T >
-    struct range_size<T*>
-    {
-       typedef std::size_t type;
-    };    
+template<class T>
+struct range_size<T*> {
+  typedef std::size_t type;
+};
 }
 
 #endif

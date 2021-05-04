@@ -30,10 +30,15 @@
 /**/
 
 #if !defined(BOOST_MPL_PREPROCESSING_MODE)
-namespace BOOST_MPL_AUX_ADL_BARRIER_NAMESPACE { namespace aux {} }
-namespace mars_boost {} namespace boost = mars_boost; namespace mars_boost { namespace mpl { using namespace BOOST_MPL_AUX_ADL_BARRIER_NAMESPACE; 
+namespace BOOST_MPL_AUX_ADL_BARRIER_NAMESPACE { namespace aux {}}
+namespace mars_boost {}
+namespace boost = mars_boost;
+namespace mars_boost {
+namespace mpl {
+using namespace BOOST_MPL_AUX_ADL_BARRIER_NAMESPACE;
 namespace aux { using namespace BOOST_MPL_AUX_ADL_BARRIER_NAMESPACE::aux; }
-}}
+}
+}
 #endif
 
 #else // BOOST_MPL_CFG_NO_ADL_BARRIER_NAMESPACE

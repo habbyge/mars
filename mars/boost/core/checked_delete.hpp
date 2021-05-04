@@ -21,47 +21,46 @@
 //  See http://www.boost.org/libs/core/doc/html/core/checked_delete.html for documentation.
 //
 
-namespace mars_boost {} namespace boost = mars_boost; namespace mars_boost
-{
+namespace mars_boost {}
+namespace boost = mars_boost;
+namespace mars_boost {
 
 // verify that types are complete for increased safety
 
-template<class T> inline void checked_delete(T * x)
-{
-    // intentionally complex - simplification causes regressions
-    typedef char type_must_be_complete[ sizeof(T)? 1: -1 ];
-    (void) sizeof(type_must_be_complete);
-    delete x;
+template<class T>
+inline void checked_delete(T* x) {
+  // intentionally complex - simplification causes regressions
+  typedef char type_must_be_complete[sizeof(T) ? 1 : -1];
+  (void) sizeof(type_must_be_complete);
+  delete x;
 }
 
-template<class T> inline void checked_array_delete(T * x)
-{
-    typedef char type_must_be_complete[ sizeof(T)? 1: -1 ];
-    (void) sizeof(type_must_be_complete);
-    delete [] x;
+template<class T>
+inline void checked_array_delete(T* x) {
+  typedef char type_must_be_complete[sizeof(T) ? 1 : -1];
+  (void) sizeof(type_must_be_complete);
+  delete[] x;
 }
 
-template<class T> struct checked_deleter
-{
-    typedef void result_type;
-    typedef T * argument_type;
+template<class T>
+struct checked_deleter {
+  typedef void result_type;
+  typedef T* argument_type;
 
-    void operator()(T * x) const
-    {
-        // mars_boost:: disables ADL
-        mars_boost::checked_delete(x);
-    }
+  void operator()(T* x) const {
+    // mars_boost:: disables ADL
+    mars_boost::checked_delete(x);
+  }
 };
 
-template<class T> struct checked_array_deleter
-{
-    typedef void result_type;
-    typedef T * argument_type;
+template<class T>
+struct checked_array_deleter {
+  typedef void result_type;
+  typedef T* argument_type;
 
-    void operator()(T * x) const
-    {
-        mars_boost::checked_array_delete(x);
-    }
+  void operator()(T* x) const {
+    mars_boost::checked_array_delete(x);
+  }
 };
 
 } // namespace mars_boost

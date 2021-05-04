@@ -84,7 +84,7 @@ PTime UTIL_getSpanTimeNano(UTIL_time_t clockStart, UTIL_time_t clockEnd)
 
 
 #elif (defined (__STDC_VERSION__) && (__STDC_VERSION__ >= 201112L) /* C11 */) \
-    && defined(TIME_UTC) /* C11 requires timespec_get, but FreeBSD 11 lacks it, while still claiming C11 compliance */
+ && defined(TIME_UTC) /* C11 requires timespec_get, but FreeBSD 11 lacks it, while still claiming C11 compliance */
 
 #include <stdlib.h>   /* abort */
 #include <stdio.h>    /* perror */
@@ -137,32 +137,34 @@ PTime UTIL_getSpanTimeNano(UTIL_time_t begin, UTIL_time_t end)
 #else   /* relies on standard C90 (note : clock_t measurements can be wrong when using multi-threading) */
 
 UTIL_time_t UTIL_getTime(void) { return clock(); }
-PTime UTIL_getSpanTimeMicro(UTIL_time_t clockStart, UTIL_time_t clockEnd) { return 1000000ULL * (clockEnd - clockStart) / CLOCKS_PER_SEC; }
-PTime UTIL_getSpanTimeNano(UTIL_time_t clockStart, UTIL_time_t clockEnd) { return 1000000000ULL * (clockEnd - clockStart) / CLOCKS_PER_SEC; }
+
+PTime UTIL_getSpanTimeMicro(UTIL_time_t clockStart, UTIL_time_t clockEnd) {
+  return 1000000ULL * (clockEnd - clockStart) / CLOCKS_PER_SEC;
+}
+
+PTime UTIL_getSpanTimeNano(UTIL_time_t clockStart, UTIL_time_t clockEnd) {
+  return 1000000000ULL * (clockEnd - clockStart) / CLOCKS_PER_SEC;
+}
 
 #endif
 
 
-
 /* returns time span in microseconds */
-PTime UTIL_clockSpanMicro(UTIL_time_t clockStart )
-{
-    UTIL_time_t const clockEnd = UTIL_getTime();
-    return UTIL_getSpanTimeMicro(clockStart, clockEnd);
+PTime UTIL_clockSpanMicro(UTIL_time_t clockStart) {
+  UTIL_time_t const clockEnd = UTIL_getTime();
+  return UTIL_getSpanTimeMicro(clockStart, clockEnd);
 }
 
 /* returns time span in microseconds */
-PTime UTIL_clockSpanNano(UTIL_time_t clockStart )
-{
-    UTIL_time_t const clockEnd = UTIL_getTime();
-    return UTIL_getSpanTimeNano(clockStart, clockEnd);
+PTime UTIL_clockSpanNano(UTIL_time_t clockStart) {
+  UTIL_time_t const clockEnd = UTIL_getTime();
+  return UTIL_getSpanTimeNano(clockStart, clockEnd);
 }
 
-void UTIL_waitForNextTick(void)
-{
-    UTIL_time_t const clockStart = UTIL_getTime();
-    UTIL_time_t clockEnd;
-    do {
-        clockEnd = UTIL_getTime();
-    } while (UTIL_getSpanTimeNano(clockStart, clockEnd) == 0);
+void UTIL_waitForNextTick(void) {
+  UTIL_time_t const clockStart = UTIL_getTime();
+  UTIL_time_t clockEnd;
+  do {
+    clockEnd = UTIL_getTime();
+  } while (UTIL_getSpanTimeNano(clockStart, clockEnd) == 0);
 }

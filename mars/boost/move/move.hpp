@@ -21,6 +21,7 @@
 #  include <boost/config.hpp>
 #endif
 #
+
 #if defined(BOOST_HAS_PRAGMA_ONCE)
 #  pragma once
 #endif

@@ -29,41 +29,45 @@
 class CommFrequencyLimit;
 
 namespace mars {
-    namespace stn {
-    
+namespace stn {
+
 class NetSource;
 
 class NetCheckLogic {
-  public:
-    NetCheckLogic();
-    ~NetCheckLogic();
+public:
+  NetCheckLogic();
 
-    void UpdateLongLinkInfo(unsigned int _continues_fail_count, bool _task_succ);
-    void UpdateShortLinkInfo(unsigned int _continue_fail_count, bool _task_succ);
+  ~NetCheckLogic();
 
-  private:
-    struct NetTaskStatusItem{
-		uint32_t records;
-		uint64_t last_failedtime;
-		NetTaskStatusItem(): records(0xFFFFFFFF), last_failedtime(0) {}
-	};
+  void UpdateLongLinkInfo(unsigned int _continues_fail_count, bool _task_succ);
 
-  private:
-    bool __ShouldNetCheck();
-    void __StartNetCheck();
+  void UpdateShortLinkInfo(unsigned int _continue_fail_count, bool _task_succ);
 
-  private:
+private:
+  struct NetTaskStatusItem {
+    uint32_t records;
+    uint64_t last_failedtime;
 
-    CommFrequencyLimit* frequency_limit_;
-    NetSource::DnsUtil dns_util_;
+    NetTaskStatusItem() : records(0xFFFFFFFF), last_failedtime(0) {}
+  };
 
-    unsigned long long last_netcheck_time_;
+private:
+  bool __ShouldNetCheck();
 
-    NetTaskStatusItem longlink_taskstatus_item_;;
-    NetTaskStatusItem shortlink_taskstatus_item_;
+  void __StartNetCheck();
+
+private:
+
+  CommFrequencyLimit* frequency_limit_;
+  NetSource::DnsUtil dns_util_;
+
+  unsigned long long last_netcheck_time_;
+
+  NetTaskStatusItem longlink_taskstatus_item_;;
+  NetTaskStatusItem shortlink_taskstatus_item_;
 };
 
-    }
+}
 }
 
 #endif // STN_SRC_NET_CHECK_LOGIC_H_

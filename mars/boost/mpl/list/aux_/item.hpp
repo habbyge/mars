@@ -19,37 +19,37 @@
 #include <boost/mpl/aux_/config/msvc.hpp>
 #include <boost/mpl/aux_/config/workaround.hpp>
 
-namespace mars_boost {} namespace boost = mars_boost; namespace mars_boost { namespace mpl {
+namespace mars_boost {}
+namespace boost = mars_boost;
+namespace mars_boost {
+namespace mpl {
 
 template<
-      typename Size
-    , typename T
-    , typename Next
-    >
-struct l_item
-{
+    typename Size, typename T, typename Next
+>
+struct l_item {
 // agurt, 17/jul/03: to facilitate the deficient 'is_sequence' implementation 
 #if BOOST_WORKAROUND(BOOST_MSVC, <= 1300)
-    typedef int begin;
+  typedef int begin;
 #endif
-    typedef aux::list_tag tag;
-    typedef l_item type;
+  typedef aux::list_tag tag;
+  typedef l_item type;
 
-    typedef Size size;
-    typedef T item;
-    typedef Next next;
+  typedef Size size;
+  typedef T item;
+  typedef Next next;
 };
 
-struct l_end
-{
+struct l_end {
 #if BOOST_WORKAROUND(BOOST_MSVC, <= 1300)
-    typedef int begin;
+  typedef int begin;
 #endif
-    typedef aux::list_tag tag;
-    typedef l_end type;
-    typedef long_<0> size;
+  typedef aux::list_tag tag;
+  typedef l_end type;
+  typedef long_<0> size;
 };
 
-}}
+}
+}
 
 #endif // BOOST_MPL_LIST_AUX_NODE_HPP_INCLUDED

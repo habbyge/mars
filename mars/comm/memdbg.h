@@ -28,29 +28,33 @@
  */
 
 #ifdef DEBUG
+
 #include <stddef.h>
 
 #ifndef _MSC_VER
-    #define __MEMDBG_FUNCTION__       __PRETTY_FUNCTION__
+#define __MEMDBG_FUNCTION__       __PRETTY_FUNCTION__
 #else
-    // Definitely, VC6 not support this feature!
-    #if _MSC_VER > 1200
-        #define __MEMDBG_FUNCTION__   __FUNCTION__
-    #else
-        #define __MEMDBG_FUNCTION__   "N/A"
-        #warning "'__FUNCTION__' is not supported by this compiler"
-    #endif
+// Definitely, VC6 not support this feature!
+#if _MSC_VER > 1200
+#define __MEMDBG_FUNCTION__   __FUNCTION__
+#else
+#define __MEMDBG_FUNCTION__   "N/A"
+#warning "'__FUNCTION__' is not supported by this compiler"
+#endif
 #endif
 
 #if defined(__cplusplus)
 
 void* operator new(size_t _size, const char* _filename, int _line, const char* _func);
+
 void* operator new[](size_t _size, const char* _filename, int _line, const char* _func);
 
 void operator delete(void* _p);
+
 void operator delete[](void* _p);
 
 void operator delete(void* _p, size_t _size);
+
 void operator delete[](void* _p, size_t _size);
 
 #endif
@@ -62,7 +66,7 @@ extern "C" {
 void* malloc_dbg(size_t _size, const char* _filename, int _line, const char* _func);
 void* calloc_dbg(size_t _num, size_t _size, const char* _filename, int _line, const char* _func);
 void* realloc_dbg(void* _oldpointer, size_t _newsize, const char* _filename, int _line, const char* _func);
-void  free_dbg(void* _p, const char* _filename, int _line, const char* _func);
+void free_dbg(void* _p, const char* _filename, int _line, const char* _func);
 
 #ifdef  __cplusplus
 }

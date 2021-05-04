@@ -25,8 +25,8 @@
 extern "C" {
 #endif
 
-unsigned int  pkcs7_padding(void* _data, unsigned int _datalen, unsigned char _blocksize);
-unsigned int  pkcs7_padding_len(unsigned int _datalen, unsigned char _blocksize);
+unsigned int pkcs7_padding(void* _data, unsigned int _datalen, unsigned char _blocksize);
+unsigned int pkcs7_padding_len(unsigned int _datalen, unsigned char _blocksize);
 unsigned char pkcs7_padding_plus_len(unsigned int _datalen, unsigned char _blocksize);
 
 unsigned int pkcs7_depadding(const void* _data, unsigned int _datapaddinglen);

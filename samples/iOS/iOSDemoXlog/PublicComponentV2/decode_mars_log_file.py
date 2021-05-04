@@ -1,10 +1,11 @@
 #!/usr/bin/python
 
-import sys
-import os
 import glob
-import zlib
+import os
 import struct
+import sys
+import zlib
+
 #import base64
 
 MAGIC_NO_COMPRESS_START = 0x03;

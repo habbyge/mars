@@ -29,47 +29,53 @@
 #include "mars/comm/messagequeue/message_queue.h"
 
 namespace mars {
-    namespace stn {
+namespace stn {
 
 class LongLinkMetaData {
-public: 
-    LongLinkMetaData(const LonglinkConfig& _config, NetSource& _netsource, ActiveLogic& _activeLogic, MessageQueue::MessageQueue_t _message_id);
+public:
+  LongLinkMetaData(const LonglinkConfig& _config,
+                   NetSource& _netsource,
+                   ActiveLogic& _activeLogic,
+                   MessageQueue::MessageQueue_t _message_id);
 
-    virtual ~LongLinkMetaData();
-    std::shared_ptr<LongLink> Channel() {
-        if(!longlink_) { // do not use (longlink_ == nullptr), or may cause NPE when someone calls this function
-            xassert2(false, TSF"null longlink, name:%_", config_.name.c_str());
-            return nullptr;
-        }
-        return longlink_;
-    }
-    
-    std::shared_ptr<LongLinkConnectMonitor> Monitor() {
-        return longlink_monitor_;
-    }
+  virtual ~LongLinkMetaData();
 
-    LonglinkConfig& Config() { return config_; }
-    std::shared_ptr<SignallingKeeper> SignalKeeper() {
-        return signal_keeper_;
+  std::shared_ptr<LongLink> Channel() {
+    // do not use (longlink_ == nullptr), or may cause NPE when someone calls this function
+    if (!longlink_) {
+      xassert2(false, TSF"null longlink, name:%_", config_.name.c_str());
+      return nullptr;
     }
-    
-    std::shared_ptr<NetSourceTimerCheck> Checker() {
-        return netsource_checker_;
-    }
+    return longlink_;
+  }
+
+  std::shared_ptr<LongLinkConnectMonitor> Monitor() {
+    return longlink_monitor_;
+  }
+
+  LonglinkConfig& Config() { return config_; }
+
+  std::shared_ptr<SignallingKeeper> SignalKeeper() {
+    return signal_keeper_;
+  }
+
+  std::shared_ptr<NetSourceTimerCheck> Checker() {
+    return netsource_checker_;
+  }
 
 private:
-    void __OnTimerCheckSuc(const std::string& _name);
+  void __OnTimerCheckSuc(const std::string& _name);
 
-private: 
-    std::shared_ptr<LongLink> longlink_;
-    std::shared_ptr<LongLinkConnectMonitor> longlink_monitor_;
-    std::shared_ptr<NetSourceTimerCheck> netsource_checker_;
-    std::shared_ptr<SignallingKeeper> signal_keeper_;
-    LonglinkConfig config_;
-    MessageQueue::ScopeRegister asyncreg_;
+private:
+  std::shared_ptr<LongLink> longlink_;
+  std::shared_ptr<LongLinkConnectMonitor> longlink_monitor_;
+  std::shared_ptr<NetSourceTimerCheck> netsource_checker_;
+  std::shared_ptr<SignallingKeeper> signal_keeper_;
+  LonglinkConfig config_;
+  MessageQueue::ScopeRegister asyncreg_;
 };
 
-    }
+}
 }
 
 #endif

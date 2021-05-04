@@ -18,17 +18,19 @@
 #include <boost/mpl/push_back.hpp>
 #include <boost/mpl/inserter.hpp>
 
-namespace mars_boost {} namespace boost = mars_boost; namespace mars_boost {
+namespace mars_boost {}
+namespace boost = mars_boost;
+namespace mars_boost {
 namespace mpl {
 
 template<
-      typename Sequence
-    >
+    typename Sequence
+>
 struct back_inserter
-    : inserter< Sequence,push_back<> >
-{
+    : inserter<Sequence, push_back<>> {
 };
 
-}}
+}
+}
 
 #endif // BOOST_MPL_BACK_INSERTER_HPP_INCLUDED

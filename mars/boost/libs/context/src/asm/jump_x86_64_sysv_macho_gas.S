@@ -27,40 +27,75 @@
 #if defined(__x86_64__)
 
 .text
-.globl _jump_fcontext
+.
+globl _jump_fcontext
 .align 8
 _jump_fcontext:
-    pushq  %rbp  /* save RBP */
-    pushq  %rbx  /* save RBX */
-    pushq  %r15  /* save R15 */
-    pushq  %r14  /* save R14 */
-    pushq  %r13  /* save R13 */
-    pushq  %r12  /* save R12 */
+pushq  %
+rbp  /* save RBP */
+pushq
+%
+rbx  /* save RBX */
+pushq
+%
+r15  /* save R15 */
+pushq
+%
+r14  /* save R14 */
+pushq
+%
+r13  /* save R13 */
+pushq
+%
+r12  /* save R12 */
 
-    /* store RSP (pointing to context-data) in RAX */
-    movq  %rsp, %rax
+/* store RSP (pointing to context-data) in RAX */
+movq
+%rsp, %
+rax
 
-    /* restore RSP (pointing to context-data) from RDI */
-    movq  %rdi, %rsp
+/* restore RSP (pointing to context-data) from RDI */
+movq
+%rdi, %
+rsp
 
-    popq  %r12  /* restrore R12 */
-    popq  %r13  /* restrore R13 */
-    popq  %r14  /* restrore R14 */
-    popq  %r15  /* restrore R15 */
-    popq  %rbx  /* restrore RBX */
-    popq  %rbp  /* restrore RBP */
+    popq
+%
+r12  /* restrore R12 */
+popq
+%
+r13  /* restrore R13 */
+popq
+%
+r14  /* restrore R14 */
+popq
+%
+r15  /* restrore R15 */
+popq
+%
+rbx  /* restrore RBX */
+popq
+%
+rbp  /* restrore RBP */
 
-    /* restore return-address */
-    popq  %r8
+/* restore return-address */
+popq
+%
+r8
 
-    /* return transfer_t from jump */
-    /* RAX == fctx, RDX == data */
-    movq  %rsi, %rdx
-    /* pass transfer_t as first arg in context function */
-    /* RDI == fctx, RSI == data */
-    movq  %rax, %rdi
+/* return transfer_t from jump */
+/* RAX == fctx, RDX == data */
+movq
+%rsi, %
+rdx
+/* pass transfer_t as first arg in context function */
+/* RDI == fctx, RSI == data */
+movq
+%rax, %
+rdi
 
-    /* indirect jump to context */
-    jmp  *%r8
+/* indirect jump to context */
+jmp
+*%r8
 
 #endif

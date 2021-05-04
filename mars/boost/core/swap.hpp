@@ -26,35 +26,31 @@
 #include <cstddef> //for std::size_t
 #include <boost/config.hpp>
 
-namespace mars_boost_swap_impl
-{
-  template<class T>
-  BOOST_GPU_ENABLED
-  void swap_impl(T& left, T& right)
-  {
-    using namespace std;//use std::swap if argument dependent lookup fails
-    swap(left,right);
-  }
-
-  template<class T, std::size_t N>
-  BOOST_GPU_ENABLED
-  void swap_impl(T (& left)[N], T (& right)[N])
-  {
-    for (std::size_t i = 0; i < N; ++i)
-    {
-      ::mars_boost_swap_impl::swap_impl(left[i], right[i]);
-    }
-  }
+namespace mars_boost_swap_impl {
+template<class T>
+BOOST_GPU_ENABLED
+void swap_impl(T& left, T& right) {
+  using namespace std;//use std::swap if argument dependent lookup fails
+  swap(left, right);
 }
 
-namespace mars_boost {} namespace boost = mars_boost; namespace mars_boost
-{
-  template<class T1, class T2>
-  BOOST_GPU_ENABLED
-  void swap(T1& left, T2& right)
-  {
-    ::mars_boost_swap_impl::swap_impl(left, right);
+template<class T, std::size_t N>
+BOOST_GPU_ENABLED
+void swap_impl(T (& left)[N], T (& right)[N]) {
+  for (std::size_t i = 0; i < N; ++i) {
+    ::mars_boost_swap_impl::swap_impl(left[i], right[i]);
   }
+}
+}
+
+namespace mars_boost {}
+namespace boost = mars_boost;
+namespace mars_boost {
+template<class T1, class T2>
+BOOST_GPU_ENABLED
+void swap(T1& left, T2& right) {
+  ::mars_boost_swap_impl::swap_impl(left, right);
+}
 }
 
 #endif

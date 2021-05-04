@@ -11,10 +11,21 @@
 
 
 #if ZLIB_VERNUM <= 0x1240
-ZEXTERN int ZEXPORT gzclose_r OF((gzFile file));
-ZEXTERN int ZEXPORT gzclose_w OF((gzFile file));
-ZEXTERN int ZEXPORT gzbuffer OF((gzFile file, unsigned size));
-ZEXTERN z_off_t ZEXPORT gzoffset OF((gzFile file));
+ZEXTERN int ZEXPORT
+gzclose_r OF((gzFile
+file));
+ZEXTERN int ZEXPORT
+gzclose_w OF((gzFile
+file));
+ZEXTERN int ZEXPORT
+gzbuffer OF((gzFile
+file,
+unsigned size
+));
+ZEXTERN z_off_t
+ZEXPORT gzoffset
+OF((gzFile
+file));
 
 #if !defined(_WIN32) && defined(Z_LARGE64)
 #  define z_off64_t off64_t
@@ -30,9 +41,9 @@ ZEXTERN z_off_t ZEXPORT gzoffset OF((gzFile file));
 
 #if ZLIB_VERNUM <= 0x1250
 struct gzFile_s {
-    unsigned have;
-    unsigned char *next;
-    z_off64_t pos;
+  unsigned have;
+  unsigned char* next;
+  z_off64_t pos;
 };
 #endif
 
@@ -48,21 +59,34 @@ ZEXTERN gzFile         ZEXPORT gzopen_w OF((const wchar_t *path,
 
 #if ZLIB_VERNUM < 0x12B0
 #ifdef Z_SOLO
-   typedef unsigned long z_size_t;
+typedef unsigned long z_size_t;
 #else
 #  define z_longlong long long
 #  if defined(NO_SIZE_T)
-     typedef unsigned NO_SIZE_T z_size_t;
+typedef unsigned NO_SIZE_T z_size_t;
 #  elif defined(STDC)
 #    include <stddef.h>
-     typedef size_t z_size_t;
+typedef size_t z_size_t;
 #  else
-     typedef unsigned long z_size_t;
+typedef unsigned long z_size_t;
 #  endif
 #  undef z_longlong
 #endif
-ZEXTERN z_size_t ZEXPORT gzfread OF((voidp buf, z_size_t size, z_size_t nitems,
-                                     gzFile file));
-ZEXTERN z_size_t ZEXPORT gzfwrite OF((voidpc buf, z_size_t size,
-                                      z_size_t nitems, gzFile file));
+ZEXTERN z_size_t
+ZEXPORT gzfread
+OF((voidp
+buf,
+z_size_t size, z_size_t
+nitems,
+gzFile file
+));
+ZEXTERN z_size_t
+ZEXPORT gzfwrite
+OF((voidpc
+buf,
+z_size_t size,
+    z_size_t
+nitems,
+gzFile file
+));
 #endif

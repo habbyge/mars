@@ -35,18 +35,18 @@ namespace pzstd {
  * and only load at most N pages.
  */
 class SkippableFrame {
- public:
+public:
   static constexpr std::size_t kSize = 12;
 
- private:
+private:
   std::uint32_t frameSize_;
   std::array<std::uint8_t, kSize> data_;
   static constexpr std::uint32_t kSkippableFrameMagicNumber = 0x184D2A50;
   // Could be improved if the size fits in less bytes
   static constexpr std::uint32_t kFrameContentsSize = kSize - 8;
 
- public:
-   // Write the skippable frame to data_ in LE format.
+public:
+  // Write the skippable frame to data_ in LE format.
   explicit SkippableFrame(std::uint32_t size);
 
   // Read the skippable frame from bytes in LE format.

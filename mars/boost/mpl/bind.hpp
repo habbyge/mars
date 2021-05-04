@@ -20,6 +20,7 @@
 // $Revision$
 
 #if !defined(BOOST_MPL_PREPROCESSING_MODE)
+
 #   include <boost/mpl/bind_fwd.hpp>
 #   include <boost/mpl/placeholders.hpp>
 #   include <boost/mpl/next.hpp>
@@ -30,9 +31,10 @@
 #   include <boost/mpl/aux_/arity_spec.hpp>
 #   include <boost/mpl/aux_/type_wrapper.hpp>
 #   include <boost/mpl/aux_/yes_no.hpp>
+
 #   if defined(BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION)
 #       include <boost/type_traits/is_reference.hpp>
-#   endif 
+#   endif
 #endif
 
 #include <boost/mpl/aux_/config/bind.hpp>
@@ -40,13 +42,14 @@
 #include <boost/mpl/aux_/config/use_preprocessed.hpp>
 
 #if !defined(BOOST_MPL_CFG_NO_PREPROCESSED_HEADERS) \
-    && !defined(BOOST_MPL_PREPROCESSING_MODE)
+ && !defined(BOOST_MPL_PREPROCESSING_MODE)
 
 #   if defined(BOOST_MPL_CFG_NO_UNNAMED_PLACEHOLDER_SUPPORT)
 #       define BOOST_MPL_PREPROCESSED_HEADER basic_bind.hpp
 #   else
 #       define BOOST_MPL_PREPROCESSED_HEADER bind.hpp
 #   endif
+
 #   include <boost/mpl/aux_/include_preprocessed.hpp>
 
 #else

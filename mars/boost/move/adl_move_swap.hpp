@@ -16,6 +16,7 @@
 #  include <boost/config.hpp>
 #endif
 #
+
 #if defined(BOOST_HAS_PRAGMA_ONCE)
 #  pragma once
 #endif
@@ -28,25 +29,27 @@
 
 //Try to avoid including <algorithm>, as it's quite big
 #if defined(_MSC_VER) && defined(BOOST_DINKUMWARE_STDLIB)
-   #include <utility>   //Dinkum libraries define std::swap in utility which is lighter than algorithm
+#include <utility>   //Dinkum libraries define std::swap in utility which is lighter than algorithm
 #elif defined(BOOST_GNU_STDLIB)
-   //For non-GCC compilers, where GNUC version is not very reliable, or old GCC versions
-   //use the good old stl_algobase header, which is quite lightweight
-   #if !defined(BOOST_GCC) || ((__GNUC__ < 4) || ((__GNUC__ == 4) && (__GNUC_MINOR__ < 3)))
-      #include <bits/stl_algobase.h>
-   #elif (__GNUC__ == 4) && (__GNUC_MINOR__ == 3)
-      //In GCC 4.3 a tiny stl_move.h was created with swap and move utilities
-      #include <bits/stl_move.h>
-   #else
-      //In GCC 4.4 stl_move.h was renamed to move.h
-      #include <bits/move.h>
-   #endif
-#elif defined(_LIBCPP_VERSION)
-   #include <type_traits>  //The initial import of libc++ defines std::swap and still there
-#elif __cplusplus >= 201103L
-   #include <utility>    //Fallback for C++ >= 2011
+//For non-GCC compilers, where GNUC version is not very reliable, or old GCC versions
+//use the good old stl_algobase header, which is quite lightweight
+#if !defined(BOOST_GCC) || ((__GNUC__ < 4) || ((__GNUC__ == 4) && (__GNUC_MINOR__ < 3)))
+#include <bits/stl_algobase.h>
+#elif (__GNUC__ == 4) && (__GNUC_MINOR__ == 3)
+   //In GCC 4.3 a tiny stl_move.h was created with swap and move utilities
+#include <bits/stl_move.h>
 #else
-   #include <algorithm>  //Fallback for C++98/03
+   //In GCC 4.4 stl_move.h was renamed to move.h
+#include <bits/move.h>
+#endif
+#elif defined(_LIBCPP_VERSION)
+
+#include <type_traits>  //The initial import of libc++ defines std::swap and still there
+
+#elif __cplusplus >= 201103L
+#include <utility>    //Fallback for C++ >= 2011
+#else
+#include <algorithm>  //Fallback for C++98/03
 #endif
 
 #include <boost/move/utility_core.hpp> //for mars_boost::move
@@ -56,128 +59,136 @@
 #if defined(BOOST_NO_CXX11_RVALUE_REFERENCES)
 namespace mars_boost_move_member_swap {
 
-struct dont_care
-{
-   dont_care(...);
+struct dont_care {
+  dont_care(...);
 };
 
-struct private_type
-{
-   static private_type p;
-   private_type const &operator,(int) const;
+struct private_type {
+  static private_type p;
+
+  private_type const& operator,(int) const;
 };
 
-typedef char yes_type;            
-struct no_type{ char dummy[2]; }; 
+typedef char yes_type;
+struct no_type {
+  char dummy[2];
+};
 
 template<typename T>
-no_type is_private_type(T const &);
+no_type is_private_type(T const&);
 
-yes_type is_private_type(private_type const &);
+yes_type is_private_type(private_type const&);
 
-template <typename Type>
-class has_member_function_named_swap
-{
-   struct BaseMixin
-   {
-      void swap();
-   };
+template<typename Type>
+class has_member_function_named_swap {
+  struct BaseMixin {
+    void swap();
+  };
 
-   struct Base : public Type, public BaseMixin { Base(); };
-   template <typename T, T t> class Helper{};
+  struct Base : public Type, public BaseMixin {
+    Base();
+  };
 
-   template <typename U>
-   static no_type deduce(U*, Helper<void (BaseMixin::*)(), &U::swap>* = 0);
-   static yes_type deduce(...);
+  template<typename T, T t>
+  class Helper {
+  };
 
-   public:
-   static const bool value = sizeof(yes_type) == sizeof(deduce((Base*)(0)));
+  template<typename U>
+  static no_type deduce(U*, Helper<void (BaseMixin::*)(), &U::swap>* = 0);
+
+  static yes_type deduce(...);
+
+public:
+  static const bool value = sizeof(yes_type) == sizeof(deduce((Base*) (0)));
 };
 
 template<typename Fun, bool HasFunc>
-struct has_member_swap_impl
-{
-   static const bool value = false;
+struct has_member_swap_impl {
+  static const bool value = false;
 };
 
 template<typename Fun>
-struct has_member_swap_impl<Fun, true>
-{
-   struct FunWrap : Fun
-   {
-      FunWrap();
+struct has_member_swap_impl<Fun, true> {
+  struct FunWrap : Fun {
+    FunWrap();
 
-      using Fun::swap;
-      private_type swap(dont_care) const;
-   };
+    using Fun::swap;
 
-   static Fun &declval_fun();
-   static FunWrap declval_wrap();
+    private_type swap(dont_care) const;
+  };
 
-   static bool const value =
-      sizeof(no_type) == sizeof(is_private_type( (declval_wrap().swap(declval_fun()), 0)) );
+  static Fun& declval_fun();
+
+  static FunWrap declval_wrap();
+
+  static bool const value =
+      sizeof(no_type) == sizeof(is_private_type((declval_wrap().swap(declval_fun()), 0)));
 };
 
 template<typename Fun>
 struct has_member_swap : public has_member_swap_impl
-      <Fun, has_member_function_named_swap<Fun>::value>
-{};
+    <Fun, has_member_function_named_swap<Fun>::value> {
+};
 
 }  //namespace mars_boost_move_member_swap
 
-namespace mars_boost_move_adl_swap{
+namespace mars_boost_move_adl_swap {
 
 template<class P1, class P2, bool = P1::value>
-struct and_op_impl
-{  static const bool value = false; };
+struct and_op_impl {
+  static const bool value = false;
+};
 
 template<class P1, class P2>
-struct and_op_impl<P1, P2, true>
-{  static const bool value = P2::value;   };
+struct and_op_impl<P1, P2, true> {
+  static const bool value = P2::value;
+};
 
 template<class P1, class P2>
 struct and_op
-   : and_op_impl<P1, P2>
-{};
+    : and_op_impl<P1, P2> {
+};
 
 //////
 
 template<class P1, class P2, bool = P1::value>
-struct and_op_not_impl
-{  static const bool value = false; };
+struct and_op_not_impl {
+  static const bool value = false;
+};
 
 template<class P1, class P2>
-struct and_op_not_impl<P1, P2, true>
-{  static const bool value = !P2::value;   };
+struct and_op_not_impl<P1, P2, true> {
+  static const bool value = !P2::value;
+};
 
 template<class P1, class P2>
 struct and_op_not
-   : and_op_not_impl<P1, P2>
-{};
+    : and_op_not_impl<P1, P2> {
+};
 
 template<class T>
-void swap_proxy(T& x, T& y, typename mars_boost::move_detail::enable_if_c<!mars_boost::move_detail::has_move_emulation_enabled_impl<T>::value>::type* = 0)
-{
-   //use std::swap if argument dependent lookup fails
-   //Use using directive ("using namespace xxx;") instead as some older compilers
-   //don't do ADL with using declarations ("using ns::func;").
-   using namespace std;
-   swap(x, y);
+void swap_proxy(T& x, T& y,
+                typename mars_boost::move_detail::enable_if_c<!mars_boost::move_detail::has_move_emulation_enabled_impl<T>::value>::type* = 0) {
+  //use std::swap if argument dependent lookup fails
+  //Use using directive ("using namespace xxx;") instead as some older compilers
+  //don't do ADL with using declarations ("using ns::func;").
+  using namespace std;
+  swap(x, y);
 }
 
 template<class T>
-void swap_proxy(T& x, T& y
-               , typename mars_boost::move_detail::enable_if< and_op_not_impl<mars_boost::move_detail::has_move_emulation_enabled_impl<T>
-                                                                        , mars_boost_move_member_swap::has_member_swap<T> >
-                                                       >::type* = 0)
-{  T t(::mars_boost::move(x)); x = ::mars_boost::move(y); y = ::mars_boost::move(t);  }
+void swap_proxy(T& x, T& y,
+                typename mars_boost::move_detail::enable_if<and_op_not_impl<mars_boost::move_detail::has_move_emulation_enabled_impl<T>, mars_boost_move_member_swap::has_member_swap<T>>
+                >::type* = 0) {
+  T t(::mars_boost::move(x));
+  x = ::mars_boost::move(y);
+  y = ::mars_boost::move(t);
+}
 
 template<class T>
-void swap_proxy(T& x, T& y
-               , typename mars_boost::move_detail::enable_if< and_op_impl< mars_boost::move_detail::has_move_emulation_enabled_impl<T>
-                                                                    , mars_boost_move_member_swap::has_member_swap<T> >
-                                                       >::type* = 0)
-{  x.swap(y);  }
+void swap_proxy(T& x, T& y,
+                typename mars_boost::move_detail::enable_if<and_op_impl<mars_boost::move_detail::has_move_emulation_enabled_impl<T>, mars_boost_move_member_swap::has_member_swap<T>>
+                >::type* = 0) { x.swap(y); }
 
 }  //namespace mars_boost_move_adl_swap{
 
@@ -196,21 +207,22 @@ void swap_proxy(T& x, T& y)
 
 #endif   //#if defined(BOOST_NO_CXX11_RVALUE_REFERENCES)
 
-namespace mars_boost_move_adl_swap{
+namespace mars_boost_move_adl_swap {
 
 template<class T, std::size_t N>
-void swap_proxy(T (& x)[N], T (& y)[N])
-{
-   for (std::size_t i = 0; i < N; ++i){
-      ::mars_boost_move_adl_swap::swap_proxy(x[i], y[i]);
-   }
+void swap_proxy(T (& x)[N], T (& y)[N]) {
+  for (std::size_t i = 0; i < N; ++i) {
+    ::mars_boost_move_adl_swap::swap_proxy(x[i], y[i]);
+  }
 }
 
 }  //namespace mars_boost_move_adl_swap {
 
 #endif   //!defined(BOOST_MOVE_DOXYGEN_INVOKED)
 
-namespace mars_boost {} namespace boost = mars_boost; namespace mars_boost{
+namespace mars_boost {}
+namespace boost = mars_boost;
+namespace mars_boost {
 
 //! Exchanges the values of a and b, using Argument Dependent Lookup (ADL) to select a
 //! specialized swap function if available. If no specialized swap function is available,
@@ -223,9 +235,8 @@ namespace mars_boost {} namespace boost = mars_boost; namespace mars_boost{
 //!   -  Otherwise a move-based swap is called, equivalent to: 
 //!      <code>T t(::mars_boost::move(x)); x = ::mars_boost::move(y); y = ::mars_boost::move(t);</code>.
 template<class T>
-void adl_move_swap(T& x, T& y)
-{
-   ::mars_boost_move_adl_swap::swap_proxy(x, y);
+void adl_move_swap(T& x, T& y) {
+  ::mars_boost_move_adl_swap::swap_proxy(x, y);
 }
 
 }  //namespace mars_boost {} namespace boost = mars_boost; namespace mars_boost{

@@ -14,33 +14,34 @@
 #include <stdlib.h>
 #include <stdint.h>
 #include "mem.h"
+
 #define ZSTD_STATIC_LINKING_ONLY
+
 #include "zstd.h"
 
 static int
-compress(ZSTD_CStream *ctx, ZSTD_outBuffer out, const void *data, size_t size)
-{
-  ZSTD_inBuffer in = { data, size, 0 };
+compress(ZSTD_CStream* ctx, ZSTD_outBuffer out, const void* data, size_t size) {
+  ZSTD_inBuffer in = {data, size, 0};
   while (in.pos < in.size) {
     ZSTD_outBuffer tmp = out;
     const size_t rc = ZSTD_compressStream(ctx, &tmp, &in);
     if (ZSTD_isError(rc)) return 1;
   }
-  { ZSTD_outBuffer tmp = out;
+  {
+    ZSTD_outBuffer tmp = out;
     const size_t rc = ZSTD_flushStream(ctx, &tmp);
     if (rc != 0) { return 1; }
   }
   return 0;
 }
 
-int main(int argc, const char** argv)
-{
+int main(int argc, const char** argv) {
   ZSTD_CStream* ctx;
   ZSTD_parameters params;
   size_t rc;
   unsigned windowLog;
-  (void)argc;
-  (void)argv;
+  (void) argc;
+  (void) argv;
   /* Create stream */
   ctx = ZSTD_createCStream();
   if (!ctx) { return 1; }
@@ -59,14 +60,14 @@ int main(int argc, const char** argv)
   if (ZSTD_isError(rc)) { return 2; }
   {
     U64 compressed = 0;
-    const U64 toCompress = ((U64)1) << 33;
+    const U64 toCompress = ((U64) 1) << 33;
     const size_t size = 1 << windowLog;
     size_t pos = 0;
-    char *srcBuffer = (char*) malloc(1 << windowLog);
-    char *dstBuffer = (char*) malloc(ZSTD_compressBound(1 << windowLog));
-    ZSTD_outBuffer out = { dstBuffer, ZSTD_compressBound(1 << windowLog), 0 };
+    char* srcBuffer = (char*) malloc(1 << windowLog);
+    char* dstBuffer = (char*) malloc(ZSTD_compressBound(1 << windowLog));
+    ZSTD_outBuffer out = {dstBuffer, ZSTD_compressBound(1 << windowLog), 0};
     const char match[] = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
-    const size_t randomData = (1 << windowLog) - 2*sizeof(match);
+    const size_t randomData = (1 << windowLog) - 2 * sizeof(match);
     size_t i;
     printf("\n ===   Long Match Test   === \n");
     printf("Creating random data to produce long matches \n");
@@ -74,7 +75,7 @@ int main(int argc, const char** argv)
       srcBuffer[i] = match[i];
     }
     for (i = 0; i < randomData; ++i) {
-      srcBuffer[sizeof(match) + i] = (char)(rand() & 0xFF);
+      srcBuffer[sizeof(match) + i] = (char) (rand() & 0xFF);
     }
     for (i = 0; i < sizeof(match); ++i) {
       srcBuffer[sizeof(match) + randomData + i] = match[i];

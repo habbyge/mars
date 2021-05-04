@@ -37,63 +37,63 @@
 
 
 LogZstdBuffer::LogZstdBuffer(void* _pbuffer, size_t _len, bool _isCompress, const char* _pubkey, int level)
-:LogBaseBuffer(_pbuffer, _len, _isCompress, _pubkey) {
+    : LogBaseBuffer(_pbuffer, _len, _isCompress, _pubkey) {
 
-    if (is_compress_) {
-        cctx_ = ZSTD_createCCtx();
-        ZSTD_CCtx_setParameter(cctx_, ZSTD_c_compressionLevel, level);
-        ZSTD_CCtx_setParameter(cctx_, ZSTD_c_windowLog, 16);
-    }
+  if (is_compress_) {
+    cctx_ = ZSTD_createCCtx();
+    ZSTD_CCtx_setParameter(cctx_, ZSTD_c_compressionLevel, level);
+    ZSTD_CCtx_setParameter(cctx_, ZSTD_c_windowLog, 16);
+  }
 }
 
 LogZstdBuffer::~LogZstdBuffer() {
 
-    if (is_compress_ && cctx_ != nullptr) {
-        ZSTD_inBuffer input = {nullptr, 0, 0};
-        ZSTD_outBuffer output = {nullptr, 0, 0};
-        ZSTD_compressStream2(cctx_, &output , &input, ZSTD_e_end);
-        ZSTD_freeCCtx(cctx_);
-    }
+  if (is_compress_ && cctx_ != nullptr) {
+    ZSTD_inBuffer input = {nullptr, 0, 0};
+    ZSTD_outBuffer output = {nullptr, 0, 0};
+    ZSTD_compressStream2(cctx_, &output, &input, ZSTD_e_end);
+    ZSTD_freeCCtx(cctx_);
+  }
 }
 
 void LogZstdBuffer::Flush(AutoBuffer& _buff) {
 
-    if (is_compress_ && cctx_ != nullptr) {
-        ZSTD_inBuffer input = {nullptr, 0, 0 };
-        ZSTD_outBuffer output = {nullptr, 0, 0 };
-        ZSTD_compressStream2(cctx_, &output , &input, ZSTD_e_end);
-    }
+  if (is_compress_ && cctx_ != nullptr) {
+    ZSTD_inBuffer input = {nullptr, 0, 0};
+    ZSTD_outBuffer output = {nullptr, 0, 0};
+    ZSTD_compressStream2(cctx_, &output, &input, ZSTD_e_end);
+  }
 
-    LogBaseBuffer::Flush(_buff);
+  LogBaseBuffer::Flush(_buff);
 }
 
 
-size_t LogZstdBuffer::Compress(const void* src, size_t inLen, void* dst, size_t outLen){
+size_t LogZstdBuffer::Compress(const void* src, size_t inLen, void* dst, size_t outLen) {
 
-    ZSTD_inBuffer input = { src, inLen, 0 };
-    ZSTD_outBuffer output = { dst, outLen,  0};
-    
-    ZSTD_compressStream2(cctx_, &output, &input, ZSTD_e_flush);
-    
-    return output.pos;
+  ZSTD_inBuffer input = {src, inLen, 0};
+  ZSTD_outBuffer output = {dst, outLen, 0};
+
+  ZSTD_compressStream2(cctx_, &output, &input, ZSTD_e_flush);
+
+  return output.pos;
 }
 
 bool LogZstdBuffer::__Reset() {
-    if (!LogBaseBuffer::__Reset()) {
-        return false;
-    }
+  if (!LogBaseBuffer::__Reset()) {
+    return false;
+  }
 
-    if (is_compress_) {
-        ZSTD_CCtx_reset(cctx_, ZSTD_reset_session_only);
-    }
+  if (is_compress_) {
+    ZSTD_CCtx_reset(cctx_, ZSTD_reset_session_only);
+  }
 
-    return true;
+  return true;
 }
 
 char LogZstdBuffer::__GetMagicSyncStart() {
-    return is_crypt_ ? LogMagicNum::kMagicSyncZstdStart : LogMagicNum::kMagicSyncNoCryptZstdStart;
+  return is_crypt_ ? LogMagicNum::kMagicSyncZstdStart : LogMagicNum::kMagicSyncNoCryptZstdStart;
 }
 
 char LogZstdBuffer::__GetMagicAsyncStart() {
-    return is_crypt_ ? LogMagicNum::kMagicAsyncZstdStart : LogMagicNum::kMagicAsyncNoCryptZstdStart;
+  return is_crypt_ ? LogMagicNum::kMagicAsyncZstdStart : LogMagicNum::kMagicAsyncNoCryptZstdStart;
 }

@@ -29,16 +29,18 @@ namespace mars {
 namespace sdt {
 
 class DnsChecker : public BaseChecker {
-  public:
-    DnsChecker();
-    virtual ~DnsChecker();
+public:
+  DnsChecker();
 
-    virtual int StartDoCheck(CheckRequestProfile& _check_request);
+  virtual ~DnsChecker();
 
-  protected:
-    virtual void __DoCheck(CheckRequestProfile& _check_request);
+  virtual int StartDoCheck(CheckRequestProfile& _check_request);
+
+protected:
+  virtual void __DoCheck(CheckRequestProfile& _check_request);
 };
 
-}}
+}
+}
 
-#endif	// SDT_SRC_ACTIVECHECK_DNSCHEKCER_H_
+#endif  // SDT_SRC_ACTIVECHECK_DNSCHEKCER_H_

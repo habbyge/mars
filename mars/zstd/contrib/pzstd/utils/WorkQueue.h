@@ -22,7 +22,7 @@
 namespace pzstd {
 
 /// Unbounded thread-safe work queue.
-template <typename T>
+template<typename T>
 class WorkQueue {
   // Protects all member variable access
   std::mutex mutex_;
@@ -42,7 +42,7 @@ class WorkQueue {
     return queue_.size() >= maxSize_;
   }
 
- public:
+public:
   /**
    * Constructs an empty work queue with an optional max size.
    * If `maxSize == 0` the queue size is unbounded.
@@ -143,7 +143,7 @@ class BufferWorkQueue {
   WorkQueue<Buffer> queue_;
   std::atomic<std::size_t> size_;
 
- public:
+public:
   BufferWorkQueue(std::size_t maxSize = 0) : queue_(maxSize), size_(0) {}
 
   void push(Buffer buffer) {

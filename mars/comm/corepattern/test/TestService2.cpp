@@ -13,7 +13,8 @@
 
 namespace design_patterns {
 
-SERVICE_REGISTER(TestService2, TestCoreService2::ServiceName(), EPublic, EFirstGet);
+SERVICE_REGISTER(TestService2, TestCoreService2::ServiceName(), EPublic, EFirstGet
+);
 IMPLEMENT_SERVICE(TestService2);
 
 

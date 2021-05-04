@@ -13,11 +13,11 @@
 
 /** @defgroup time_basics Time Basics
   
-**/ 
+**/
 
 /** @defgroup time_format Time Formatting
   
-**/ 
+**/
 
 
 

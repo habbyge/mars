@@ -32,7 +32,7 @@ class Buffer {
     delete[] buffer;
   }
 
- public:
+public:
   /// Construct an empty buffer that owns no data.
   explicit Buffer() {}
 
@@ -45,7 +45,8 @@ class Buffer {
       : buffer_(buffer), range_(data) {}
 
   Buffer(Buffer&&) = default;
-  Buffer& operator=(Buffer&&) & = default;
+
+  Buffer& operator=(Buffer&&)& = default;
 
   /**
    * Splits the data into two pieces: [begin, begin + n), [begin + n, end).
@@ -75,6 +76,7 @@ class Buffer {
   ByteRange range() const {
     return range_;
   }
+
   /// Returns a mutable `Range` pointing to the `Buffer`s data.
   MutableByteRange range() {
     return range_;

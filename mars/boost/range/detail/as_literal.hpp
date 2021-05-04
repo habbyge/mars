@@ -18,15 +18,15 @@
 #include <boost/range/detail/detail_str.hpp>
 #include <boost/range/iterator_range.hpp>
 
-namespace mars_boost {} namespace boost = mars_boost; namespace mars_boost
-{
-    template< class Range >
-    inline iterator_range<BOOST_DEDUCED_TYPENAME range_iterator<Range>::type> 
-    as_literal( Range& r )
-    {
-        return ::mars_boost::make_iterator_range( ::mars_boost::range_detail::str_begin(r),
-                                             ::mars_boost::range_detail::str_end(r) );
-    }
+namespace mars_boost {}
+namespace boost = mars_boost;
+namespace mars_boost {
+template<class Range>
+inline iterator_range<BOOST_DEDUCED_TYPENAME range_iterator<Range>::type>
+as_literal(Range& r) {
+  return ::mars_boost::make_iterator_range(::mars_boost::range_detail::str_begin(r),
+                                           ::mars_boost::range_detail::str_end(r));
+}
 
 }
 

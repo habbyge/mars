@@ -15,8 +15,7 @@ namespace design_patterns {
 IMPLEMENT_CORE_SERVICE(TestCoreService);
 
 TestCoreService::TestCoreService()
-:CoreServiceBase(ServiceName())
-{
+    : CoreServiceBase(ServiceName()) {
 
 }
 

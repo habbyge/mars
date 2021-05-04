@@ -23,20 +23,21 @@
 #include <boost/mpl/aux_/traits_lambda_spec.hpp>
 #include <boost/mpl/aux_/config/eti.hpp>
 
-namespace mars_boost {} namespace boost = mars_boost; namespace mars_boost { namespace mpl {
+namespace mars_boost {}
+namespace boost = mars_boost;
+namespace mars_boost {
+namespace mpl {
 
 
-namespace aux { 
+namespace aux {
 
-template< typename Sequence > 
-struct begin_type 
-{ 
-    typedef typename Sequence::begin type; 
+template<typename Sequence>
+struct begin_type {
+  typedef typename Sequence::begin type;
 };
-template< typename Sequence > 
-struct end_type
-{ 
-    typedef typename Sequence::end type; 
+template<typename Sequence>
+struct end_type {
+  typedef typename Sequence::end type;
 };
 
 }
@@ -45,24 +46,22 @@ struct end_type
 // specializing either the 'begin_impl/end_impl' or the primary 
 // 'begin/end' templates
 
-template< typename Tag >
-struct begin_impl
-{
-    template< typename Sequence > struct apply
-    {
-        typedef typename eval_if<aux::has_begin<Sequence, true_>,
-                                 aux::begin_type<Sequence>, void_>::type type;
-    };
+template<typename Tag>
+struct begin_impl {
+  template<typename Sequence>
+  struct apply {
+    typedef typename eval_if<aux::has_begin<Sequence, true_>,
+        aux::begin_type<Sequence>, void_>::type type;
+  };
 };
 
-template< typename Tag >
-struct end_impl
-{
-    template< typename Sequence > struct apply
-    {
-        typedef typename eval_if<aux::has_begin<Sequence, true_>,
-                                 aux::end_type<Sequence>, void_>::type type;
-    };
+template<typename Tag>
+struct end_impl {
+  template<typename Sequence>
+  struct apply {
+    typedef typename eval_if<aux::has_begin<Sequence, true_>,
+        aux::end_type<Sequence>, void_>::type type;
+  };
 };
 
 // specialize 'begin_trait/end_trait' for two pre-defined tags
@@ -93,9 +92,10 @@ AUX778076_IMPL_SPEC(end, na, void_)
 #   undef AUX778076_IMPL_SPEC
 
 
-BOOST_MPL_ALGORITM_TRAITS_LAMBDA_SPEC_IMPL(1,begin_impl)
-BOOST_MPL_ALGORITM_TRAITS_LAMBDA_SPEC_IMPL(1,end_impl)
+BOOST_MPL_ALGORITM_TRAITS_LAMBDA_SPEC_IMPL(1, begin_impl)
+BOOST_MPL_ALGORITM_TRAITS_LAMBDA_SPEC_IMPL(1, end_impl)
 
-}}
+}
+}
 
 #endif // BOOST_MPL_AUX_BEGIN_END_IMPL_HPP_INCLUDED

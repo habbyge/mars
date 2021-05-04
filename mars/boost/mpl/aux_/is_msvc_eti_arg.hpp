@@ -18,7 +18,11 @@
 #include <boost/mpl/aux_/config/eti.hpp>
 #include <boost/mpl/aux_/config/static_constant.hpp>
 
-namespace mars_boost {} namespace boost = mars_boost; namespace mars_boost { namespace mpl { namespace aux {
+namespace mars_boost {}
+namespace boost = mars_boost;
+namespace mars_boost {
+namespace mpl {
+namespace aux {
 
 #if defined(BOOST_MPL_CFG_MSVC_ETI_BUG)
 
@@ -59,6 +63,8 @@ struct is_msvc_eti_arg<int>
 
 #endif // BOOST_MPL_CFG_MSVC_ETI_BUG
 
-}}}
+}
+}
+}
 
 #endif // BOOST_MPL_AUX_IS_MSVC_ETI_ARG_HPP_INCLUDED

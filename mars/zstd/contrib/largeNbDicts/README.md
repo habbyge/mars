@@ -1,16 +1,14 @@
 largeNbDicts
 =====================
 
-`largeNbDicts` is a benchmark test tool
-dedicated to the specific scenario of
-dictionary decompression using a very large number of dictionaries.
-When dictionaries are constantly changing, they are always "cold",
-suffering from increased latency due to cache misses.
+`largeNbDicts` is a benchmark test tool dedicated to the specific scenario of dictionary decompression using a very
+large number of dictionaries. When dictionaries are constantly changing, they are always "cold", suffering from
+increased latency due to cache misses.
 
-The tool is created in a bid to investigate performance for this scenario,
-and experiment mitigation techniques.
+The tool is created in a bid to investigate performance for this scenario, and experiment mitigation techniques.
 
 Command line :
+
 ```
 largeNbDicts [Options] filename(s)
 

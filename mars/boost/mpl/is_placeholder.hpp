@@ -22,20 +22,21 @@
 #include <boost/mpl/aux_/config/ctps.hpp>
 #include <boost/mpl/aux_/config/static_constant.hpp>
 
-namespace mars_boost {} namespace boost = mars_boost; namespace mars_boost { namespace mpl {
+namespace mars_boost {}
+namespace boost = mars_boost;
+namespace mars_boost {
+namespace mpl {
 
 #if !defined(BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION)
 
-template< typename T >
+template<typename T>
 struct is_placeholder
-    : bool_<false>
-{
+    : bool_<false> {
 };
 
-template< BOOST_MPL_AUX_NTTP_DECL(int, N) >
-struct is_placeholder< arg<N> >
-    : bool_<true>
-{
+template<BOOST_MPL_AUX_NTTP_DECL(int, N)>
+struct is_placeholder<arg<N>>
+    : bool_<true> {
 };
 
 #else
@@ -62,6 +63,7 @@ struct is_placeholder
 
 #endif // BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION
 
-}}
+}
+}
 
 #endif // BOOST_MPL_IS_PLACEHOLDER_HPP_INCLUDED

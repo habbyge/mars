@@ -32,7 +32,9 @@ Abstract:
 
 
 #pragma  once
+
 #include "WinInet.h"  // references some data defines
+
 #pragma warning(disable : 4005)    // disable C4005 warning
 
 #if !defined(_WINHTTPX_)
@@ -47,9 +49,10 @@ Abstract:
 #if defined(_WIN64)
 #include <pshpack8.h>
 #else
-#include <pshpack4.h>
-#endif
 
+#include <pshpack4.h>
+
+#endif
 
 
 #if defined(__cplusplus)
@@ -70,10 +73,10 @@ extern "C" {
 //
 
 typedef LPVOID HINTERNET;
-typedef HINTERNET * LPHINTERNET;
+typedef HINTERNET* LPHINTERNET;
 
 typedef WORD INTERNET_PORT;
-typedef INTERNET_PORT * LPINTERNET_PORT;
+typedef INTERNET_PORT* LPINTERNET_PORT;
 
 //
 // manifests
@@ -112,12 +115,11 @@ typedef INTERNET_PORT * LPINTERNET_PORT;
 // the API succeeded (in this case dwError will be ERROR_SUCCESS)
 //
 
-typedef struct
-{
-    DWORD_PTR dwResult;  // indicates which async API has encountered an error
-    DWORD dwError;       // the error code if the API failed
+typedef struct {
+  DWORD_PTR dwResult;  // indicates which async API has encountered an error
+  DWORD dwError;       // the error code if the API failed
 }
-WINHTTP_ASYNC_RESULT, * LPWINHTTP_ASYNC_RESULT;
+    WINHTTP_ASYNC_RESULT, * LPWINHTTP_ASYNC_RESULT;
 
 
 //
@@ -191,29 +193,26 @@ typedef LPURL_COMPONENTS LPURL_COMPONENTSW;  // duplicate wininet.h
 // set proxy information on a WinHttpOpen() handle
 //
 
-typedef struct
-{
-    DWORD  dwAccessType;      // see WINHTTP_ACCESS_* types below
-    LPWSTR lpszProxy;         // proxy server list
-    LPWSTR lpszProxyBypass;   // proxy bypass list
+typedef struct {
+  DWORD dwAccessType;      // see WINHTTP_ACCESS_* types below
+  LPWSTR lpszProxy;         // proxy server list
+  LPWSTR lpszProxyBypass;   // proxy bypass list
 }
-WINHTTP_PROXY_INFO, * LPWINHTTP_PROXY_INFO;
+    WINHTTP_PROXY_INFO, * LPWINHTTP_PROXY_INFO;
 
 typedef WINHTTP_PROXY_INFO WINHTTP_PROXY_INFOW;
 typedef LPWINHTTP_PROXY_INFO LPWINHTTP_PROXY_INFOW;
 
 
-typedef struct
-{
-    DWORD   dwFlags;
-    DWORD   dwAutoDetectFlags;
-    LPCWSTR lpszAutoConfigUrl;
-    LPVOID  lpvReserved;
-    DWORD   dwReserved;
-    BOOL    fAutoLogonIfChallenged;
+typedef struct {
+  DWORD dwFlags;
+  DWORD dwAutoDetectFlags;
+  LPCWSTR lpszAutoConfigUrl;
+  LPVOID lpvReserved;
+  DWORD dwReserved;
+  BOOL fAutoLogonIfChallenged;
 }
-WINHTTP_AUTOPROXY_OPTIONS;
-
+    WINHTTP_AUTOPROXY_OPTIONS;
 
 
 #define WINHTTP_AUTOPROXY_AUTO_DETECT           0x00000001
@@ -232,62 +231,61 @@ WINHTTP_AUTOPROXY_OPTIONS;
 // the server
 //
 
-typedef struct
-{
-    //
-    // ftExpiry - date the certificate expires.
-    //
+typedef struct {
+  //
+  // ftExpiry - date the certificate expires.
+  //
 
-    FILETIME ftExpiry;
+  FILETIME ftExpiry;
 
-    //
-    // ftStart - date the certificate becomes valid.
-    //
+  //
+  // ftStart - date the certificate becomes valid.
+  //
 
-    FILETIME ftStart;
+  FILETIME ftStart;
 
-    //
-    // lpszSubjectInfo - the name of organization, site, and server
-    //   the cert. was issued for.
-    //
+  //
+  // lpszSubjectInfo - the name of organization, site, and server
+  //   the cert. was issued for.
+  //
 
-    LPWSTR lpszSubjectInfo;
+  LPWSTR lpszSubjectInfo;
 
-    //
-    // lpszIssuerInfo - the name of orgainzation, site, and server
-    //   the cert was issues by.
-    //
+  //
+  // lpszIssuerInfo - the name of orgainzation, site, and server
+  //   the cert was issues by.
+  //
 
-    LPWSTR lpszIssuerInfo;
+  LPWSTR lpszIssuerInfo;
 
-    //
-    // lpszProtocolName - the name of the protocol used to provide the secure
-    //   connection.
-    //
+  //
+  // lpszProtocolName - the name of the protocol used to provide the secure
+  //   connection.
+  //
 
-    LPWSTR lpszProtocolName;
+  LPWSTR lpszProtocolName;
 
-    //
-    // lpszSignatureAlgName - the name of the algorithm used for signing
-    //  the certificate.
-    //
+  //
+  // lpszSignatureAlgName - the name of the algorithm used for signing
+  //  the certificate.
+  //
 
-    LPWSTR lpszSignatureAlgName;
+  LPWSTR lpszSignatureAlgName;
 
-    //
-    // lpszEncryptionAlgName - the name of the algorithm used for
-    //  doing encryption over the secure channel (SSL) connection.
-    //
+  //
+  // lpszEncryptionAlgName - the name of the algorithm used for
+  //  doing encryption over the secure channel (SSL) connection.
+  //
 
-    LPWSTR lpszEncryptionAlgName;
+  LPWSTR lpszEncryptionAlgName;
 
-    //
-    // dwKeySize - size of the key.
-    //
+  //
+  // dwKeySize - size of the key.
+  //
 
-    DWORD dwKeySize;
+  DWORD dwKeySize;
 }
-WINHTTP_CERTIFICATE_INFO;
+    WINHTTP_CERTIFICATE_INFO;
 
 #ifdef _WS2DEF_
 
@@ -312,17 +310,17 @@ typedef struct
 
 BOOLAPI
 WinHttpTimeFromSystemTime
-(
-    __in CONST SYSTEMTIME *pst,  // input GMT time
-    __out_bcount(WINHTTP_TIME_FORMAT_BUFSIZE) LPWSTR pwszTime  // output string buffer
-);
+    (
+        __in CONST SYSTEMTIME* pst,  // input GMT time
+        __out_bcount( WINHTTP_TIME_FORMAT_BUFSIZE ) LPWSTR pwszTime  // output string buffer
+) ;
 
 BOOLAPI
 WinHttpTimeToSystemTime
-(
-    __in LPCWSTR pwszTime,        // NULL terminated string
-    __out SYSTEMTIME *pst         // output in GMT time
-);
+    (
+        __in LPCWSTR pwszTime,        // NULL terminated string
+        __out SYSTEMTIME * pst         // output in GMT time
+) ;
 
 
 //
@@ -336,26 +334,26 @@ WinHttpTimeToSystemTime
 #define ICU_BROWSER_MODE 0x02000000  // Special encode/decode rules for browser
 #define ICU_ENCODE_PERCENT      0x00001000      // Encode any percent (ASCII25)
 
-        // signs encountered, default is to not encode percent.
+// signs encountered, default is to not encode percent.
 
-   
+
 BOOLAPI
 WinHttpCrackUrl
-(
-    __in_ecount(dwUrlLength) LPCWSTR pwszUrl,
-    __in DWORD dwUrlLength,
-    __in DWORD dwFlags,
-    __inout LPURL_COMPONENTS lpUrlComponents
-);
-    
+    (
+        __in_ecount(dwUrlLength) LPCWSTR pwszUrl,
+        __in DWORD dwUrlLength,
+        __in DWORD dwFlags,
+        __inout LPURL_COMPONENTS lpUrlComponents
+    );
+
 BOOLAPI
 WinHttpCreateUrl
-(
-    __in LPURL_COMPONENTS lpUrlComponents,
-    __in DWORD dwFlags,
-    __out_ecount_full_opt(*lpdwUrlLength) LPWSTR pwszUrl,
-    __inout LPDWORD lpdwUrlLength
-);
+    (
+        __in LPURL_COMPONENTS lpUrlComponents,
+        __in DWORD dwFlags,
+        __out_ecount_full_opt(* lpdwUrlLength) LPWSTR pwszUrl,
+        __inout LPDWORD lpdwUrlLength
+    );
 
 //
 // flags for WinHttpCrackUrl() and WinHttpCreateUrl()
@@ -368,21 +366,23 @@ BOOLAPI
 WinHttpCheckPlatform(void);
 
 
-WINHTTPAPI BOOL WINAPI WinHttpGetDefaultProxyConfiguration( IN OUT WINHTTP_PROXY_INFO * pProxyInfo);
-WINHTTPAPI BOOL WINAPI WinHttpSetDefaultProxyConfiguration( IN WINHTTP_PROXY_INFO * pProxyInfo);
+WINHTTPAPI BOOL
+WINAPI WinHttpGetDefaultProxyConfiguration(IN OUT WINHTTP_PROXY_INFO* pProxyInfo);
+WINHTTPAPI BOOL
+WINAPI WinHttpSetDefaultProxyConfiguration(IN WINHTTP_PROXY_INFO * pProxyInfo ) ;
 
-    
+
 WINHTTPAPI
-HINTERNET
+    HINTERNET
 WINAPI
 WinHttpOpen
-(
-    __in_opt LPCWSTR pszAgentW,
-    __in DWORD dwAccessType,
-    __in_opt LPCWSTR pszProxyW,
-    __in_opt LPCWSTR pszProxyBypassW,
-    __in DWORD dwFlags
-);
+    (
+        __in_opt LPCWSTR pszAgentW,
+        __in DWORD dwAccessType,
+        __in_opt LPCWSTR pszProxyW,
+        __in_opt LPCWSTR pszProxyBypassW,
+        __in DWORD dwFlags
+    );
 
 // WinHttpOpen dwAccessType values (also for WINHTTP_PROXY_INFO::dwAccessType)
 #define WINHTTP_ACCESS_TYPE_DEFAULT_PROXY               0
@@ -395,79 +395,79 @@ WinHttpOpen
 
 BOOLAPI
 WinHttpCloseHandle
-(
-    IN HINTERNET hInternet
-);
+    (
+        IN HINTERNET hInternet
+    );
 
-   
+
 WINHTTPAPI
-HINTERNET
+    HINTERNET
 WINAPI
 WinHttpConnect
-(
-    IN HINTERNET hSession,
-    IN LPCWSTR pswzServerName,
-    IN INTERNET_PORT nServerPort,
-    IN DWORD dwReserved
-);
+    (
+        IN HINTERNET hSession,
+        IN LPCWSTR pswzServerName,
+        IN INTERNET_PORT nServerPort,
+        IN DWORD dwReserved
+    );
 
 
 BOOLAPI
 WinHttpReadData
-(
-    IN HINTERNET hRequest,
-    IN __out_data_source(NETWORK) LPVOID lpBuffer,
-    IN DWORD dwNumberOfBytesToRead,
-    OUT LPDWORD lpdwNumberOfBytesRead
-);
+    (
+        IN HINTERNET hRequest,
+        IN __out_data_source(NETWORK) LPVOID lpBuffer,
+        IN DWORD dwNumberOfBytesToRead,
+        OUT LPDWORD lpdwNumberOfBytesRead
+    );
 
 BOOLAPI
 WinHttpWriteData
-(
-    IN HINTERNET hRequest,
-    IN LPCVOID lpBuffer,
-    IN DWORD dwNumberOfBytesToWrite,
-    OUT LPDWORD lpdwNumberOfBytesWritten
-);
-    
+    (
+        IN HINTERNET hRequest,
+        IN LPCVOID lpBuffer,
+        IN DWORD dwNumberOfBytesToWrite,
+        OUT LPDWORD lpdwNumberOfBytesWritten
+    );
+
 
 BOOLAPI
 WinHttpQueryDataAvailable
-(
-    IN HINTERNET hRequest,
-    OUT __out_data_source(NETWORK) LPDWORD lpdwNumberOfBytesAvailable OPTIONAL
-);
+    (
+        IN HINTERNET hRequest,
+        OUT __out_data_source(NETWORK) LPDWORD lpdwNumberOfBytesAvailable OPTIONAL
+    );
 
-    
+
 BOOLAPI
 WinHttpQueryOption
-(
-    IN HINTERNET hInternet,
-    IN DWORD dwOption,
-    OUT __out_data_source(NETWORK) LPVOID lpBuffer OPTIONAL,
-    IN OUT LPDWORD lpdwBufferLength
-);
+    (
+        IN HINTERNET hInternet,
+        IN DWORD dwOption,
+        OUT __out_data_source(NETWORK) LPVOID lpBuffer OPTIONAL,
+        IN OUT LPDWORD lpdwBufferLength
+    );
 
 #define WINHTTP_NO_CLIENT_CERT_CONTEXT NULL
-    
+
 BOOLAPI
 WinHttpSetOption
-(
-    IN HINTERNET hInternet,
-    IN DWORD dwOption,
-    IN LPVOID lpBuffer,
-    IN DWORD dwBufferLength
-);
+    (
+        IN HINTERNET hInternet,
+        IN DWORD dwOption,
+        IN LPVOID lpBuffer,
+        IN DWORD dwBufferLength
+    );
 
 BOOLAPI
 WinHttpSetTimeouts
-(    
-    IN HINTERNET    hInternet,           // Session/Request handle.
-    IN int          nResolveTimeout,
-    IN int          nConnectTimeout,
-    IN int          nSendTimeout,
-    IN int          nReceiveTimeout
-);
+    (
+        IN HINTERNET    hInternet,           // Session/Request handle.
+        IN int nResolveTimeout,
+        IN int nConnectTimeout,
+        IN int nSendTimeout,
+        IN int nReceiveTimeout
+    );
 
 //
 // options manifests for WinHttp{Query|Set}Option
@@ -562,7 +562,7 @@ WinHttpSetTimeouts
 #define WINHTTP_DISABLE_PASSPORT_AUTH    0x00000000
 #define WINHTTP_ENABLE_PASSPORT_AUTH     0x10000000
 #define WINHTTP_DISABLE_PASSPORT_KEYRING 0x20000000
-#define WINHTTP_ENABLE_PASSPORT_KEYRING  0x40000000    
+#define WINHTTP_ENABLE_PASSPORT_KEYRING  0x40000000
 
 
 // values for WINHTTP_OPTION_DISABLE_FEATURE
@@ -580,28 +580,26 @@ WinHttpSetTimeouts
 #define WINHTTP_ENABLE_SPN_SERVER_PORT            0x00000001
 #define WINHTTP_OPTION_SPN_MASK                   WINHTTP_ENABLE_SPN_SERVER_PORT
 
-typedef struct tagWINHTTP_CREDS
-{
-    LPSTR lpszUserName;
-    LPSTR lpszPassword;
-    LPSTR lpszRealm;
-    DWORD dwAuthScheme;
-    LPSTR lpszHostName;
-    DWORD dwPort;
-} WINHTTP_CREDS, *PWINHTTP_CREDS;
+typedef struct tagWINHTTP_CREDS {
+  LPSTR lpszUserName;
+  LPSTR lpszPassword;
+  LPSTR lpszRealm;
+  DWORD dwAuthScheme;
+  LPSTR lpszHostName;
+  DWORD dwPort;
+} WINHTTP_CREDS, * PWINHTTP_CREDS;
 
 // structure for WINHTTP_OPTION_GLOBAL_SERVER_CREDS and
 // WINHTTP_OPTION_GLOBAL_PROXY_CREDS
-typedef struct tagWINHTTP_CREDS_EX
-{
-    LPSTR lpszUserName;
-    LPSTR lpszPassword;
-    LPSTR lpszRealm;
-    DWORD dwAuthScheme;
-    LPSTR lpszHostName;
-    DWORD dwPort;
-    LPSTR lpszUrl;
-} WINHTTP_CREDS_EX, *PWINHTTP_CREDS_EX;
+typedef struct tagWINHTTP_CREDS_EX {
+  LPSTR lpszUserName;
+  LPSTR lpszPassword;
+  LPSTR lpszRealm;
+  DWORD dwAuthScheme;
+  LPSTR lpszHostName;
+  DWORD dwPort;
+  LPSTR lpszUrl;
+} WINHTTP_CREDS_EX, * PWINHTTP_CREDS_EX;
 
 //
 // winhttp handle types
@@ -618,7 +616,7 @@ typedef struct tagWINHTTP_CREDS_EX
 #define WINHTTP_AUTH_SCHEME_PASSPORT   0x00000004
 #define WINHTTP_AUTH_SCHEME_DIGEST     0x00000008
 #define WINHTTP_AUTH_SCHEME_NEGOTIATE  0x00000010
-    
+
 // WinHttp supported Authentication Targets
 
 #define WINHTTP_AUTH_TARGET_SERVER 0x00000000
@@ -661,27 +659,36 @@ typedef struct tagWINHTTP_CREDS_EX
 
 typedef
 VOID
-(CALLBACK * WINHTTP_STATUS_CALLBACK)(
-    IN HINTERNET hInternet,
-    IN DWORD_PTR dwContext,
-    IN DWORD dwInternetStatus,
-    IN LPVOID lpvStatusInformation OPTIONAL,
-    IN DWORD dwStatusInformationLength
-    );
+(CALLBACK * WINHTTP_STATUS_CALLBACK ) (
+IN HINTERNET
+hInternet ,
+IN DWORD_PTR
+dwContext ,
+IN DWORD
+dwInternetStatus ,
+IN LPVOID
+lpvStatusInformation OPTIONAL,
+    IN
+DWORD dwStatusInformationLength
+) ;
 
-typedef WINHTTP_STATUS_CALLBACK * LPWINHTTP_STATUS_CALLBACK;
+typedef WINHTTP_STATUS_CALLBACK* LPWINHTTP_STATUS_CALLBACK;
 
 
 WINHTTPAPI
-WINHTTP_STATUS_CALLBACK
+    WINHTTP_STATUS_CALLBACK
 WINAPI
-WinHttpSetStatusCallback
-(
-    IN HINTERNET hInternet,
-    IN WINHTTP_STATUS_CALLBACK lpfnInternetCallback,
-    IN DWORD dwNotificationFlags,
-    IN DWORD_PTR dwReserved
-);
+    WinHttpSetStatusCallback
+    (
+        IN
+HINTERNET hInternet,
+    IN
+WINHTTP_STATUS_CALLBACK lpfnInternetCallback,
+    IN
+DWORD dwNotificationFlags,
+    IN
+DWORD_PTR dwReserved
+) ;
 
 
 //
@@ -842,7 +849,6 @@ WinHttpSetStatusCallback
 #define WINHTTP_QUERY_UNLESS_MODIFIED_SINCE        70
 
 
-
 #define WINHTTP_QUERY_PROXY_SUPPORT                75
 #define WINHTTP_QUERY_AUTHENTICATION_INFO          76
 #define WINHTTP_QUERY_PASSPORT_URLS                77
@@ -940,33 +946,46 @@ WinHttpSetStatusCallback
 //
 // prototypes
 //
-    
+
 WINHTTPAPI
-HINTERNET
+    HINTERNET
 WINAPI
-WinHttpOpenRequest
-(
-    IN HINTERNET hConnect,
-    IN LPCWSTR pwszVerb,
-    IN LPCWSTR pwszObjectName,
-    IN LPCWSTR pwszVersion,
-    IN LPCWSTR pwszReferrer OPTIONAL,
-    IN LPCWSTR FAR * ppwszAcceptTypes OPTIONAL,
-    IN DWORD dwFlags
-);
+    WinHttpOpenRequest
+    (
+        IN
+HINTERNET hConnect,
+    IN
+LPCWSTR pwszVerb,
+    IN
+LPCWSTR pwszObjectName,
+    IN
+LPCWSTR pwszVersion,
+    IN
+LPCWSTR pwszReferrer
+OPTIONAL ,
+IN LPCWSTR
+FAR* ppwszAcceptTypes
+OPTIONAL ,
+IN DWORD
+dwFlags
+) ;
 
 // WinHttpOpenRequest prettifers for optional parameters
 #define WINHTTP_NO_REFERER             NULL
 #define WINHTTP_DEFAULT_ACCEPT_TYPES   NULL
-    
+
 BOOLAPI
-WinHttpAddRequestHeaders
-(
-    IN HINTERNET hRequest,
-    IN LPCWSTR pwszHeaders,
-    IN DWORD dwHeadersLength,
-    IN DWORD dwModifiers
-);
+    WinHttpAddRequestHeaders
+    (
+        IN
+HINTERNET hRequest,
+    IN
+LPCWSTR pwszHeaders,
+    IN
+DWORD dwHeadersLength,
+    IN
+DWORD dwModifiers
+) ;
 
 //
 // values for dwModifiers parameter of WinHttpAddRequestHeaders()
@@ -1011,18 +1030,26 @@ WinHttpAddRequestHeaders
 #define WINHTTP_ADDREQ_FLAG_REPLACE    0x80000000
 
 #define WINHTTP_IGNORE_REQUEST_TOTAL_LENGTH 0
-    
+
 BOOLAPI
-WinHttpSendRequest
-(
-    IN HINTERNET hRequest,
-    IN LPCWSTR pwszHeaders OPTIONAL,
-    IN DWORD dwHeadersLength,
-    IN LPVOID lpOptional OPTIONAL,
-    IN DWORD dwOptionalLength,
-    IN DWORD dwTotalLength,
-    IN DWORD_PTR dwContext
-);
+    WinHttpSendRequest
+    (
+        IN
+HINTERNET hRequest,
+    IN
+LPCWSTR pwszHeaders
+OPTIONAL ,
+IN DWORD
+dwHeadersLength ,
+IN LPVOID
+lpOptional OPTIONAL,
+    IN
+DWORD dwOptionalLength,
+    IN
+DWORD dwTotalLength,
+    IN
+DWORD_PTR dwContext
+) ;
 
 // WinHttpSendRequest prettifiers for optional parameters.
 #define WINHTTP_NO_ADDITIONAL_HEADERS   NULL
@@ -1030,65 +1057,88 @@ WinHttpSendRequest
 
 
 BOOLAPI WinHttpSetCredentials
-(
-    
-    IN HINTERNET   hRequest,        // HINTERNET handle returned by WinHttpOpenRequest.   
-    
-    
-    IN DWORD       AuthTargets,      // Only WINHTTP_AUTH_TARGET_SERVER and 
-                                    // WINHTTP_AUTH_TARGET_PROXY are supported
-                                    // in this version and they are mutually 
-                                    // exclusive 
-    
-    IN DWORD       AuthScheme,      // must be one of the supported Auth Schemes 
-                                    // returned from WinHttpQueryAuthSchemes()
-    
-    IN LPCWSTR     pwszUserName,    // 1) NULL if default creds is to be used, in 
-                                    // which case pszPassword will be ignored
-    
-    IN LPCWSTR     pwszPassword,    // 1) "" == Blank Password; 2)Parameter ignored 
-                                    // if pszUserName is NULL; 3) Invalid to pass in 
-                                    // NULL if pszUserName is not NULL
-    IN LPVOID      pAuthParams
-);
+    (
+
+        IN
+HINTERNET hRequest,        // HINTERNET handle returned by WinHttpOpenRequest.
+
+
+IN
+DWORD AuthTargets,      // Only WINHTTP_AUTH_TARGET_SERVER and
+// WINHTTP_AUTH_TARGET_PROXY are supported
+// in this version and they are mutually
+// exclusive
+
+IN
+DWORD AuthScheme,      // must be one of the supported Auth Schemes
+// returned from WinHttpQueryAuthSchemes()
+
+IN
+LPCWSTR pwszUserName,    // 1) NULL if default creds is to be used, in
+// which case pszPassword will be ignored
+
+IN
+LPCWSTR pwszPassword,    // 1) "" == Blank Password; 2)Parameter ignored
+// if pszUserName is NULL; 3) Invalid to pass in
+// NULL if pszUserName is not NULL
+IN
+LPVOID pAuthParams
+) ;
 
 
 BOOLAPI WinHttpQueryAuthSchemes
-(
-    IN  HINTERNET   hRequest,             // HINTERNET handle returned by WinHttpOpenRequest   
-    OUT LPDWORD     lpdwSupportedSchemes,  // a bitmap of available Authentication Schemes
-    OUT LPDWORD     lpdwFirstScheme,      // returns the first auth scheme returned by the server
-    OUT LPDWORD     pdwAuthTarget  
-);
+    (
+        IN
+HINTERNET hRequest,             // HINTERNET handle returned by WinHttpOpenRequest
+OUT
+LPDWORD lpdwSupportedSchemes,  // a bitmap of available Authentication Schemes
+OUT
+LPDWORD lpdwFirstScheme,      // returns the first auth scheme returned by the server
+OUT
+LPDWORD pdwAuthTarget
+) ;
 
 BOOLAPI WinHttpQueryAuthParams(
-    IN  HINTERNET   hRequest,        // HINTERNET handle returned by WinHttpOpenRequest   
-    IN  DWORD       AuthScheme,
-    OUT LPVOID*     pAuthParams      // Scheme-specific Advanced auth parameters
-    );
+    IN
+HINTERNET hRequest,        // HINTERNET handle returned by WinHttpOpenRequest
+IN
+DWORD AuthScheme,
+    OUT
+LPVOID* pAuthParams      // Scheme-specific Advanced auth parameters
+) ;
 
-  
+
 WINHTTPAPI
-BOOL
+    BOOL
 WINAPI
-WinHttpReceiveResponse
-(
-    IN HINTERNET hRequest,
-    IN LPVOID lpReserved
-);
-
+    WinHttpReceiveResponse
+    (
+        IN
+HINTERNET hRequest,
+    IN
+LPVOID lpReserved
+) ;
 
 
 BOOLAPI
-WinHttpQueryHeaders
-(
-    IN     HINTERNET hRequest,
-    IN     DWORD     dwInfoLevel,
-    IN     LPCWSTR   pwszName OPTIONAL, 
-       OUT __out_data_source(NETWORK) LPVOID    lpBuffer OPTIONAL,
-    IN OUT LPDWORD   lpdwBufferLength,
-    IN OUT LPDWORD   lpdwIndex OPTIONAL
-);
+    WinHttpQueryHeaders
+    (
+        IN
+HINTERNET hRequest,
+    IN
+DWORD dwInfoLevel,
+    IN
+LPCWSTR pwszName
+OPTIONAL ,
+OUT __out_data_source(NETWORK)
+LPVOID lpBuffer
+OPTIONAL ,
+IN OUT
+LPDWORD lpdwBufferLength,
+    IN
+OUT LPDWORD
+lpdwIndex OPTIONAL
+) ;
 
 // WinHttpQueryHeaders prettifiers for optional parameters.
 #define WINHTTP_HEADER_NAME_BY_INDEX           NULL
@@ -1098,35 +1148,39 @@ WinHttpQueryHeaders
 
 BOOLAPI
 WinHttpDetectAutoProxyConfigUrl
-(
-    __in  DWORD     dwAutoDetectFlags,
-    __out LPWSTR *  ppwszAutoConfigUrl
-);
+    (
+        __in DWORD     dwAutoDetectFlags,
+        __out LPWSTR * ppwszAutoConfigUrl
+) ;
 
 BOOLAPI
-WinHttpGetProxyForUrl
-(
-    IN  HINTERNET                   hSession,
-    IN  LPCWSTR                     lpcwszUrl,
-    IN  WINHTTP_AUTOPROXY_OPTIONS * pAutoProxyOptions,
-    OUT WINHTTP_PROXY_INFO *        pProxyInfo  
-);
+    WinHttpGetProxyForUrl
+    (
+        IN
+HINTERNET hSession,
+    IN
+LPCWSTR lpcwszUrl,
+    IN
+WINHTTP_AUTOPROXY_OPTIONS* pAutoProxyOptions,
+    OUT
+WINHTTP_PROXY_INFO* pProxyInfo
+) ;
 
 
-typedef struct
-{
-    BOOL    fAutoDetect;
-    LPWSTR  lpszAutoConfigUrl;
-    LPWSTR  lpszProxy;
-    LPWSTR  lpszProxyBypass;
+typedef struct {
+  BOOL fAutoDetect;
+  LPWSTR lpszAutoConfigUrl;
+  LPWSTR lpszProxy;
+  LPWSTR lpszProxyBypass;
 } WINHTTP_CURRENT_USER_IE_PROXY_CONFIG;
 
 
 BOOLAPI
-WinHttpGetIEProxyConfigForCurrentUser
-(
-    IN OUT WINHTTP_CURRENT_USER_IE_PROXY_CONFIG * pProxyConfig
-);
+    WinHttpGetIEProxyConfigForCurrentUser
+    (
+        IN
+OUT WINHTTP_CURRENT_USER_IE_PROXY_CONFIG * pProxyConfig
+) ;
 
 
 // #if !defined(_WINERROR_)

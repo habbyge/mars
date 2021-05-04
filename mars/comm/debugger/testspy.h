@@ -23,16 +23,19 @@
 
 #include "comm/debugger/spy.inl"
 
-class TSpy :  public Spy {
-  public:
-    TSpy(void* _this): Spy(_this) {}
+class TSpy : public Spy {
+public:
+  TSpy(void* _this) : Spy(_this) {}
 
 
-    static bool SpyHookLogFunc(struct XLoggerInfo_t& _info, std::string& _log);
-    void TestFun0();
-    int __TestFun1(int i);
+  static bool SpyHookLogFunc(struct XLoggerInfo_t& _info, std::string& _log);
 
-  private:
-    virtual void __OnAttach(const char* _key) {}
-    virtual void __OnDetach(const char* _key) {}
+  void TestFun0();
+
+  int __TestFun1(int i);
+
+private:
+  virtual void __OnAttach(const char* _key) {}
+
+  virtual void __OnDetach(const char* _key) {}
 };

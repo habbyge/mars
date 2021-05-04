@@ -31,16 +31,18 @@ namespace mars {
 namespace sdt {
 
 class HttpChecker : public BaseChecker {
-  public:
-    HttpChecker();
-    virtual ~HttpChecker();
+public:
+  HttpChecker();
 
-    virtual int StartDoCheck(CheckRequestProfile& _check_request);
+  virtual ~HttpChecker();
 
-  protected:
-    virtual void __DoCheck(CheckRequestProfile& _check_request);
+  virtual int StartDoCheck(CheckRequestProfile& _check_request);
+
+protected:
+  virtual void __DoCheck(CheckRequestProfile& _check_request);
 };
 
-}}
+}
+}
 
 #endif /* SDT_SRC_ACTIVECHECK_HTTPCHEKCER_H_ */

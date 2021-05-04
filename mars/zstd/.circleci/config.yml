@@ -150,7 +150,7 @@ workflows:
 
 
 
-  # Longer tests
+    # Longer tests
     #- make -C tests test-zstd-nolegacy && make clean
     #- pyenv global 3.4.4; make -C tests versionsTest && make clean
     #- make zlibwrapper         && make clean
@@ -158,10 +158,10 @@ workflows:
     #- make uasan               && make clean
     #- make asan32              && make clean
     #- make -C tests test32 CC=clang MOREFLAGS="-g -fsanitize=address -I/usr/include/x86_64-linux-gnu"
-  # Valgrind tests
+    # Valgrind tests
     #- CFLAGS="-O1 -g" make -C zlibWrapper valgrindTest && make clean
     #- make -C tests valgrindTest && make clean
-  # ARM, AArch64, PowerPC, PowerPC64 tests
+    # ARM, AArch64, PowerPC, PowerPC64 tests
     #- make ppctest             && make clean
     #- make ppc64test           && make clean
     #- make armtest             && make clean

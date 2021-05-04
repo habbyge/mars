@@ -43,7 +43,7 @@
 extern "C" {
 #endif
 
-int LLVMFuzzerTestOneInput(const uint8_t *src, size_t size);
+int LLVMFuzzerTestOneInput(const uint8_t* src, size_t size);
 
 #ifdef __cplusplus
 }

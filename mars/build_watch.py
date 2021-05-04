@@ -1,10 +1,9 @@
 #!/usr/bin/env python
+import glob
 import os
 import sys
-import glob
 
 from mars_utils import *
-
 
 SCRIPT_PATH = os.path.split(os.path.realpath(__file__))[0]
 

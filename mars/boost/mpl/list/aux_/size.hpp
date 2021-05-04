@@ -17,17 +17,20 @@
 #include <boost/mpl/size_fwd.hpp>
 #include <boost/mpl/list/aux_/tag.hpp>
 
-namespace mars_boost {} namespace boost = mars_boost; namespace mars_boost { namespace mpl {
+namespace mars_boost {}
+namespace boost = mars_boost;
+namespace mars_boost {
+namespace mpl {
 
 template<>
-struct size_impl< aux::list_tag >
-{
-    template< typename List > struct apply
-        : List::size
-    {
-    };
+struct size_impl<aux::list_tag> {
+  template<typename List>
+  struct apply
+      : List::size {
+  };
 };
 
-}}
+}
+}
 
 #endif // BOOST_MPL_LIST_AUX_SIZE_HPP_INCLUDED

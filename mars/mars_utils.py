@@ -1,9 +1,8 @@
 #!/usr/bin/env python
 import os
 import shutil
-import time
 import subprocess
-
+import time
 
 COMM_COPY_HEADER_FILES = {
             "mars/comm/verinfo.h": "comm",

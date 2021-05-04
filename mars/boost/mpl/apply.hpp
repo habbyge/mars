@@ -19,20 +19,23 @@
 // $Revision$
 
 #if !defined(BOOST_MPL_PREPROCESSING_MODE)
+
 #   include <boost/mpl/apply_fwd.hpp>
 #   include <boost/mpl/apply_wrap.hpp>
 #   include <boost/mpl/placeholders.hpp>
 #   include <boost/mpl/lambda.hpp>
 #   include <boost/mpl/aux_/na.hpp>
 #   include <boost/mpl/aux_/lambda_support.hpp>
+
 #endif
 
 #include <boost/mpl/aux_/config/use_preprocessed.hpp>
 
 #if !defined(BOOST_MPL_CFG_NO_PREPROCESSED_HEADERS) \
-    && !defined(BOOST_MPL_PREPROCESSING_MODE)
+ && !defined(BOOST_MPL_PREPROCESSING_MODE)
 
 #   define BOOST_MPL_PREPROCESSED_HEADER apply.hpp
+
 #   include <boost/mpl/aux_/include_preprocessed.hpp>
 
 #else

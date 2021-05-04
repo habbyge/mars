@@ -21,18 +21,16 @@
 #define PublicComponent_debug_h
 
 
-
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 int isDebuggerPerforming();
-    
+
 
 #ifdef __cplusplus
 }
 #endif
-
 
 
 #endif

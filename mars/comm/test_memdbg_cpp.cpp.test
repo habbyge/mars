@@ -6,63 +6,54 @@
 
 #include "memdbg.h"
 
-class A
-{
+class A {
 public:
-    A()
-    {
-      i1 = 1;
-      i2 = 2;
-    }
+  A() {
+    i1 = 1;
+    i2 = 2;
+  }
 
-    int i1;
-    int i2;
+  int i1;
+  int i2;
 };
 
-void test_new_ok()
-{
-    A* a = new A();
-    delete a;
-    a = NULL;
+void test_new_ok() {
+  A* a = new A();
+  delete a;
+  a = NULL;
 }
 
-void test_new_array_ok()
-{
-    A* a = new A[100];
-    delete[] a;
-    a = NULL;
+void test_new_array_ok() {
+  A* a = new A[100];
+  delete[] a;
+  a = NULL;
 }
 
-void test_new_leak()
-{
-    A* a = new A();
-    a = NULL;
+void test_new_leak() {
+  A* a = new A();
+  a = NULL;
 }
 
-void test_new_array_leak()
-{
-    A* a = new A[100];
-    a = NULL;
+void test_new_array_leak() {
+  A* a = new A[100];
+  a = NULL;
 }
 
-void test_error_delete()
-{
-    A* a = new A[100];
-    delete a;
-    a = NULL;
+void test_error_delete() {
+  A* a = new A[100];
+  delete a;
+  a = NULL;
 }
 
-void test_error_delete2()
-{
-    A* a = new A;
-    free(a);
-    a = NULL;
+void test_error_delete2() {
+  A* a = new A;
+  free(a);
+  a = NULL;
 }
 
-void test_error_delete3()
-{
-    void *a = malloc(sizeof(A));
-    delete a;
-    a = NULL;
+void test_error_delete3() {
+  void* a = malloc(sizeof(A));
+  delete a;
+  a = NULL;
 }
 

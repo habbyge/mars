@@ -19,20 +19,22 @@
 // $Revision$
 
 #if !defined(BOOST_MPL_PREPROCESSING_MODE)
+
 #   include <boost/mpl/void.hpp>
 #   include <boost/mpl/aux_/has_type.hpp>
+
 #endif
 
 #include <boost/mpl/aux_/config/bcc.hpp>
 #include <boost/mpl/aux_/config/ttp.hpp>
 
 #if defined(BOOST_MPL_CFG_NO_TEMPLATE_TEMPLATE_PARAMETERS) \
-    && !defined(BOOST_MPL_CFG_BCC590_WORKAROUNDS)
+ && !defined(BOOST_MPL_CFG_BCC590_WORKAROUNDS)
 #   define BOOST_MPL_CFG_NO_QUOTE_TEMPLATE
 #endif
 
 #if !defined(BOOST_MPL_CFG_NO_IMPLICIT_METAFUNCTIONS) \
-    && defined(BOOST_MPL_CFG_NO_HAS_XXX)
+ && defined(BOOST_MPL_CFG_NO_HAS_XXX)
 #   define BOOST_MPL_CFG_NO_IMPLICIT_METAFUNCTIONS
 #endif
 
@@ -42,6 +44,7 @@
  && !defined(BOOST_MPL_PREPROCESSING_MODE)
 
 #   define BOOST_MPL_PREPROCESSED_HEADER quote.hpp
+
 #   include <boost/mpl/aux_/include_preprocessed.hpp>
 
 #else

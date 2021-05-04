@@ -14,14 +14,22 @@
 // $Date$
 // $Revision$
 
-namespace mars_boost {} namespace boost = mars_boost; namespace mars_boost { namespace mpl {
+namespace mars_boost {}
+namespace boost = mars_boost;
+namespace mars_boost {
+namespace mpl {
 
-template< typename Tag > struct begin_impl;
-template< typename Tag > struct end_impl;
+template<typename Tag>
+struct begin_impl;
+template<typename Tag>
+struct end_impl;
 
-template< typename Sequence > struct begin;
-template< typename Sequence > struct end;
+template<typename Sequence>
+struct begin;
+template<typename Sequence>
+struct end;
 
-}}
+}
+}
 
 #endif // BOOST_MPL_BEGIN_END_FWD_HPP_INCLUDED

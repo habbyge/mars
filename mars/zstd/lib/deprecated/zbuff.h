@@ -69,15 +69,22 @@ extern "C" {
 *  frames created by one can be decoded by the other one */
 
 typedef ZSTD_CStream ZBUFF_CCtx;
-ZBUFF_DEPRECATED("use ZSTD_createCStream") ZBUFF_CCtx* ZBUFF_createCCtx(void);
-ZBUFF_DEPRECATED("use ZSTD_freeCStream")   size_t      ZBUFF_freeCCtx(ZBUFF_CCtx* cctx);
+ZBUFF_DEPRECATED("use ZSTD_createCStream") ZBUFF_CCtx * ZBUFF_createCCtx(void);
+ZBUFF_DEPRECATED("use ZSTD_freeCStream") size_t
+ZBUFF_freeCCtx(ZBUFF_CCtx * cctx ) ;
 
-ZBUFF_DEPRECATED("use ZSTD_initCStream")           size_t ZBUFF_compressInit(ZBUFF_CCtx* cctx, int compressionLevel);
-ZBUFF_DEPRECATED("use ZSTD_initCStream_usingDict") size_t ZBUFF_compressInitDictionary(ZBUFF_CCtx* cctx, const void* dict, size_t dictSize, int compressionLevel);
+ZBUFF_DEPRECATED("use ZSTD_initCStream") size_t
+ZBUFF_compressInit(ZBUFF_CCtx * cctx , int compressionLevel ) ;
+ZBUFF_DEPRECATED("use ZSTD_initCStream_usingDict") size_t
+ZBUFF_compressInitDictionary(ZBUFF_CCtx * cctx , const void* dict, size_t
+dictSize , int compressionLevel ) ;
 
-ZBUFF_DEPRECATED("use ZSTD_compressStream") size_t ZBUFF_compressContinue(ZBUFF_CCtx* cctx, void* dst, size_t* dstCapacityPtr, const void* src, size_t* srcSizePtr);
-ZBUFF_DEPRECATED("use ZSTD_flushStream")    size_t ZBUFF_compressFlush(ZBUFF_CCtx* cctx, void* dst, size_t* dstCapacityPtr);
-ZBUFF_DEPRECATED("use ZSTD_endStream")      size_t ZBUFF_compressEnd(ZBUFF_CCtx* cctx, void* dst, size_t* dstCapacityPtr);
+ZBUFF_DEPRECATED("use ZSTD_compressStream") size_t
+ZBUFF_compressContinue(ZBUFF_CCtx * cctx , void* dst, size_t * dstCapacityPtr , const void* src, size_t * srcSizePtr ) ;
+ZBUFF_DEPRECATED("use ZSTD_flushStream") size_t
+ZBUFF_compressFlush(ZBUFF_CCtx * cctx , void* dst, size_t * dstCapacityPtr ) ;
+ZBUFF_DEPRECATED("use ZSTD_endStream") size_t
+ZBUFF_compressEnd(ZBUFF_CCtx * cctx , void* dst, size_t * dstCapacityPtr ) ;
 
 /*-*************************************************
 *  Streaming compression - howto
@@ -121,15 +128,20 @@ ZBUFF_DEPRECATED("use ZSTD_endStream")      size_t ZBUFF_compressEnd(ZBUFF_CCtx*
 
 
 typedef ZSTD_DStream ZBUFF_DCtx;
-ZBUFF_DEPRECATED("use ZSTD_createDStream") ZBUFF_DCtx* ZBUFF_createDCtx(void);
-ZBUFF_DEPRECATED("use ZSTD_freeDStream")   size_t      ZBUFF_freeDCtx(ZBUFF_DCtx* dctx);
+ZBUFF_DEPRECATED("use ZSTD_createDStream") ZBUFF_DCtx * ZBUFF_createDCtx(void);
+ZBUFF_DEPRECATED("use ZSTD_freeDStream") size_t
+ZBUFF_freeDCtx(ZBUFF_DCtx * dctx ) ;
 
-ZBUFF_DEPRECATED("use ZSTD_initDStream")           size_t ZBUFF_decompressInit(ZBUFF_DCtx* dctx);
-ZBUFF_DEPRECATED("use ZSTD_initDStream_usingDict") size_t ZBUFF_decompressInitDictionary(ZBUFF_DCtx* dctx, const void* dict, size_t dictSize);
+ZBUFF_DEPRECATED("use ZSTD_initDStream") size_t
+ZBUFF_decompressInit(ZBUFF_DCtx * dctx ) ;
+ZBUFF_DEPRECATED("use ZSTD_initDStream_usingDict") size_t
+ZBUFF_decompressInitDictionary(ZBUFF_DCtx * dctx , const void* dict, size_t
+dictSize ) ;
 
-ZBUFF_DEPRECATED("use ZSTD_decompressStream") size_t ZBUFF_decompressContinue(ZBUFF_DCtx* dctx,
-                                            void* dst, size_t* dstCapacityPtr,
-                                      const void* src, size_t* srcSizePtr);
+ZBUFF_DEPRECATED("use ZSTD_decompressStream") size_t
+ZBUFF_decompressContinue(ZBUFF_DCtx * dctx ,
+void* dst, size_t * dstCapacityPtr ,
+const void* src, size_t * srcSizePtr ) ;
 
 /*-***************************************************************************
 *  Streaming decompression howto
@@ -160,15 +172,19 @@ ZBUFF_DEPRECATED("use ZSTD_decompressStream") size_t ZBUFF_decompressContinue(ZB
 /* *************************************
 *  Tool functions
 ***************************************/
-ZBUFF_DEPRECATED("use ZSTD_isError")      unsigned ZBUFF_isError(size_t errorCode);
+ZBUFF_DEPRECATED("use ZSTD_isError") unsigned ZBUFF_isError(size_t errorCode);
 ZBUFF_DEPRECATED("use ZSTD_getErrorName") const char* ZBUFF_getErrorName(size_t errorCode);
 
 /** Functions below provide recommended buffer sizes for Compression or Decompression operations.
 *   These sizes are just hints, they tend to offer better latency */
-ZBUFF_DEPRECATED("use ZSTD_CStreamInSize")  size_t ZBUFF_recommendedCInSize(void);
-ZBUFF_DEPRECATED("use ZSTD_CStreamOutSize") size_t ZBUFF_recommendedCOutSize(void);
-ZBUFF_DEPRECATED("use ZSTD_DStreamInSize")  size_t ZBUFF_recommendedDInSize(void);
-ZBUFF_DEPRECATED("use ZSTD_DStreamOutSize") size_t ZBUFF_recommendedDOutSize(void);
+ZBUFF_DEPRECATED("use ZSTD_CStreamInSize") size_t
+ZBUFF_recommendedCInSize(void);
+ZBUFF_DEPRECATED("use ZSTD_CStreamOutSize") size_t
+ZBUFF_recommendedCOutSize(void);
+ZBUFF_DEPRECATED("use ZSTD_DStreamInSize") size_t
+ZBUFF_recommendedDInSize(void);
+ZBUFF_DEPRECATED("use ZSTD_DStreamOutSize") size_t
+ZBUFF_recommendedDOutSize(void);
 
 #endif  /* ZSTD_BUFFERED_H_23987 */
 

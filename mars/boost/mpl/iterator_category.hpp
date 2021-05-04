@@ -17,15 +17,17 @@
 #include <boost/mpl/aux_/na_spec.hpp>
 #include <boost/mpl/aux_/lambda_support.hpp>
 
-namespace mars_boost {} namespace boost = mars_boost; namespace mars_boost {  namespace mpl {
+namespace mars_boost {}
+namespace boost = mars_boost;
+namespace mars_boost {
+namespace mpl {
 
 template<
-      typename BOOST_MPL_AUX_NA_PARAM(Iterator)
-    >
-struct iterator_category
-{
-    typedef typename Iterator::category type;
-    BOOST_MPL_AUX_LAMBDA_SUPPORT(1,iterator_category,(Iterator))
+    typename BOOST_MPL_AUX_NA_PARAM(Iterator)
+>
+struct iterator_category {
+  typedef typename Iterator::category type;
+  BOOST_MPL_AUX_LAMBDA_SUPPORT(1, iterator_category, (Iterator))
 };
 
 BOOST_MPL_AUX_NA_SPEC(1, iterator_category)

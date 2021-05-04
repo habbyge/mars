@@ -17,20 +17,20 @@
 
 #include <boost/config.hpp>
 
-namespace mars_boost {} namespace boost = mars_boost; namespace mars_boost
-{
+namespace mars_boost {}
+namespace boost = mars_boost;
+namespace mars_boost {
 
-namespace core
-{
+namespace core {
 
-template< class T1, class T2 > struct is_same
-{
-    BOOST_STATIC_CONSTANT( bool, value = false );
+template<class T1, class T2>
+struct is_same {
+  BOOST_STATIC_CONSTANT(bool, value = false);
 };
 
-template< class T > struct is_same< T, T >
-{
-    BOOST_STATIC_CONSTANT( bool, value = true );
+template<class T>
+struct is_same<T, T> {
+  BOOST_STATIC_CONSTANT(bool, value = true);
 };
 
 } // namespace core

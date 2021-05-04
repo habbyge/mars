@@ -12,16 +12,16 @@
 #pragma once
 #endif
 
-namespace mars_boost {} namespace boost = mars_boost; namespace mars_boost{ namespace math
-{
-  namespace tools
-  {
-    template <class To, class T>
-    inline BOOST_MATH_CONSTEXPR To real_cast(T t) BOOST_NOEXCEPT_IF(BOOST_MATH_IS_FLOAT(T) && BOOST_MATH_IS_FLOAT(To))
-    {
-       return static_cast<To>(t);
-    }
-  } // namespace tools
+namespace mars_boost {}
+namespace boost = mars_boost;
+namespace mars_boost {
+namespace math {
+namespace tools {
+template<class To, class T>
+inline BOOST_MATH_CONSTEXPR To real_cast(T t) BOOST_NOEXCEPT_IF(BOOST_MATH_IS_FLOAT(T) && BOOST_MATH_IS_FLOAT(To)) {
+  return static_cast<To>(t);
+}
+} // namespace tools
 } // namespace math
 } // namespace mars_boost
 

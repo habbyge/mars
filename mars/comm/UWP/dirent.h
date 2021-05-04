@@ -81,16 +81,18 @@ typedef struct DIR {
 } DIR;
 
 
-static DIR *opendir (const char *dirname);
-static struct dirent *readdir (DIR *dirp);
-static int closedir (DIR *dirp);
+static DIR* opendir(const char* dirname);
+
+static struct dirent* readdir(DIR* dirp);
+
+static int closedir(DIR* dirp);
 
 
 /* use the new safe string functions introduced in Visual Studio 2005 */
 #if defined(_MSC_VER) && _MSC_VER >= 1400
 # define STRNCPY(dest,src,size) strncpy_s((dest),(size),(src),_TRUNCATE)
 #else
-# define STRNCPY(dest,src,size) strncpy((dest),(src),(size))
+# define STRNCPY(dest, src, size) strncpy((dest),(src),(size))
 #endif
 
 
@@ -101,17 +103,16 @@ static int closedir (DIR *dirp);
  */
 static DIR*
 opendir(
-    const char *dirname)
-{
-  DIR *dirp;
+    const char* dirname) {
+  DIR* dirp;
   assert (dirname != NULL);
-  assert (strlen (dirname) < MAX_PATH);
+  assert (strlen(dirname) < MAX_PATH);
 
   /* construct new DIR structure */
-  dirp = (DIR*) malloc (sizeof (struct DIR));
+  dirp = (DIR*) malloc(sizeof(struct DIR));
   if (dirp != NULL) {
-    TCHAR *p;
-    
+    TCHAR* p;
+
     /* prepare search pattern */
 #ifdef _UNICODE
 
@@ -134,37 +135,38 @@ opendir(
     *p = '\0';
 
 #else /* !_UNICODE */
-    
+
     /* take directory name... */
     STRNCPY (dirp->patt, dirname, sizeof(dirp->patt));
     dirp->patt[MAX_PATH] = '\0';
-    
+
     /* ... and append search pattern to it */
-    p = strchr (dirp->patt, '\0');
-    if (dirp->patt < p  &&  *(p-1) != '\\'  &&  *(p-1) != ':') {
+    p = strchr(dirp->patt, '\0');
+    if (dirp->patt < p && *(p - 1) != '\\' && *(p - 1) != ':') {
       *p++ = '\\';
     }
     *p++ = '*';
     *p = '\0';
-    
+
 #endif /* !_UNICODE */
 
     /* open stream and retrieve first file */
-	dirp->search_handle = FindFirstFileEx (dirp->patt, FindExInfoStandard, &dirp->current.data, FindExSearchNameMatch, NULL, 0);
+    dirp->search_handle = FindFirstFileEx(dirp->patt, FindExInfoStandard, &dirp->current.data, FindExSearchNameMatch,
+                                          NULL, 0);
     if (dirp->search_handle == INVALID_HANDLE_VALUE) {
       /* invalid search pattern? */
-      free (dirp);
+      free(dirp);
       return NULL;
     }
 
     /* there is an un-processed directory entry in memory now */
     dirp->cached = 1;
-    
+
   }
   return dirp;
 }
 
-  
+
 /*
  * Read a directory entry, and return a pointer to a dirent structure
  * containing the name of the entry in d_name field.  Individual directory
@@ -172,10 +174,9 @@ opendir(
  * sub-directories, pseudo-directories "." and "..", but also volume labels,
  * hidden files and system files may be returned.  
  */
-static struct dirent *
+static struct dirent*
 readdir(
-    DIR *dirp)
-{
+    DIR* dirp) {
   assert (dirp != NULL);
 
   if (dirp->search_handle == INVALID_HANDLE_VALUE) {
@@ -189,9 +190,9 @@ readdir(
     dirp->cached = 0;
   } else {
     /* read next directory entry from disk */
-    if (FindNextFile (dirp->search_handle, &dirp->current.data) == FALSE) {
+    if (FindNextFile(dirp->search_handle, &dirp->current.data) == FALSE) {
       /* the very last file has been processed or an error occured */
-      FindClose (dirp->search_handle);
+      FindClose(dirp->search_handle);
       dirp->search_handle = INVALID_HANDLE_VALUE;
       return NULL;
     }
@@ -199,7 +200,7 @@ readdir(
 
   /* copy directory entry to d_name */
 #ifdef _UNICODE
-  
+
   /* convert entry name to multibyte */
   WideCharToMultiByte(
       CP_ACP,                                  /* code page */
@@ -211,7 +212,7 @@ readdir(
       NULL,                                    /* use sys default character */
       NULL);                                   /* don't care  */
   dirp->current.d_name[MAX_PATH] = '\0';
-  
+
 #else /* !_UNICODE */
 
   /* copy as a multibyte character string */
@@ -219,7 +220,7 @@ readdir(
   dirp->current.d_name[MAX_PATH] = '\0';
 
 #endif /* !_UNICODE */
-  
+
   return &dirp->current;
 }
 
@@ -231,18 +232,17 @@ readdir(
  */
 static int
 closedir(
-    DIR *dirp)
-{
+    DIR* dirp) {
   assert (dirp != NULL);
- 
+
   /* release search handle */
   if (dirp->search_handle != INVALID_HANDLE_VALUE) {
-    FindClose (dirp->search_handle);
+    FindClose(dirp->search_handle);
     dirp->search_handle = INVALID_HANDLE_VALUE;
   }
 
   /* release directory handle */
-  free (dirp);
+  free(dirp);
   return 0;
 }
 

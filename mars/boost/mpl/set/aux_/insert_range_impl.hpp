@@ -20,22 +20,23 @@
 #include <boost/mpl/fold.hpp>
 #include <boost/mpl/insert.hpp>
 
-namespace mars_boost {} namespace boost = mars_boost; namespace mars_boost { namespace mpl {
+namespace mars_boost {}
+namespace boost = mars_boost;
+namespace mars_boost {
+namespace mpl {
 
 template<>
-struct insert_range_impl< aux::set_tag >
-{
-    template<
-          typename Sequence
-        , typename /*Pos*/
-        , typename Range
-        >
-    struct apply
-        : fold<Range, Sequence, insert<_1, _2> >
-    {
-    };
+struct insert_range_impl<aux::set_tag> {
+  template<
+      typename Sequence, typename /*Pos*/
+      , typename Range
+  >
+  struct apply
+      : fold<Range, Sequence, insert<_1, _2>> {
+  };
 };
 
-}}
+}
+}
 
 #endif // BOOST_MPL_SET_AUX_INSERT_RANGE_IMPL_HPP_INCLUDED

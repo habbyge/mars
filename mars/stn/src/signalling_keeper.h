@@ -29,43 +29,49 @@
 #include "longlink.h"
 
 namespace mars {
-    namespace stn {
+namespace stn {
 
-class SignallingKeeper: IAsyncUdpClientEvent {
-  public:
-    static void SetStrategy(unsigned int  _period, unsigned int _keep_time);  // ms
-  public:
-    SignallingKeeper(const LongLink& _longlink, MessageQueue::MessageQueue_t _messagequeue_id, bool _use_UDP = true);
-    ~SignallingKeeper();
+class SignallingKeeper : IAsyncUdpClientEvent {
+public:
+  static void SetStrategy(unsigned int _period, unsigned int _keep_time);  // ms
+public:
+  SignallingKeeper(const LongLink& _longlink, MessageQueue::MessageQueue_t _messagequeue_id, bool _use_UDP = true);
 
-    void OnNetWorkDataChanged(const char*, ssize_t, ssize_t);
+  ~SignallingKeeper();
 
-    void Keep();
-    void Stop();
+  void OnNetWorkDataChanged(const char*, ssize_t, ssize_t);
 
-    virtual void OnError(UdpClient* _this, int _errno);
-    virtual void OnDataGramRead(UdpClient* _this, void* _buf, size_t _len);
-    virtual void OnDataSent(UdpClient* _this);
-  public:
-    boost::function<unsigned int (const AutoBuffer&, const AutoBuffer&, int)> fun_send_signalling_buffer_;
+  void Keep();
 
-  private:
-    void __SendSignallingBuffer();
-    void __OnTimeOut();
+  void Stop();
 
-  private:
-    MessageQueue::ScopeRegister msgreg_;
-    uint64_t last_touch_time_;
-    bool keeping_;
-    MessageQueue::MessagePost_t postid_;
-    const LongLink& longlink_;
-    std::string ip_;
-    unsigned int port_;
-    UdpClient udp_client_;
-    bool use_UDP_;
+  virtual void OnError(UdpClient* _this, int _errno);
+
+  virtual void OnDataGramRead(UdpClient* _this, void* _buf, size_t _len);
+
+  virtual void OnDataSent(UdpClient* _this);
+
+public:
+  boost::function<unsigned int(const AutoBuffer&, const AutoBuffer&, int)> fun_send_signalling_buffer_;
+
+private:
+  void __SendSignallingBuffer();
+
+  void __OnTimeOut();
+
+private:
+  MessageQueue::ScopeRegister msgreg_;
+  uint64_t last_touch_time_;
+  bool keeping_;
+  MessageQueue::MessagePost_t postid_;
+  const LongLink& longlink_;
+  std::string ip_;
+  unsigned int port_;
+  UdpClient udp_client_;
+  bool use_UDP_;
 };
-        
-    }
+
+}
 }
 
 

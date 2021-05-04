@@ -40,10 +40,11 @@ class BaseChecker;
 class SdtCore {
 public:
   SINGLETON_INTRUSIVE(SdtCore,
-  new SdtCore, delete);
+                      new SdtCore, delete);
 
 public:
-  void StartCheck(CheckIPPorts& _longlink_items, CheckIPPorts& _shortlink_items, int _mode, int _timeout = UNUSE_TIMEOUT);
+  void
+  StartCheck(CheckIPPorts& _longlink_items, CheckIPPorts& _shortlink_items, int _mode, int _timeout = UNUSE_TIMEOUT);
 
   /*
    * Stop and cancel net check.

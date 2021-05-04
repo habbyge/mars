@@ -24,7 +24,7 @@ add_executable(gen_html ${GENHTML_DIR}/gen_html.cpp)
 GetZstdLibraryVersion(${LIBRARY_DIR}/zstd.h VMAJOR VMINOR VRELEASE)
 set(LIBVERSION "${VMAJOR}.${VMINOR}.${VRELEASE}")
 add_custom_target(zstd_manual.html ALL
-                  ${GENHTML_BINARY} "${LIBVERSION}" "${LIBRARY_DIR}/zstd.h" "${PROJECT_BINARY_DIR}/zstd_manual.html"
-                  DEPENDS gen_html COMMENT "Update zstd manual")
+        ${GENHTML_BINARY} "${LIBVERSION}" "${LIBRARY_DIR}/zstd.h" "${PROJECT_BINARY_DIR}/zstd_manual.html"
+        DEPENDS gen_html COMMENT "Update zstd manual")
 
 install(FILES "${PROJECT_BINARY_DIR}/zstd_manual.html" DESTINATION "${CMAKE_INSTALL_DOCDIR}")

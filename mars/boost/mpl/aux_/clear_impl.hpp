@@ -18,18 +18,22 @@
 #include <boost/mpl/aux_/traits_lambda_spec.hpp>
 #include <boost/mpl/aux_/config/eti.hpp>
 
-namespace mars_boost {} namespace boost = mars_boost; namespace mars_boost { namespace mpl {
+namespace mars_boost {}
+namespace boost = mars_boost;
+namespace mars_boost {
+namespace mpl {
 
 // no default implementation; the definition is needed to make MSVC happy
 
-template< typename Tag >
-struct clear_impl
-{
-    template< typename Sequence > struct apply;
+template<typename Tag>
+struct clear_impl {
+  template<typename Sequence>
+  struct apply;
 };
 
 BOOST_MPL_ALGORITM_TRAITS_LAMBDA_SPEC(1, clear_impl)
 
-}}
+}
+}
 
 #endif // BOOST_MPL_AUX_CLEAR_IMPL_HPP_INCLUDED

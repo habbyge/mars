@@ -29,6 +29,7 @@
 #define AUX_WRAPPER_NAME integral_c
 #define AUX_WRAPPER_VALUE_TYPE T
 #define AUX_WRAPPER_INST(value) AUX_WRAPPER_NAME< T, value >
+
 #include <boost/mpl/aux_/integral_wrapper.hpp>
 
 
@@ -36,14 +37,14 @@
  && !BOOST_WORKAROUND(__BORLANDC__, <= 0x551)
 BOOST_MPL_AUX_ADL_BARRIER_NAMESPACE_OPEN
 // 'bool' constant doesn't have 'next'/'prior' members
-template< bool C >
-struct integral_c<bool, C>
-{
-    BOOST_STATIC_CONSTANT(bool, value = C);
-    typedef integral_c_tag tag;
-    typedef integral_c type;
-    typedef bool value_type;
-    operator bool() const { return this->value; }
+template<bool C>
+struct integral_c<bool, C> {
+  BOOST_STATIC_CONSTANT(bool, value = C);
+  typedef integral_c_tag tag;
+  typedef integral_c type;
+  typedef bool value_type;
+
+  operator bool() const { return this->value; }
 };
 BOOST_MPL_AUX_ADL_BARRIER_NAMESPACE_CLOSE
 #endif

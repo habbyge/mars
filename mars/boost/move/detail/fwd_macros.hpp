@@ -12,21 +12,37 @@
 #define BOOST_MOVE_DETAIL_FWD_MACROS_HPP
 
 #ifndef BOOST_CONFIG_HPP
+
 #  include <boost/config.hpp>
+
 #endif
 #
+
 #if defined(BOOST_HAS_PRAGMA_ONCE)
 #  pragma once
 #endif
 
 #include <boost/move/detail/workaround.hpp>
 
-namespace mars_boost {} namespace boost = mars_boost; namespace mars_boost {
+namespace mars_boost {}
+namespace boost = mars_boost;
+namespace mars_boost {
 namespace move_detail {
 
-template <typename T> struct unvoid { typedef T type; };
-template <> struct unvoid<void> { struct type { }; };
-template <> struct unvoid<const void> { struct type { }; };
+template<typename T>
+struct unvoid {
+  typedef T type;
+};
+template<>
+struct unvoid<void> {
+  struct type {
+  };
+};
+template<>
+struct unvoid<const void> {
+  struct type {
+  };
+};
 
 }  //namespace move_detail {
 }  //namespace mars_boost {} namespace boost = mars_boost; namespace mars_boost {
@@ -148,13 +164,13 @@ namespace move_detail {
 #define BOOST_MOVE_DECLVALQ9 BOOST_MOVE_DECLVALQ8, ::mars_boost::move_detail::declval<Q8>()
 
 #ifdef BOOST_MOVE_MSVC_10_MEMBER_RVALUE_REF_BUG
-   #define BOOST_MOVE_MREF(T)    ::mars_boost::move_detail::mref<T>
-   #define BOOST_MOVE_MFWD(N)    ::mars_boost::forward<P##N>(this->m_p##N.get())
-   #define BOOST_MOVE_MFWDQ(N)   ::mars_boost::forward<Q##N>(this->m_q##N.get())
+#define BOOST_MOVE_MREF(T)    ::mars_boost::move_detail::mref<T>
+#define BOOST_MOVE_MFWD(N)    ::mars_boost::forward<P##N>(this->m_p##N.get())
+#define BOOST_MOVE_MFWDQ(N)   ::mars_boost::forward<Q##N>(this->m_q##N.get())
 #else
-   #define BOOST_MOVE_MREF(T)    BOOST_FWD_REF(T)
-   #define BOOST_MOVE_MFWD(N)    ::mars_boost::forward<P##N>(this->m_p##N)
-   #define BOOST_MOVE_MFWDQ(N)   ::mars_boost::forward<Q##N>(this->m_q##N)
+#define BOOST_MOVE_MREF(T)    BOOST_FWD_REF(T)
+#define BOOST_MOVE_MFWD(N)    ::mars_boost::forward<P##N>(this->m_p##N)
+#define BOOST_MOVE_MFWDQ(N)   ::mars_boost::forward<Q##N>(this->m_q##N)
 #endif
 #define BOOST_MOVE_MITFWD(N)  *this->m_p##N
 #define BOOST_MOVE_MINC(N)    ++this->m_p##N

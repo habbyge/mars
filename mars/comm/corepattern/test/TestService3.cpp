@@ -14,8 +14,10 @@
 
 namespace design_patterns {
 
-SERVICE_REGISTER(TestService3, TestCoreService2::ServiceName(), EPrivate, EFirstGet);
-IMPLEMENT_SERVICE(TestService3, TestService2::ServiceName(), TestService::ServiceName());
+SERVICE_REGISTER(TestService3, TestCoreService2::ServiceName(), EPrivate, EFirstGet
+);
+IMPLEMENT_SERVICE(TestService3, TestService2::ServiceName(), TestService::ServiceName()
+);
 
 TestService3::~TestService3() {
 }

@@ -21,20 +21,21 @@
 #include <boost/mpl/aux_/config/ctps.hpp>
 #include <boost/type_traits/is_same.hpp>
 
-namespace mars_boost {} namespace boost = mars_boost; namespace mars_boost { namespace mpl {
+namespace mars_boost {}
+namespace boost = mars_boost;
+namespace mars_boost {
+namespace mpl {
 
 #if defined(BOOST_MPL_CFG_TYPEOF_BASED_SEQUENCES)
 
 template<>
-struct empty_impl< aux::vector_tag >
-{
-    template< typename Vector > struct apply
-        : is_same<
-              typename Vector::lower_bound_
-            , typename Vector::upper_bound_
-            >
-    {
-    };
+struct empty_impl<aux::vector_tag> {
+  template<typename Vector>
+  struct apply
+      : is_same<
+          typename Vector::lower_bound_, typename Vector::upper_bound_
+      > {
+  };
 };
 
 #else
@@ -63,6 +64,7 @@ struct empty_impl< aux::vector_tag<N> >
 
 #endif // BOOST_MPL_CFG_TYPEOF_BASED_SEQUENCES
 
-}}
+}
+}
 
 #endif // BOOST_MPL_VECTOR_AUX_EMPTY_HPP_INCLUDED

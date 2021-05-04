@@ -9,7 +9,9 @@
 
 #include <boost/config.hpp>
 
-namespace mars_boost {} namespace boost = mars_boost; namespace mars_boost {
+namespace mars_boost {}
+namespace boost = mars_boost;
+namespace mars_boost {
 
 #ifndef BOOST_NO_CXX11_VARIADIC_TEMPLATES
 
@@ -23,45 +25,35 @@ BOOST_FORCEINLINE BOOST_CXX14_CONSTEXPR void ignore_unused()
 
 #else
 
-template <typename T1>
-BOOST_FORCEINLINE BOOST_CXX14_CONSTEXPR void ignore_unused(T1 const&)
-{}
+template<typename T1>
+BOOST_FORCEINLINE BOOST_CXX14_CONSTEXPR void ignore_unused(T1 const&) {}
 
-template <typename T1, typename T2>
-BOOST_FORCEINLINE BOOST_CXX14_CONSTEXPR void ignore_unused(T1 const&, T2 const&)
-{}
+template<typename T1, typename T2>
+BOOST_FORCEINLINE BOOST_CXX14_CONSTEXPR void ignore_unused(T1 const&, T2 const&) {}
 
-template <typename T1, typename T2, typename T3>
-BOOST_FORCEINLINE BOOST_CXX14_CONSTEXPR void ignore_unused(T1 const&, T2 const&, T3 const&)
-{}
+template<typename T1, typename T2, typename T3>
+BOOST_FORCEINLINE BOOST_CXX14_CONSTEXPR void ignore_unused(T1 const&, T2 const&, T3 const&) {}
 
-template <typename T1, typename T2, typename T3, typename T4>
-BOOST_FORCEINLINE BOOST_CXX14_CONSTEXPR void ignore_unused(T1 const&, T2 const&, T3 const&, T4 const&)
-{}
+template<typename T1, typename T2, typename T3, typename T4>
+BOOST_FORCEINLINE BOOST_CXX14_CONSTEXPR void ignore_unused(T1 const&, T2 const&, T3 const&, T4 const&) {}
 
-template <typename T1, typename T2, typename T3, typename T4, typename T5>
-BOOST_FORCEINLINE BOOST_CXX14_CONSTEXPR void ignore_unused(T1 const&, T2 const&, T3 const&, T4 const&, T5 const&)
-{}
+template<typename T1, typename T2, typename T3, typename T4, typename T5>
+BOOST_FORCEINLINE BOOST_CXX14_CONSTEXPR void ignore_unused(T1 const&, T2 const&, T3 const&, T4 const&, T5 const&) {}
 
-template <typename T1>
-BOOST_FORCEINLINE BOOST_CXX14_CONSTEXPR void ignore_unused()
-{}
+template<typename T1>
+BOOST_FORCEINLINE BOOST_CXX14_CONSTEXPR void ignore_unused() {}
 
-template <typename T1, typename T2>
-BOOST_FORCEINLINE BOOST_CXX14_CONSTEXPR void ignore_unused()
-{}
+template<typename T1, typename T2>
+BOOST_FORCEINLINE BOOST_CXX14_CONSTEXPR void ignore_unused() {}
 
-template <typename T1, typename T2, typename T3>
-BOOST_FORCEINLINE BOOST_CXX14_CONSTEXPR void ignore_unused()
-{}
+template<typename T1, typename T2, typename T3>
+BOOST_FORCEINLINE BOOST_CXX14_CONSTEXPR void ignore_unused() {}
 
-template <typename T1, typename T2, typename T3, typename T4>
-BOOST_FORCEINLINE BOOST_CXX14_CONSTEXPR void ignore_unused()
-{}
+template<typename T1, typename T2, typename T3, typename T4>
+BOOST_FORCEINLINE BOOST_CXX14_CONSTEXPR void ignore_unused() {}
 
-template <typename T1, typename T2, typename T3, typename T4, typename T5>
-BOOST_FORCEINLINE BOOST_CXX14_CONSTEXPR void ignore_unused()
-{}
+template<typename T1, typename T2, typename T3, typename T4, typename T5>
+BOOST_FORCEINLINE BOOST_CXX14_CONSTEXPR void ignore_unused() {}
 
 #endif
 

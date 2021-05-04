@@ -163,7 +163,7 @@
 
 #define PP_NUM_PARAMS(...) PP_IF(PP_DEC(PP_NARG(__VA_ARGS__)), PP_NARG(__VA_ARGS__), PP_NUM_PARAMS_0_1_TEST(__VA_ARGS__))
 #define PP_NUM_PARAMS_0_1_TEST(_1, ...) PP_IF(PP_DEC(PP_NARG(PP_NUM_PARAMS_0 _1 ())), 0, 1)
-#define PP_NUM_PARAMS_0()	,
+#define PP_NUM_PARAMS_0()  ,
 
 #if 0
 #define P00_ARG(                                               \
@@ -189,7 +189,7 @@
    _153, _154, _155, _156, _157, _158, _159,                     \
    ...) _159
 
- #define P99_HAS_COMMA(...) P00_ARG(__VA_ARGS__,                \
+#define P99_HAS_COMMA(...) P00_ARG(__VA_ARGS__,                \
    1, 1, 1, 1, 1, 1, 1,                                          \
    1, 1, 1, 1, 1, 1, 1, 1,                                       \
    1, 1, 1, 1, 1, 1, 1, 1,                                       \

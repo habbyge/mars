@@ -46,7 +46,7 @@ extern "C" {
 
 #if defined(__GNUC__)
 #define FUZZ_STATIC static __inline __attribute__((unused))
-#elif defined(__cplusplus) ||                                                  \
+#elif defined(__cplusplus) || \
     (defined(__STDC_VERSION__) && (__STDC_VERSION__ >= 199901L) /* C99 */)
 #define FUZZ_STATIC static inline
 #elif defined(_MSC_VER)

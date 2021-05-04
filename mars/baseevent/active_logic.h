@@ -27,34 +27,33 @@
 #include "mars/comm/singleton.h"
 #include <memory>
 
-class ActiveLogic
-{
+class ActiveLogic {
 public:
 //    SINGLETON_INTRUSIVE(ActiveLogic, new ActiveLogic, delete);
-    boost::signals2::signal<void (bool _isForeground)> SignalForeground;
-    boost::signals2::signal<void (bool _isactive)> SignalActive;
-    static std::shared_ptr<ActiveLogic> Instance();
+  boost::signals2::signal<void(bool _isForeground)> SignalForeground;
+  boost::signals2::signal<void(bool _isactive)> SignalActive;
+
+  static std::shared_ptr<ActiveLogic> Instance();
 
 public:
-    ActiveLogic();
-    virtual ~ActiveLogic();
+  ActiveLogic();
 
-    void OnForeground(bool _isforeground);
-    bool IsActive() const;
+  virtual ~ActiveLogic();
 
-    bool IsForeground() const;
-    uint64_t LastForegroundChangeTime() const;
-
-    void SwitchActiveStateForDebug(bool _active);
-
-private:
-    void __OnInActive();
+  void OnForeground(bool _isforeground);
+  bool IsActive() const;
+  bool IsForeground() const;
+  uint64_t LastForegroundChangeTime() const;
+  void SwitchActiveStateForDebug(bool _active);
 
 private:
-    bool   isforeground_;
-    bool   isactive_;
-    Alarm  alarm_;
-    uint64_t lastforegroundchangetime_;
+  void __OnInActive();
+
+private:
+  bool isforeground_;
+  bool isactive_;
+  Alarm alarm_;
+  uint64_t lastforegroundchangetime_;
 };
 
 #endif // MMCOMM_SRC_ACTIVE_LOGIC_H_

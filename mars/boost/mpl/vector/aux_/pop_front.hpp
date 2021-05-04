@@ -22,18 +22,21 @@
 #   include <boost/mpl/vector/aux_/item.hpp>
 #   include <boost/mpl/vector/aux_/tag.hpp>
 
-namespace mars_boost {} namespace boost = mars_boost; namespace mars_boost { namespace mpl {
+namespace mars_boost {}
+namespace boost = mars_boost;
+namespace mars_boost {
+namespace mpl {
 
 template<>
-struct pop_front_impl< aux::vector_tag >
-{
-    template< typename Vector > struct apply
-    {
-        typedef v_mask<Vector,1> type;
-    };
+struct pop_front_impl<aux::vector_tag> {
+  template<typename Vector>
+  struct apply {
+    typedef v_mask<Vector, 1> type;
+  };
 };
 
-}}
+}
+}
 
 #endif // BOOST_MPL_CFG_TYPEOF_BASED_SEQUENCES
 

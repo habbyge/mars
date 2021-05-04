@@ -17,11 +17,15 @@
 
 #include <boost/mpl/aux_/config/ctps.hpp>
 
-namespace mars_boost {} namespace boost = mars_boost; namespace mars_boost { namespace mpl { namespace aux {
+namespace mars_boost {}
+namespace boost = mars_boost;
+namespace mars_boost {
+namespace mpl {
+namespace aux {
 
-template< typename T > struct type_wrapper
-{
-    typedef T type;
+template<typename T>
+struct type_wrapper {
+  typedef T type;
 };
 
 #if !defined(BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION)
@@ -29,11 +33,12 @@ template< typename T > struct type_wrapper
 // mostly for the sake of GCC (3.2.x), which ICEs if you try to extract the 
 // nested 'type' from 'type_wrapper<T>' when the latter was the result of a
 // 'typeof' expression
-template< typename T > struct wrapped_type;
+template<typename T>
+struct wrapped_type;
 
-template< typename T > struct wrapped_type< type_wrapper<T> >
-{
-    typedef T type;
+template<typename T>
+struct wrapped_type<type_wrapper<T>> {
+  typedef T type;
 };
 #else
 template< typename W > struct wrapped_type
@@ -42,6 +47,8 @@ template< typename W > struct wrapped_type
 };
 #endif
 
-}}}
+}
+}
+}
 
 #endif // BOOST_MPL_AUX_TYPE_WRAPPER_HPP_INCLUDED

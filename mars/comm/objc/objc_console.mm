@@ -16,26 +16,26 @@
 #include "comm/xlogger/loginfo_extract.h"
 #import "comm/objc/scope_autoreleasepool.h"
 
-void ConsoleLog(const XLoggerInfo* _info, const char* _log)
-{
-    SCOPE_POOL();
+void ConsoleLog(const XLoggerInfo* _info, const char* _log) {
+  SCOPE_POOL();
 
-    if (NULL==_info || NULL==_log) return;
-    
-    static const char* levelStrings[] = {
-        "V",
-        "D",  // debug
-        "I",  // info
-        "W",  // warn
-        "E",  // error
-        "F"  // fatal
-    };
-    
-    const char* strFuncName  = NULL == _info->func_name ? "" : _info->func_name;
-    const char* file_name = ExtractFileName(_info->filename);
-    
-    char log[16 * 1024] = {0};
-    snprintf(log, sizeof(log), "[%s][%s][%s, %s, %d][%s", levelStrings[_info->level], NULL == _info->tag ? "" : _info->tag, file_name, strFuncName, _info->line, _log);
-    
-    NSLog(@"%@", [NSString stringWithUTF8String:log]);
+  if (NULL == _info || NULL == _log) return;
+
+  static const char* levelStrings[] = {
+      "V",
+      "D",  // debug
+      "I",  // info
+      "W",  // warn
+      "E",  // error
+      "F"  // fatal
+  };
+
+  const char* strFuncName = NULL == _info->func_name ? "" : _info->func_name;
+  const char* file_name = ExtractFileName(_info->filename);
+
+  char log[16 * 1024] = {0};
+  snprintf(log, sizeof(log), "[%s][%s][%s, %s, %d][%s", levelStrings[_info->level],
+           NULL == _info->tag ? "" : _info->tag, file_name, strFuncName, _info->line, _log);
+
+  NSLog(@"%@", [NSString stringWithUTF8String:log]);
 }

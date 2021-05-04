@@ -27,30 +27,31 @@
 #include <boost/mpl/aux_/config/ctps.hpp>
 #include <boost/mpl/aux_/config/workaround.hpp>
 
-namespace mars_boost {} namespace boost = mars_boost; namespace mars_boost { namespace mpl {
+namespace mars_boost {}
+namespace boost = mars_boost;
+namespace mars_boost {
+namespace mpl {
 
 template<
-      typename Vector
-    , BOOST_MPL_AUX_NTTP_DECL(long, n_)
-    >
-struct v_iter
-{
-    typedef aux::v_iter_tag tag;
-    typedef random_access_iterator_tag category;
-    typedef typename v_at<Vector,n_>::type type;
+    typename Vector, BOOST_MPL_AUX_NTTP_DECL(long, n_)
+>
+struct v_iter {
+  typedef aux::v_iter_tag tag;
+  typedef random_access_iterator_tag category;
+  typedef typename v_at<Vector, n_>::type type;
 
-    typedef Vector vector_;
-    typedef mpl::long_<n_> pos;
+  typedef Vector vector_;
+  typedef mpl::long_<n_> pos;
 
 #if defined(BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION)
-    enum { 
-          next_ = n_ + 1
-        , prior_ = n_ - 1
-        , pos_ = n_
-    };
-    
-    typedef v_iter<Vector,next_> next;
-    typedef v_iter<Vector,prior_> prior;
+  enum {
+        next_ = n_ + 1
+      , prior_ = n_ - 1
+      , pos_ = n_
+  };
+
+  typedef v_iter<Vector,next_> next;
+  typedef v_iter<Vector,prior_> prior;
 #endif
 
 };
@@ -59,44 +60,33 @@ struct v_iter
 #if !defined(BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION)
 
 template<
-      typename Vector
-    , BOOST_MPL_AUX_NTTP_DECL(long, n_)
-    >
-struct next< v_iter<Vector,n_> >
-{
-    typedef v_iter<Vector,(n_ + 1)> type;
+    typename Vector, BOOST_MPL_AUX_NTTP_DECL(long, n_)
+>
+struct next<v_iter<Vector, n_>> {
+  typedef v_iter<Vector, (n_ + 1)> type;
 };
 
 template<
-      typename Vector
-    , BOOST_MPL_AUX_NTTP_DECL(long, n_)
-    >
-struct prior< v_iter<Vector,n_> >
-{
-    typedef v_iter<Vector,(n_ - 1)> type;
+    typename Vector, BOOST_MPL_AUX_NTTP_DECL(long, n_)
+>
+struct prior<v_iter<Vector, n_>> {
+  typedef v_iter<Vector, (n_ - 1)> type;
 };
 
 template<
-      typename Vector
-    , BOOST_MPL_AUX_NTTP_DECL(long, n_)
-    , typename Distance
-    >
-struct advance< v_iter<Vector,n_>,Distance>
-{
-    typedef v_iter<
-          Vector
-        , (n_ + BOOST_MPL_AUX_NESTED_VALUE_WKND(long, Distance))
-        > type;
+    typename Vector, BOOST_MPL_AUX_NTTP_DECL(long, n_), typename Distance
+>
+struct advance<v_iter<Vector, n_>, Distance> {
+  typedef v_iter<
+      Vector, (n_ + BOOST_MPL_AUX_NESTED_VALUE_WKND(long, Distance))
+  > type;
 };
 
-template< 
-      typename Vector
-    , BOOST_MPL_AUX_NTTP_DECL(long, n_)
-    , BOOST_MPL_AUX_NTTP_DECL(long, m_)
-    > 
-struct distance< v_iter<Vector,n_>, v_iter<Vector,m_> >
-    : mpl::long_<(m_ - n_)>
-{
+template<
+    typename Vector, BOOST_MPL_AUX_NTTP_DECL(long, n_), BOOST_MPL_AUX_NTTP_DECL(long, m_)
+>
+struct distance<v_iter<Vector, n_>, v_iter<Vector, m_>>
+    : mpl::long_<(m_ - n_)> {
 };
 
 #else // BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION
@@ -125,6 +115,7 @@ template<> struct distance_impl<aux::v_iter_tag>
 
 #endif
 
-}}
+}
+}
 
 #endif // BOOST_MPL_AUX_VECTOR_ITERATOR_HPP_INCLUDED

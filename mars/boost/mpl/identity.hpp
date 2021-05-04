@@ -17,24 +17,25 @@
 #include <boost/mpl/aux_/na_spec.hpp>
 #include <boost/mpl/aux_/lambda_support.hpp>
 
-namespace mars_boost {} namespace boost = mars_boost; namespace mars_boost { namespace mpl {
+namespace mars_boost {}
+namespace boost = mars_boost;
+namespace mars_boost {
+namespace mpl {
 
 template<
-      typename BOOST_MPL_AUX_NA_PARAM(T)
-    >
-struct identity
-{
-    typedef T type;
-    BOOST_MPL_AUX_LAMBDA_SUPPORT(1, identity, (T))
+    typename BOOST_MPL_AUX_NA_PARAM(T)
+>
+struct identity {
+  typedef T type;
+  BOOST_MPL_AUX_LAMBDA_SUPPORT(1, identity, (T))
 };
 
 template<
-      typename BOOST_MPL_AUX_NA_PARAM(T)
-    >
-struct make_identity
-{
-    typedef identity<T> type;
-    BOOST_MPL_AUX_LAMBDA_SUPPORT(1, make_identity, (T))
+    typename BOOST_MPL_AUX_NA_PARAM(T)
+>
+struct make_identity {
+  typedef identity<T> type;
+  BOOST_MPL_AUX_LAMBDA_SUPPORT(1, make_identity, (T))
 };
 
 BOOST_MPL_AUX_NA_SPEC_NO_ETI(1, identity)

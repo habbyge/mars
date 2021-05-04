@@ -8,11 +8,11 @@
  * You may select, at your option, one of the above-listed licenses.
  */
 
- /* benchzstd :
-  * benchmark Zstandard compression / decompression
-  * over a set of files or buffers
-  * and display progress result and final summary
-  */
+/* benchzstd :
+ * benchmark Zstandard compression / decompression
+ * over a set of files or buffers
+ * and display progress result and final summary
+ */
 
 #if defined (__cplusplus)
 extern "C" {
@@ -48,10 +48,10 @@ typedef struct {                             \
 
 
 typedef struct {
-    size_t cSize;
-    unsigned long long cSpeed;   /* bytes / sec */
-    unsigned long long dSpeed;
-    size_t cMem;                 /* memory usage during compression */
+  size_t cSize;
+  unsigned long long cSpeed;   /* bytes / sec */
+  unsigned long long dSpeed;
+  size_t cMem;                 /* memory usage during compression */
 } BMK_benchResult_t;
 
 VARIANT_ERROR_RESULT(BMK_benchResult_t, BMK_benchOutcome_t);
@@ -92,31 +92,31 @@ BMK_benchResult_t BMK_extract_benchResult(BMK_benchOutcome_t outcome);
  *          .cMem  : memory budget required for the compression context
  */
 BMK_benchOutcome_t BMK_benchFiles(
-                   const char* const * fileNamesTable, unsigned nbFiles,
-                   const char* dictFileName,
-                   int cLevel, const ZSTD_compressionParameters* compressionParams,
-                   int displayLevel);
+    const char* const* fileNamesTable, unsigned nbFiles,
+    const char* dictFileName,
+    int cLevel, const ZSTD_compressionParameters* compressionParams,
+    int displayLevel);
 
 
 typedef enum {
-    BMK_both = 0,
-    BMK_decodeOnly = 1,
-    BMK_compressOnly = 2
+  BMK_both = 0,
+  BMK_decodeOnly = 1,
+  BMK_compressOnly = 2
 } BMK_mode_t;
 
 typedef struct {
-    BMK_mode_t mode;        /* 0: all, 1: compress only 2: decode only */
-    unsigned nbSeconds;     /* default timing is in nbSeconds */
-    size_t blockSize;       /* Maximum size of each block*/
-    int nbWorkers;          /* multithreading */
-    unsigned realTime;      /* real time priority */
-    int additionalParam;    /* used by python speed benchmark */
-    int ldmFlag;            /* enables long distance matching */
-    int ldmMinMatch;        /* below: parameters for long distance matching, see zstd.1.md */
-    int ldmHashLog;
-    int ldmBucketSizeLog;
-    int ldmHashRateLog;
-    ZSTD_literalCompressionMode_e literalCompressionMode;
+  BMK_mode_t mode;        /* 0: all, 1: compress only 2: decode only */
+  unsigned nbSeconds;     /* default timing is in nbSeconds */
+  size_t blockSize;       /* Maximum size of each block*/
+  int nbWorkers;          /* multithreading */
+  unsigned realTime;      /* real time priority */
+  int additionalParam;    /* used by python speed benchmark */
+  int ldmFlag;            /* enables long distance matching */
+  int ldmMinMatch;        /* below: parameters for long distance matching, see zstd.1.md */
+  int ldmHashLog;
+  int ldmBucketSizeLog;
+  int ldmHashRateLog;
+  ZSTD_literalCompressionMode_e literalCompressionMode;
 } BMK_advancedParams_t;
 
 /* returns default parameters used by nonAdvanced functions */
@@ -126,10 +126,10 @@ BMK_advancedParams_t BMK_initAdvancedParams(void);
  *  Same as BMK_benchFiles(),
  *  with more controls, provided through advancedParams_t structure */
 BMK_benchOutcome_t BMK_benchFilesAdvanced(
-                   const char* const * fileNamesTable, unsigned nbFiles,
-                   const char* dictFileName,
-                   int cLevel, const ZSTD_compressionParameters* compressionParams,
-                   int displayLevel, const BMK_advancedParams_t* adv);
+    const char* const* fileNamesTable, unsigned nbFiles,
+    const char* dictFileName,
+    int cLevel, const ZSTD_compressionParameters* compressionParams,
+    int displayLevel, const BMK_advancedParams_t* adv);
 
 /*! BMK_syntheticTest() -- called from zstdcli */
 /*  Generates a sample with datagen, using compressibility argument */
@@ -149,9 +149,9 @@ BMK_benchOutcome_t BMK_benchFilesAdvanced(
  *          .cMem  : memory budget required for the compression context
  */
 BMK_benchOutcome_t BMK_syntheticTest(
-                          int cLevel, double compressibility,
-                          const ZSTD_compressionParameters* compressionParams,
-                          int displayLevel, const BMK_advancedParams_t* adv);
+    int cLevel, double compressibility,
+    const ZSTD_compressionParameters* compressionParams,
+    int displayLevel, const BMK_advancedParams_t* adv);
 
 
 
@@ -183,10 +183,10 @@ BMK_benchOutcome_t BMK_syntheticTest(
  *          .cMem  : memory budget required for the compression context
  */
 BMK_benchOutcome_t BMK_benchMem(const void* srcBuffer, size_t srcSize,
-                        const size_t* fileSizes, unsigned nbFiles,
-                        int cLevel, const ZSTD_compressionParameters* comprParams,
-                        const void* dictBuffer, size_t dictBufferSize,
-                        int displayLevel, const char* displayName);
+                                const size_t* fileSizes, unsigned nbFiles,
+                                int cLevel, const ZSTD_compressionParameters* comprParams,
+                                const void* dictBuffer, size_t dictBufferSize,
+                                int displayLevel, const char* displayName);
 
 
 /* BMK_benchMemAdvanced() : same as BMK_benchMem()
@@ -196,13 +196,12 @@ BMK_benchOutcome_t BMK_benchMem(const void* srcBuffer, size_t srcSize,
  * adv = see advancedParams_t
  */
 BMK_benchOutcome_t BMK_benchMemAdvanced(const void* srcBuffer, size_t srcSize,
-                        void* dstBuffer, size_t dstCapacity,
-                        const size_t* fileSizes, unsigned nbFiles,
-                        int cLevel, const ZSTD_compressionParameters* comprParams,
-                        const void* dictBuffer, size_t dictBufferSize,
-                        int displayLevel, const char* displayName,
-                        const BMK_advancedParams_t* adv);
-
+                                        void* dstBuffer, size_t dstCapacity,
+                                        const size_t* fileSizes, unsigned nbFiles,
+                                        int cLevel, const ZSTD_compressionParameters* comprParams,
+                                        const void* dictBuffer, size_t dictBufferSize,
+                                        int displayLevel, const char* displayName,
+                                        const BMK_advancedParams_t* adv);
 
 
 #endif   /* BENCH_ZSTD_H_3242387 */

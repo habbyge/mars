@@ -29,52 +29,52 @@ extern pthread_key_t g_env_key;
 
 ScopeJEnv::ScopeJEnv(JavaVM* jvm, jint _capacity)
     : vm_(jvm), env_(NULL), we_attach_(false), status_(0) {
-    ASSERT(jvm);
-    do {
-        env_ = (JNIEnv*)pthread_getspecific(g_env_key);
-        
-        if (NULL != env_) {
-            break;
-        }
-        
-        status_ = vm_->GetEnv((void**) &env_, JNI_VERSION_1_6);
+  ASSERT(jvm);
+  do {
+    env_ = (JNIEnv*) pthread_getspecific(g_env_key);
 
-        if (JNI_OK == status_) {
-            break;
-        }
+    if (NULL != env_) {
+      break;
+    }
 
-        char thread_name[32] = {0};
-        snprintf(thread_name, sizeof(thread_name), "mars::%d", (int)gettid());
-        JavaVMAttachArgs args;
-        args.group = NULL;
-        args.name = thread_name;
-        args.version = JNI_VERSION_1_6;
-        status_ = vm_->AttachCurrentThread(&env_, &args);
+    status_ = vm_->GetEnv((void**) &env_, JNI_VERSION_1_6);
 
-        if (JNI_OK == status_) {
-            we_attach_ = true;
-            pthread_setspecific(g_env_key, env_);
-        } else {
-            ASSERT2(false, "vm:%p, env:%p, status:%d", vm_, env_, status_);
-            env_ = NULL;
-            return;
-        }
-    } while (false);
-    
-    jint ret = env_->PushLocalFrame(_capacity);
-    ASSERT2(0 == ret, "ret:%d", ret);
+    if (JNI_OK == status_) {
+      break;
+    }
+
+    char thread_name[32] = {0};
+    snprintf(thread_name, sizeof(thread_name), "mars::%d", (int) gettid());
+    JavaVMAttachArgs args;
+    args.group = NULL;
+    args.name = thread_name;
+    args.version = JNI_VERSION_1_6;
+    status_ = vm_->AttachCurrentThread(&env_, &args);
+
+    if (JNI_OK == status_) {
+      we_attach_ = true;
+      pthread_setspecific(g_env_key, env_);
+    } else {
+      ASSERT2(false, "vm:%p, env:%p, status:%d", vm_, env_, status_);
+      env_ = NULL;
+      return;
+    }
+  } while (false);
+
+  jint ret = env_->PushLocalFrame(_capacity);
+  ASSERT2(0 == ret, "ret:%d", ret);
 }
 
 ScopeJEnv::~ScopeJEnv() {
-    if (NULL != env_) {
-        env_->PopLocalFrame(NULL);
-    }
+  if (NULL != env_) {
+    env_->PopLocalFrame(NULL);
+  }
 }
 
 JNIEnv* ScopeJEnv::GetEnv() {
-    return env_;
+  return env_;
 }
 
 int ScopeJEnv::Status() {
-    return status_;
+  return status_;
 }

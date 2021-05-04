@@ -7,7 +7,7 @@
 
 #if WINAPI_FAMILY == WINAPI_FAMILY_APP
 #define UWP 1
-#endif 
+#endif
 
 #if !UWP
 #define snprintf _snprintf
@@ -33,7 +33,7 @@ typedef long ssize_t;
 #define access _access
 
 #if !defined(WIN32)
-    #define sscanf sscanf_s
+#define sscanf sscanf_s
 #endif
 
 #define strdup _strdup
@@ -46,18 +46,14 @@ typedef long ssize_t;
 #define S_ISDIR(x) (_S_IFDIR & x)
 
 #if defined(WINAPI_FAMILY) && WINAPI_FAMILY == WINAPI_FAMILY_PHONE_APP
-    /// This code is for Windows phone 8
-    #define PLATFORM_WP8
+/// This code is for Windows phone 8
+#define PLATFORM_WP8
 #if !UWP
-    #define InitializeCriticalSection(x) InitializeCriticalSectionEx(x, 0 , 0)
+#define InitializeCriticalSection(x) InitializeCriticalSectionEx(x, 0 , 0)
 #endif
 #endif
 
 #define WIN32_LEAN_AND_MEAN
-
-
-
-
 
 
 #if !defined(WIN32)
@@ -69,7 +65,7 @@ typedef long ssize_t;
 #define _CRT_NONSTDC_NO_WARNINGS 1
 
 #define _SCL_SECURE_NO_WARNINGS 1
-#define S_ISDIR(x) (_S_IFDIR & x) 
+#define S_ISDIR(x) (_S_IFDIR & x)
 
 
 #define WIN32_LEAN_AND_MEAN

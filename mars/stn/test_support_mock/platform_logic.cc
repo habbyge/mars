@@ -10,65 +10,59 @@
 
 class AutoBuffer;
 
-struct AccountInfo
-{
-	AccountInfo():uin(0),qquin(0){}
-	int uin;
-    std::string username;
-    int qquin;
+struct AccountInfo {
+  AccountInfo() : uin(0), qquin(0) {}
+
+  int uin;
+  std::string username;
+  int qquin;
 };
 
-std::string getUserName() { return "test";}
-std::string getRecentUserName()
-{
-    return "test";
+std::string getUserName() { return "test"; }
+
+std::string getRecentUserName() {
+  return "test";
 }
 
-struct AccountInfo getAccountInfo()
-{
-    AccountInfo info;
-	info.username = "test";
-	info.uin = 0;
-	info.qquin = 0;
+struct AccountInfo getAccountInfo() {
+  AccountInfo info;
+  info.username = "test";
+  info.uin = 0;
+  info.qquin = 0;
 
-    return info;
+  return info;
 }
 
 unsigned int getClientVersion() {
-    return 0;
+  return 0;
 }
 
-void getUplodLogExtrasInfo(std::string& _descData)
-{
+void getUplodLogExtrasInfo(std::string& _descData) {
 }
 
 const std::string& getAppFilePath();
 
-void getWatchDogPath(std::string& aPath)
-{
+void getWatchDogPath(std::string& aPath) {
 }
 
-void getKVCommPath(std::string& aPath)
-{
+void getKVCommPath(std::string& aPath) {
 }
 
 
 void getCrashFilePath(std::string& filePath, int timespan) {
-    // ipxx upload crash file
+  // ipxx upload crash file
 }
 
 
-std::string getCurLanguage()
-{
-    return "";
+std::string getCurLanguage() {
+  return "";
 }
 
-std::string getDeviceType()
-{
-    return "";
+std::string getDeviceType() {
+  return "";
 }
 
 std::string getDeviceInfo() {
-    return "";
+  return "";
 }
 

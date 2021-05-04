@@ -18,21 +18,24 @@
 #include <boost/mpl/aux_/na.hpp>
 #include <boost/mpl/aux_/arity_spec.hpp>
 
-namespace mars_boost {} namespace boost = mars_boost; namespace mars_boost { namespace mpl {
+namespace mars_boost {}
+namespace boost = mars_boost;
+namespace mars_boost {
+namespace mpl {
 
-template< typename Value > struct always
-{
-    template<
-        BOOST_MPL_PP_DEFAULT_PARAMS(BOOST_MPL_LIMIT_METAFUNCTION_ARITY, typename T, na)
-        >
-    struct apply
-    {
-        typedef Value type;
-    };
+template<typename Value>
+struct always {
+  template<
+      BOOST_MPL_PP_DEFAULT_PARAMS(BOOST_MPL_LIMIT_METAFUNCTION_ARITY, typename T, na)
+  >
+  struct apply {
+    typedef Value type;
+  };
 };
 
 BOOST_MPL_AUX_ARITY_SPEC(0, always)
 
-}}
+}
+}
 
 #endif // BOOST_MPL_ALWAYS_HPP_INCLUDED

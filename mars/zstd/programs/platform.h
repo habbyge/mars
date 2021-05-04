@@ -40,7 +40,7 @@ extern "C" {
   || defined __x86_64__s || defined _M_X64                                                                          /* x86 64-bit */    \
   || defined __arm64__ || defined __aarch64__ || defined __ARM64_ARCH_8__                                           /* ARM 64-bit */    \
   || (defined __mips  && (__mips == 64 || __mips == 4 || __mips == 3))                                              /* MIPS 64-bit */   \
-  || defined _LP64 || defined __LP64__ /* NetBSD, OpenBSD */ || defined __64BIT__ /* AIX */ || defined _ADDR64 /* Cray */               \
+ || defined _LP64 || defined __LP64__ /* NetBSD, OpenBSD */ || defined __64BIT__ /* AIX */ || defined _ADDR64 /* Cray */               \
   || (defined __SIZEOF_POINTER__ && __SIZEOF_POINTER__ == 8) /* gcc */
 #  if !defined(__64BIT__)
 #    define __64BIT__  1
@@ -74,9 +74,9 @@ extern "C" {
 #ifndef PLATFORM_POSIX_VERSION
 
 #  if (defined(__APPLE__) && defined(__MACH__)) || defined(__SVR4) || defined(_AIX) || defined(__hpux) /* POSIX.1-2001 (SUSv3) conformant */ \
-     || defined(__DragonFly__) || defined(__FreeBSD__) || defined(__NetBSD__) || defined(__OpenBSD__)  /* BSD distros */
-     /* exception rule : force posix version to 200112L,
-      * note: it's better to use unistd.h's _POSIX_VERSION whenever possible */
+ || defined(__DragonFly__) || defined(__FreeBSD__) || defined(__NetBSD__) || defined(__OpenBSD__)  /* BSD distros */
+/* exception rule : force posix version to 200112L,
+ * note: it's better to use unistd.h's _POSIX_VERSION whenever possible */
 #    define PLATFORM_POSIX_VERSION 200112L
 
 /* try to determine posix version through official unistd.h's _POSIX_VERSION (http://pubs.opengroup.org/onlinepubs/7908799/xsh/unistd.h.html).
@@ -87,8 +87,8 @@ extern "C" {
  * The following list of build macros tries to "guess" if target OS is likely unix-like, and therefore can #include <unistd.h>
  */
 #  elif !defined(_WIN32) \
-     && ( defined(__unix__) || defined(__unix) \
-       || defined(__midipix__) || defined(__VMS) || defined(__HAIKU__) )
+ && (defined(__unix__) || defined(__unix) \
+ || defined(__midipix__) || defined(__VMS) || defined(__HAIKU__))
 
 #    if defined(__linux__) || defined(__linux)
 #      ifndef _POSIX_C_SOURCE
@@ -176,15 +176,15 @@ static __inline int IS_CONSOLE(FILE* stdStream) {
 
 
 #ifndef ZSTD_SETPRIORITY_SUPPORT
-   /* mandates presence of <sys/resource.h> and support for setpriority() : http://man7.org/linux/man-pages/man2/setpriority.2.html */
+/* mandates presence of <sys/resource.h> and support for setpriority() : http://man7.org/linux/man-pages/man2/setpriority.2.html */
 #  define ZSTD_SETPRIORITY_SUPPORT (PLATFORM_POSIX_VERSION >= 200112L)
 #endif
 
 
 #ifndef ZSTD_NANOSLEEP_SUPPORT
-   /* mandates support of nanosleep() within <time.h> : http://man7.org/linux/man-pages/man2/nanosleep.2.html */
+/* mandates support of nanosleep() within <time.h> : http://man7.org/linux/man-pages/man2/nanosleep.2.html */
 #  if (defined(__linux__) && (PLATFORM_POSIX_VERSION >= 199309L)) \
-   || (PLATFORM_POSIX_VERSION >= 200112L)
+ || (PLATFORM_POSIX_VERSION >= 200112L)
 #     define ZSTD_NANOSLEEP_SUPPORT 1
 #  else
 #     define ZSTD_NANOSLEEP_SUPPORT 0

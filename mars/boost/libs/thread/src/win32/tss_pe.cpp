@@ -9,7 +9,7 @@
 
 #include <boost/thread/detail/config.hpp>
 
-#if defined(BOOST_HAS_WINTHREADS) && defined(BOOST_THREAD_BUILD_LIB) 
+#if defined(BOOST_HAS_WINTHREADS) && defined(BOOST_THREAD_BUILD_LIB)
 
 #if (defined(__MINGW32__) && !defined(_WIN64)) || defined(__MINGW64__) || (__MINGW64_VERSION_MAJOR)
 
@@ -73,12 +73,12 @@ extern "C" const IMAGE_TLS_DIRECTORY32 _tls_used __attribute__ ((section(".rdata
 
 #elif  defined(_MSC_VER) && !defined(UNDER_CE)
 
-    #include <boost/thread/detail/tss_hooks.hpp>
+#include <boost/thread/detail/tss_hooks.hpp>
 
-    #include <stdlib.h>
+#include <stdlib.h>
 
-    #define WIN32_LEAN_AND_MEAN
-    #include <windows.h>
+#define WIN32_LEAN_AND_MEAN
+#include <windows.h>
 
 
 // _pRawDllMainOrig can be defined by including boost/thread/win32/mfc_thread_init.hpp
@@ -112,15 +112,15 @@ extern BOOL (WINAPI * const _pDefaultRawDllMainOrig)(HANDLE, DWORD, LPVOID) = NU
 
     //Definitions required by implementation
 
-    #if (_MSC_VER < 1300) // 1300 == VC++ 7.0
+#if (_MSC_VER < 1300) // 1300 == VC++ 7.0
         typedef void (__cdecl *_PVFV)();
-        #define INIRETSUCCESS
-        #define PVAPI void __cdecl
-    #else
+#define INIRETSUCCESS
+#define PVAPI void __cdecl
+#else
         typedef int (__cdecl *_PVFV)();
-        #define INIRETSUCCESS 0
-        #define PVAPI int __cdecl
-    #endif
+#define INIRETSUCCESS 0
+#define PVAPI int __cdecl
+#endif
 
     typedef void (NTAPI* _TLSCB)(HINSTANCE, DWORD, PVOID);
 
@@ -154,38 +154,38 @@ extern BOOL (WINAPI * const _pDefaultRawDllMainOrig)(HANDLE, DWORD, LPVOID) = NU
         __declspec(allocate(".CRT$XCU"))_PVFV p_process_init = on_process_init;
         __declspec(allocate(".CRT$XTU"))_PVFV p_process_term = on_process_term;
 #else
-        #if (_MSC_VER >= 1300) // 1300 == VC++ 7.0
-        #   pragma data_seg(push, old_seg)
-        #endif
+#if (_MSC_VER >= 1300) // 1300 == VC++ 7.0
+#   pragma data_seg(push, old_seg)
+#endif
             //Callback to run tls glue code first.
             //I don't think it is necessary to run it
             //at .CRT$XIB level, since we are only
             //interested in thread detachement. But
             //this could be changed easily if required.
 
-            #pragma data_seg(".CRT$XIU")
+#pragma data_seg(".CRT$XIU")
             static _PVFV p_tls_prepare = on_tls_prepare;
-            #pragma data_seg()
+#pragma data_seg()
 
             //Callback after all global ctors.
 
-            #pragma data_seg(".CRT$XCU")
+#pragma data_seg(".CRT$XCU")
             static _PVFV p_process_init = on_process_init;
-            #pragma data_seg()
+#pragma data_seg()
 
             //Callback for tls notifications.
 
-            #pragma data_seg(".CRT$XLB")
+#pragma data_seg(".CRT$XLB")
             _TLSCB p_thread_callback = on_tls_callback;
-            #pragma data_seg()
+#pragma data_seg()
             //Callback for termination.
 
-            #pragma data_seg(".CRT$XTU")
+#pragma data_seg(".CRT$XTU")
             static _PVFV p_process_term = on_process_term;
-            #pragma data_seg()
-        #if (_MSC_VER >= 1300) // 1300 == VC++ 7.0
-        #   pragma data_seg(pop, old_seg)
-        #endif
+#pragma data_seg()
+#if (_MSC_VER >= 1300) // 1300 == VC++ 7.0
+#   pragma data_seg(pop, old_seg)
+#endif
 #endif
 
 #ifdef BOOST_MSVC
@@ -205,7 +205,7 @@ extern BOOL (WINAPI * const _pDefaultRawDllMainOrig)(HANDLE, DWORD, LPVOID) = NU
 
             DWORD volatile dw = _tls_used;
 
-            #if (_MSC_VER < 1300) // 1300 == VC++ 7.0
+#if (_MSC_VER < 1300) // 1300 == VC++ 7.0
                 _TLSCB* pfbegin = __xl_a;
                 _TLSCB* pfend = __xl_z;
                 _TLSCB* pfdst = pfbegin;
@@ -226,7 +226,7 @@ extern BOOL (WINAPI * const _pDefaultRawDllMainOrig)(HANDLE, DWORD, LPVOID) = NU
                 }
 
                 *pfdst = 0;
-            #endif
+#endif
 
             return INIRETSUCCESS;
         }

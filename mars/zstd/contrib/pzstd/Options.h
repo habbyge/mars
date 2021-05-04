@@ -9,7 +9,9 @@
 #pragma once
 
 #define ZSTD_STATIC_LINKING_ONLY
+
 #include "zstd.h"
+
 #undef ZSTD_STATIC_LINKING_ONLY
 
 #include <cstdint>
@@ -19,7 +21,9 @@
 namespace pzstd {
 
 struct Options {
-  enum class WriteMode { Regular, Auto, Sparse };
+  enum class WriteMode {
+    Regular, Auto, Sparse
+  };
 
   unsigned numThreads;
   unsigned maxWindowLog;
@@ -40,6 +44,7 @@ struct Options {
   };
 
   Options();
+
   Options(unsigned numThreads, unsigned maxWindowLog, unsigned compressionLevel,
           bool decompress, std::vector<std::string> inputFiles,
           std::string outputFile, bool overwrite, bool keepSource,
@@ -50,7 +55,7 @@ struct Options {
         overwrite(overwrite), keepSource(keepSource), writeMode(writeMode),
         checksum(checksum), verbosity(verbosity) {}
 
-  Status parse(int argc, const char **argv);
+  Status parse(int argc, const char** argv);
 
   ZSTD_parameters determineParameters() const {
     ZSTD_parameters params = ZSTD_getParams(compressionLevel, 0, 0);
@@ -63,6 +68,6 @@ struct Options {
     return params;
   }
 
-  std::string getOutputFile(const std::string &inputFile) const;
+  std::string getOutputFile(const std::string& inputFile) const;
 };
 }

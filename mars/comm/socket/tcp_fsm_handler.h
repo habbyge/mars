@@ -24,60 +24,63 @@
 #include "comm/xlogger/xlogger.h"
 
 template<class InputIterator>
-bool TcpFSMHandler(InputIterator _first, InputIterator _last, SocketBreaker& _breaker, bool _select_anyway)
-{
-	xverbose_function();
-    xgroup2_define(group);
+bool TcpFSMHandler(InputIterator _first, InputIterator _last, SocketBreaker& _breaker, bool _select_anyway) {
+  xverbose_function();
+  xgroup2_define(group);
 
-    SocketSelect sel(_breaker, true);
-    sel.PreSelect();
+  SocketSelect sel(_breaker, true);
+  sel.PreSelect();
 
-    bool have_runing_status = false;
-    int timeout = INT_MAX;
+  bool have_runing_status = false;
+  int timeout = INT_MAX;
 
-    for (InputIterator it = _first; it != _last; ++it)
-    {
-        if (!(*it)->IsEndStatus()) have_runing_status = true;
+  for (InputIterator it = _first; it != _last; ++it) {
+    if (!(*it)->IsEndStatus()) have_runing_status = true;
 
-        timeout = std::min(timeout, (*it)->Timeout());
-        (*it)->PreSelect(sel, group);
-    }
+    timeout = std::min(timeout, (*it)->Timeout());
+    (*it)->PreSelect(sel, group);
+  }
 
-    if (!have_runing_status && !_select_anyway)
-    {
-        xinfo2(TSF"all end status") >> group;
-        return false;
-    }
+  if (!have_runing_status && !_select_anyway) {
+    xinfo2(TSF"all end status") >> group;
+    return false;
+  }
 
-    int ret = 0;
-    if (INT_MAX == timeout)
-    {
-        ret = sel.Select();
-    } else {
-        timeout = std::max(0, timeout);
-        ret = sel.Select(timeout);
-    }
+  int ret = 0;
+  if (INT_MAX == timeout) {
+    ret = sel.Select();
+  } else {
+    timeout = std::max(0, timeout);
+    ret = sel.Select(timeout);
+  }
 
-    // select error
-    if (ret < 0) { xerror2(TSF"sel err ret:(%_, %_)", ret, sel.Errno()) >> group; return false;}
-    // user break
-    if (sel.IsException()) { xerror2(TSF"breaker exp") >> group; return false; }
-    if (sel.IsBreak()) { xdebug2(TSF"breaker break") >> group; return false; }
+  // select error
+  if (ret < 0) {
+    xerror2(TSF"sel err ret:(%_, %_)", ret, sel.Errno()) >> group;
+    return false;
+  }
+  // user break
+  if (sel.IsException()) {
+    xerror2(TSF"breaker exp") >> group;
+    return false;
+  }
+  if (sel.IsBreak()) {
+    xdebug2(TSF"breaker break") >> group;
+    return false;
+  }
 
-    for (InputIterator it = _first; it != _last; ++it)
-    {
-        (*it)->AfterSelect(sel, group);
-    }
+  for (InputIterator it = _first; it != _last; ++it) {
+    (*it)->AfterSelect(sel, group);
+  }
 
-    return true;
+  return true;
 }
 
 template<class InputIterator>
-void TcpFSMHandlerRunloop(InputIterator _first, InputIterator _last, SocketBreaker& _breaker, bool _select_anyway)
-{
-    xinfo_function();
+void TcpFSMHandlerRunloop(InputIterator _first, InputIterator _last, SocketBreaker& _breaker, bool _select_anyway) {
+  xinfo_function();
 
-     while (TcpFSMHandler(_first, _last, _breaker, _select_anyway)) {}
+  while (TcpFSMHandler(_first, _last, _breaker, _select_anyway)) {}
 }
 
 #endif

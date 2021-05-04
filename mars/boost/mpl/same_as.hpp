@@ -20,36 +20,38 @@
 
 #include <boost/type_traits/is_same.hpp>
 
-namespace mars_boost {} namespace boost = mars_boost; namespace mars_boost { namespace mpl {
+namespace mars_boost {}
+namespace boost = mars_boost;
+namespace mars_boost {
+namespace mpl {
 
-template< typename T1 >
-struct same_as
-{
-    template< typename T2 > struct apply
+template<typename T1>
+struct same_as {
+  template<typename T2>
+  struct apply
 #if !defined(BOOST_MPL_CFG_NO_NESTED_FORWARDING)
-        : is_same<T1,T2>
-    {
+      : is_same<T1, T2> {
 #else
     {
         typedef typename is_same<T1,T2>::type type;
 #endif
-    };
+  };
 };
 
-template< typename T1 >
-struct not_same_as
-{
-    template< typename T2 > struct apply
+template<typename T1>
+struct not_same_as {
+  template<typename T2> struct apply
 #if !defined(BOOST_MPL_CFG_NO_NESTED_FORWARDING)
-        : not_< is_same<T1,T2> >
-    {
+      : not_<is_same < T1, T2> >
+  {
 #else
     {
         typedef typename not_< is_same<T1,T2> >::type type;
 #endif
-    };
+  };
 };
 
-}}
+}
+}
 
 #endif // BOOST_MPL_SAME_AS_HPP_INCLUDED

@@ -26,40 +26,35 @@
 
 #include <boost/type_traits/is_same.hpp>
 
-namespace mars_boost {} namespace boost = mars_boost; namespace mars_boost { namespace mpl {
+namespace mars_boost {}
+namespace boost = mars_boost;
+namespace mars_boost {
+namespace mpl {
 
 namespace aux {
-template<  typename Set, typename T > struct set_insert_impl
-    : eval_if< 
-          has_key_impl<aux::set_tag>::apply<Set,T>
-        , identity<Set>
-        , eval_if< 
-              is_same< T,typename Set::last_masked_ > 
-            , base<Set>
-            , identity< s_item<T,typename Set::item_> >
-            >
+template<typename Set, typename T>
+struct set_insert_impl
+    : eval_if<
+        has_key_impl<aux::set_tag>::apply<Set, T>, identity<Set>, eval_if<
+            is_same<T, typename Set::last_masked_>, base<Set>, identity<s_item<T, typename Set::item_>>
         >
-{
+    > {
 };
 }
 
 template<>
-struct insert_impl< aux::set_tag >
-{
-    template< 
-          typename Set
-        , typename PosOrKey
-        , typename KeyOrNA
-        > 
-    struct apply
-        : aux::set_insert_impl<
-              Set
-            , typename if_na<KeyOrNA,PosOrKey>::type
-            >
-    {
-    };
+struct insert_impl<aux::set_tag> {
+  template<
+      typename Set, typename PosOrKey, typename KeyOrNA
+  >
+  struct apply
+      : aux::set_insert_impl<
+          Set, typename if_na<KeyOrNA, PosOrKey>::type
+      > {
+  };
 };
 
-}}
+}
+}
 
 #endif // BOOST_MPL_SET_AUX_INSERT_IMPL_HPP_INCLUDED

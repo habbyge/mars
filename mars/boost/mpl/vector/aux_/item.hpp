@@ -21,83 +21,83 @@
 #include <boost/mpl/aux_/config/typeof.hpp>
 #include <boost/mpl/aux_/config/ctps.hpp>
 
-namespace mars_boost {} namespace boost = mars_boost; namespace mars_boost { namespace mpl {
+namespace mars_boost {}
+namespace boost = mars_boost;
+namespace mars_boost {
+namespace mpl {
 
 #if defined(BOOST_MPL_CFG_TYPEOF_BASED_SEQUENCES)
 
-template< 
-      typename T
-    , typename Base
-    , int at_front = 0
-    >
+template<
+    typename T, typename Base, int at_front = 0
+>
 struct v_item
-    : Base
-{
-    typedef typename Base::upper_bound_ index_;
-    typedef typename next<index_>::type upper_bound_;
-    typedef typename next<typename Base::size>::type size;
-    typedef Base base;
-    typedef v_item type;
+    : Base {
+  typedef typename Base::upper_bound_ index_;
+  typedef typename next<index_>::type upper_bound_;
+  typedef typename next<typename Base::size>::type size;
+  typedef Base base;
+  typedef v_item type;
 
-    // agurt 10/sep/04: MWCW <= 9.3 workaround here and below; the compiler
-    // breaks if using declaration comes _before_ the new overload
-    static aux::type_wrapper<T> item_(index_);
-    using Base::item_;
+  // agurt 10/sep/04: MWCW <= 9.3 workaround here and below; the compiler
+  // breaks if using declaration comes _before_ the new overload
+  static aux::type_wrapper<T> item_(index_);
+
+  using Base::item_;
 };
 
 template<
-      typename T
-    , typename Base
-    >
-struct v_item<T,Base,1>
-    : Base
-{
-    typedef typename prior<typename Base::lower_bound_>::type index_;
-    typedef index_ lower_bound_;
-    typedef typename next<typename Base::size>::type size;
-    typedef Base base;
-    typedef v_item type;
+    typename T, typename Base
+>
+struct v_item<T, Base, 1>
+    : Base {
+  typedef typename prior<typename Base::lower_bound_>::type index_;
+  typedef index_ lower_bound_;
+  typedef typename next<typename Base::size>::type size;
+  typedef Base base;
+  typedef v_item type;
 
-    static aux::type_wrapper<T> item_(index_);
-    using Base::item_;
+  static aux::type_wrapper<T> item_(index_);
+
+  using Base::item_;
 };
 
 // "erasure" item
-template< 
-      typename Base
-    , int at_front
-    >
+template<
+    typename Base, int at_front
+>
 struct v_mask
-    : Base
-{
-    typedef typename prior<typename Base::upper_bound_>::type index_;
-    typedef index_ upper_bound_;
-    typedef typename prior<typename Base::size>::type size;
-    typedef Base base;
-    typedef v_mask type;
+    : Base {
+  typedef typename prior<typename Base::upper_bound_>::type index_;
+  typedef index_ upper_bound_;
+  typedef typename prior<typename Base::size>::type size;
+  typedef Base base;
+  typedef v_mask type;
 
-    static aux::type_wrapper<void_> item_(index_);
-    using Base::item_;
+  static aux::type_wrapper<void_> item_(index_);
+
+  using Base::item_;
 };
 
-template< 
-      typename Base
-    >
-struct v_mask<Base,1>
-    : Base
-{
-    typedef typename Base::lower_bound_ index_;
-    typedef typename next<index_>::type lower_bound_;
-    typedef typename prior<typename Base::size>::type size;
-    typedef Base base;
-    typedef v_mask type;
+template<
+    typename Base
+>
+struct v_mask<Base, 1>
+    : Base {
+  typedef typename Base::lower_bound_ index_;
+  typedef typename next<index_>::type lower_bound_;
+  typedef typename prior<typename Base::size>::type size;
+  typedef Base base;
+  typedef v_mask type;
 
-    static aux::type_wrapper<void_> item_(index_);
-    using Base::item_;
+  static aux::type_wrapper<void_> item_(index_);
+
+  using Base::item_;
 };
 
 #endif // BOOST_MPL_CFG_TYPEOF_BASED_SEQUENCES
 
-}}
+}
+}
 
 #endif // BOOST_MPL_VECTOR_AUX_ITEM_HPP_INCLUDED

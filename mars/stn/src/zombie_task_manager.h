@@ -36,37 +36,45 @@ namespace mars {
 namespace stn {
 
 class ZombieTaskManager {
-  public:
-    boost::function<void (const Task& _task)> fun_start_task_;
+public:
+  boost::function<void(const Task& _task)> fun_start_task_;
 
-    boost::function<int (ErrCmdType _errtype, int _errcode, int _fail_handle,
-                    const Task& _task, unsigned int _taskcosttime)> fun_callback_;
+  boost::function<int(ErrCmdType _errtype, int _errcode, int _fail_handle,
+                      const Task& _task, unsigned int _taskcosttime)> fun_callback_;
 
-  public:
-    ZombieTaskManager(MessageQueue::MessageQueue_t _messagequeueid);
-    ~ZombieTaskManager();
+public:
+  ZombieTaskManager(MessageQueue::MessageQueue_t _messagequeueid);
 
-    bool SaveTask(const Task& _task, unsigned int _taskcosttime /*ms*/);
-    bool StopTask(uint32_t _taskid);
-    bool HasTask(uint32_t _taskid) const;
-    void ClearTasks();
-    void RedoTasks();
-    void OnNetCoreStartTask();
+  ~ZombieTaskManager();
 
-  private:
-    ZombieTaskManager(const ZombieTaskManager&);
-    ZombieTaskManager& operator=(const ZombieTaskManager&);
+  bool SaveTask(const Task& _task, unsigned int _taskcosttime /*ms*/);
 
-  private:
-    void __StartTask();
-    void __TimerChecker();
+  bool StopTask(uint32_t _taskid);
 
-  private:
-    MessageQueue::ScopeRegister asyncreg_;
-    std::list<ZombieTask> lsttask_;
-    uint64_t net_core_last_start_task_time_;
+  bool HasTask(uint32_t _taskid) const;
+
+  void ClearTasks();
+
+  void RedoTasks();
+
+  void OnNetCoreStartTask();
+
+private:
+  ZombieTaskManager(const ZombieTaskManager&);
+
+  ZombieTaskManager& operator=(const ZombieTaskManager&);
+
+private:
+  void __StartTask();
+
+  void __TimerChecker();
+
+private:
+  MessageQueue::ScopeRegister asyncreg_;
+  std::list<ZombieTask> lsttask_;
+  uint64_t net_core_last_start_task_time_;
 };
-        
+
 }
 
 }

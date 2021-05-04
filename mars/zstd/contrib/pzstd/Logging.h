@@ -27,7 +27,7 @@ class Logger {
   Clock::time_point lastUpdate_;
   std::chrono::milliseconds refreshRate_;
 
- public:
+public:
   explicit Logger(int level, FILE* out = stderr)
       : out_(out), level_(level), lastUpdate_(Clock::now()),
         refreshRate_(150) {}
@@ -37,8 +37,8 @@ class Logger {
     return level <= level_;
   }
 
-  template <typename... Args>
-  void operator()(int level, const char *fmt, Args... args) {
+  template<typename... Args>
+  void operator()(int level, const char* fmt, Args... args) {
     if (level > level_) {
       return;
     }
@@ -46,8 +46,8 @@ class Logger {
     std::fprintf(out_, fmt, args...);
   }
 
-  template <typename... Args>
-  void update(int level, const char *fmt, Args... args) {
+  template<typename... Args>
+  void update(int level, const char* fmt, Args... args) {
     if (level > level_) {
       return;
     }

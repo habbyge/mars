@@ -33,7 +33,7 @@
 #include <boost/preprocessor/repetition/enum_params.hpp>
 #include <boost/preprocessor/repetition/enum_trailing_params.hpp>
 
-#if BOOST_WORKAROUND( __BORLANDC__, BOOST_TESTED_AT(0x590) )
+#if BOOST_WORKAROUND(__BORLANDC__, BOOST_TESTED_AT(0x590))
 # include <boost/type_traits/is_class.hpp>
 #endif
 
@@ -156,8 +156,8 @@ template<> struct trait<T> \
 // posting by Rani Sharoni (comp.lang.c++.moderated, 2002-03-17 07:45:09 PST)
 
 #   elif BOOST_WORKAROUND(BOOST_MSVC, <= 1400) \
-      || (BOOST_WORKAROUND(BOOST_MSVC, BOOST_TESTED_AT(1800)) && defined(__CUDACC__)) \
-      || BOOST_WORKAROUND(__IBMCPP__, <= 700)
+ || (BOOST_WORKAROUND(BOOST_MSVC, BOOST_TESTED_AT(1800)) && defined(__CUDACC__)) \
+ || BOOST_WORKAROUND(__IBMCPP__, <= 700)
 
 // MSVC 7.1 & MSVC 8.0 & VACPP
 
@@ -196,7 +196,7 @@ struct trait \
 }; \
 /**/
 
-#   elif BOOST_WORKAROUND( __BORLANDC__, BOOST_TESTED_AT(0x590) )
+#   elif BOOST_WORKAROUND(__BORLANDC__, BOOST_TESTED_AT(0x590))
 
 #   define BOOST_MPL_HAS_XXX_TRAIT_NAMED_BCB_DEF(trait, trait_tester, name, default_) \
 template< typename T, bool IS_CLASS > \
@@ -415,9 +415,9 @@ struct trait \
 #     endif
 #   endif
 
-#   define BOOST_MPL_HAS_MEMBER_INTROSPECT( \
+#   define BOOST_MPL_HAS_MEMBER_INTROSPECT(\
                args, substitute_macro, member_macro \
-           ) \
+) \
       template< typename U > \
       struct BOOST_MPL_HAS_MEMBER_INTROSPECTION_NAME(args) { \
           BOOST_MPL_HAS_MEMBER_SUBSTITUTE(args, substitute_macro) \
@@ -430,9 +430,9 @@ struct trait \
       }; \
     /**/
 
-#   define BOOST_MPL_HAS_MEMBER_IMPLEMENTATION( \
+#   define BOOST_MPL_HAS_MEMBER_IMPLEMENTATION(\
                args, introspect_macro, substitute_macro, member_macro \
-           ) \
+) \
       template< \
           typename T \
         , typename fallback_ \
@@ -452,9 +452,9 @@ struct trait \
 // BOOST_MPL_HAS_MEMBER_WITH_FUNCTION_SFINAE expands to the full
 // implementation of the function-based metafunction. Compile with -E
 // to see the preprocessor output for this macro.
-#   define BOOST_MPL_HAS_MEMBER_WITH_FUNCTION_SFINAE( \
+#   define BOOST_MPL_HAS_MEMBER_WITH_FUNCTION_SFINAE(\
                args, substitute_macro, member_macro \
-           ) \
+) \
       BOOST_MPL_HAS_MEMBER_IMPLEMENTATION( \
           args \
         , BOOST_MPL_HAS_MEMBER_INTROSPECT \

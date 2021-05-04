@@ -15,9 +15,12 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE. */
 #include <stdio.h>
 #include <ctype.h>
+
 #ifndef WIN32
+
 #include <netinet/in.h>
 #include <sys/param.h>
+
 #endif
 
 /* There is no portable method to get the default route gateway.
@@ -47,6 +50,7 @@
 #define USE_SYSCTL_NET_ROUTE
 
 #include <TargetConditionals.h>
+
 #if TARGET_OS_IOS
 #undef __ROUTE_HEADER_FILE__
 #define __ROUTE_HEADER_FILE__  "comm/objc/route.h"
@@ -73,10 +77,12 @@
 #endif
 
 #ifdef USE_SYSCTL_NET_ROUTE
+
 #include <stdlib.h>
 #include <sys/sysctl.h>
 #include <sys/socket.h>
 #include __ROUTE_HEADER_FILE__
+
 #endif
 #ifdef USE_SOCKET_ROUTE
 #include <unistd.h>
@@ -91,6 +97,7 @@
 #define MAX_KEY_LENGTH 255
 #define MAX_VALUE_LENGTH 16383
 #endif
+
 #include "comm/network/getgateway.h"
 
 #define SUCCESS (0)
@@ -117,7 +124,7 @@ int getdefaultgateway(struct in_addr * addr)
                 p++;
             if (sscanf(p, "%lx%lx", &d, &g)==2) {
                 if (d == 0) { /* default */
-                	addr->s_addr = (in_addr_t)g;
+                  addr->s_addr = (in_addr_t)g;
                     fclose(f);
                     return SUCCESS;
                 }
@@ -132,7 +139,7 @@ int getdefaultgateway(struct in_addr * addr)
 }
 
 int getdefaultgateway6(struct in6_addr * addr) {
-	return FAILED;
+  return FAILED;
 }
 
 #endif /* #ifdef USE_PROC_NET_ROUTE */
@@ -143,104 +150,103 @@ int getdefaultgateway6(struct in6_addr * addr) {
 #define ROUNDUP(a) \
     ((a) > 0 ? (1 + (((a) - 1) | (sizeof(long) - 1))) : sizeof(long))
 
-int getdefaultgateway(struct in_addr * addr)
-{
+int getdefaultgateway(struct in_addr* addr) {
 #if 0
-    /* net.route.0.inet.dump.0.0 ? */
-    int mib[] = {CTL_NET, PF_ROUTE, 0, AF_INET,
-                 NET_RT_DUMP, 0, 0/*tableid*/};
+  /* net.route.0.inet.dump.0.0 ? */
+  int mib[] = {CTL_NET, PF_ROUTE, 0, AF_INET,
+               NET_RT_DUMP, 0, 0/*tableid*/};
 #endif
-    /* net.route.0.inet.flags.gateway */
-    int mib[] = {CTL_NET, PF_ROUTE, 0, AF_INET,
-                 NET_RT_FLAGS, RTF_GATEWAY};
-    size_t l;
-    char * buf, * p;
-    struct rt_msghdr * rt;
-    struct sockaddr * sa;
-    struct sockaddr * sa_tab[RTAX_MAX];
-    int i;
-    int r = FAILED;
-    if (sysctl(mib, sizeof(mib)/sizeof(int), 0, &l, 0, 0) < 0) {
-        return FAILED;
+  /* net.route.0.inet.flags.gateway */
+  int mib[] = {CTL_NET, PF_ROUTE, 0, AF_INET,
+               NET_RT_FLAGS, RTF_GATEWAY};
+  size_t l;
+  char* buf, * p;
+  struct rt_msghdr* rt;
+  struct sockaddr* sa;
+  struct sockaddr* sa_tab[RTAX_MAX];
+  int i;
+  int r = FAILED;
+  if (sysctl(mib, sizeof(mib) / sizeof(int), 0, &l, 0, 0) < 0) {
+    return FAILED;
+  }
+  if (l > 0) {
+    buf = malloc(l);
+    if (sysctl(mib, sizeof(mib) / sizeof(int), buf, &l, 0, 0) < 0) {
+      free(buf);
+      return FAILED;
     }
-    if (l>0) {
-        buf = malloc(l);
-        if (sysctl(mib, sizeof(mib)/sizeof(int), buf, &l, 0, 0) < 0) {
-            free(buf);
-            return FAILED;
+    for (p = buf; p < buf + l; p += rt->rtm_msglen) {
+      rt = (struct rt_msghdr*) p;
+      sa = (struct sockaddr*) (rt + 1);
+      for (i = 0; i < RTAX_MAX; i++) {
+        if (rt->rtm_addrs & (1 << i)) {
+          sa_tab[i] = sa;
+          sa = (struct sockaddr*) ((char*) sa + ROUNDUP(sa->sa_len));
+        } else {
+          sa_tab[i] = NULL;
         }
-        for(p=buf; p<buf+l; p+=rt->rtm_msglen) {
-            rt = (struct rt_msghdr *)p;
-            sa = (struct sockaddr *)(rt + 1);
-            for(i=0; i<RTAX_MAX; i++) {
-                if (rt->rtm_addrs & (1 << i)) {
-                    sa_tab[i] = sa;
-                    sa = (struct sockaddr *)((char *)sa + ROUNDUP(sa->sa_len));
-                } else {
-                    sa_tab[i] = NULL;
-                }
-            }
-            if ( ((rt->rtm_addrs & (RTA_DST|RTA_GATEWAY)) == (RTA_DST|RTA_GATEWAY))
-              && sa_tab[RTAX_DST]->sa_family == AF_INET) {
+      }
+      if (((rt->rtm_addrs & (RTA_DST | RTA_GATEWAY)) == (RTA_DST | RTA_GATEWAY))
+          && sa_tab[RTAX_DST]->sa_family == AF_INET) {
 //              && sa_tab[RTAX_GATEWAY]->sa_family == AF_INET) {
-                if (((struct sockaddr_in *)sa_tab[RTAX_DST])->sin_addr.s_addr == 0) {
-                    *addr = ((struct sockaddr_in *)(sa_tab[RTAX_GATEWAY]))->sin_addr;
-                    r = SUCCESS;
-                    break;
-                }
-            }
+        if (((struct sockaddr_in*) sa_tab[RTAX_DST])->sin_addr.s_addr == 0) {
+          *addr = ((struct sockaddr_in*) (sa_tab[RTAX_GATEWAY]))->sin_addr;
+          r = SUCCESS;
+          break;
         }
-        free(buf);
+      }
     }
-    return r;
+    free(buf);
+  }
+  return r;
 }
 
-int getdefaultgateway6(struct in6_addr * addr)
-{
-    /* net.route.0.inet6.flags.gateway */
-    int mib[] = {CTL_NET, PF_ROUTE, 0, AF_INET6,
-        NET_RT_FLAGS, RTF_GATEWAY};
-    size_t l;
-    char * buf, * p;
-    struct rt_msghdr * rt;
-    struct sockaddr * sa;
-    struct sockaddr * sa_tab[RTAX_MAX];
-    int i;
-    int r = FAILED;
-    if (sysctl(mib, sizeof(mib)/sizeof(int), 0, &l, 0, 0) < 0) {
-        return FAILED;
+int getdefaultgateway6(struct in6_addr* addr) {
+  /* net.route.0.inet6.flags.gateway */
+  int mib[] = {CTL_NET, PF_ROUTE, 0, AF_INET6,
+               NET_RT_FLAGS, RTF_GATEWAY};
+  size_t l;
+  char* buf, * p;
+  struct rt_msghdr* rt;
+  struct sockaddr* sa;
+  struct sockaddr* sa_tab[RTAX_MAX];
+  int i;
+  int r = FAILED;
+  if (sysctl(mib, sizeof(mib) / sizeof(int), 0, &l, 0, 0) < 0) {
+    return FAILED;
+  }
+  if (l > 0) {
+    buf = malloc(l);
+    if (sysctl(mib, sizeof(mib) / sizeof(int), buf, &l, 0, 0) < 0) {
+      free(buf);
+      return FAILED;
     }
-    if (l>0) {
-        buf = malloc(l);
-        if (sysctl(mib, sizeof(mib)/sizeof(int), buf, &l, 0, 0) < 0) {
-            free(buf);
-            return FAILED;
+    for (p = buf; p < buf + l; p += rt->rtm_msglen) {
+      rt = (struct rt_msghdr*) p;
+      sa = (struct sockaddr*) (rt + 1);
+      for (i = 0; i < RTAX_MAX; i++) {
+        if (rt->rtm_addrs & (1 << i)) {
+          sa_tab[i] = sa;
+          sa = (struct sockaddr*) ((char*) sa + ROUNDUP(sa->sa_len));
+        } else {
+          sa_tab[i] = NULL;
         }
-        for(p=buf; p<buf+l; p+=rt->rtm_msglen) {
-            rt = (struct rt_msghdr *)p;
-            sa = (struct sockaddr *)(rt + 1);
-            for(i=0; i<RTAX_MAX; i++) {
-                if (rt->rtm_addrs & (1 << i)) {
-                    sa_tab[i] = sa;
-                    sa = (struct sockaddr *)((char *)sa + ROUNDUP(sa->sa_len));
-                } else {
-                    sa_tab[i] = NULL;
-                }
-            }
-            if ( ((rt->rtm_addrs & (RTA_DST|RTA_GATEWAY)) == (RTA_DST|RTA_GATEWAY))
-               && sa_tab[RTAX_DST]->sa_family == AF_INET6) {
+      }
+      if (((rt->rtm_addrs & (RTA_DST | RTA_GATEWAY)) == (RTA_DST | RTA_GATEWAY))
+          && sa_tab[RTAX_DST]->sa_family == AF_INET6) {
 //               && sa_tab[RTAX_GATEWAY]->sa_family == AF_INET6) {
-                if (IN6_IS_ADDR_UNSPECIFIED(&((struct sockaddr_in6 *)sa_tab[RTAX_DST])->sin6_addr)) {
-                    *addr = ((struct sockaddr_in6 *)(sa_tab[RTAX_GATEWAY]))->sin6_addr;
-                    r = SUCCESS;
-                    break;
-                }
-            }
+        if (IN6_IS_ADDR_UNSPECIFIED(&((struct sockaddr_in6*) sa_tab[RTAX_DST])->sin6_addr)) {
+          *addr = ((struct sockaddr_in6*) (sa_tab[RTAX_GATEWAY]))->sin6_addr;
+          r = SUCCESS;
+          break;
         }
-        free(buf);
+      }
     }
-    return r;
+    free(buf);
+  }
+  return r;
 }
+
 #endif /* #ifdef USE_SYSCTL_NET_ROUTE */
 
 
@@ -475,7 +481,7 @@ int getdefaultgateway(in_addr_t * addr)
 }
 
 int getdefaultgateway6(struct in6_addr * addr) {
-	return FAILED;
+  return FAILED;
 }
 #endif /* #ifdef USE_WIN32_CODE */
 

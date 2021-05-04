@@ -48,152 +48,158 @@ namespace mars {
 namespace app {
 
 DEFINE_FIND_STATIC_METHOD(KC2Java_getAppFilePath, KC2Java, "getAppFilePath", "()Ljava/lang/String;")
+
 std::string GetAppFilePath() {
-	xverbose_function();
+  xverbose_function();
 
-    VarCache* cache_instance = VarCache::Singleton();
-	ScopeJEnv scope_jenv(cache_instance->GetJvm());
-	JNIEnv *env = scope_jenv.GetEnv();
+  VarCache* cache_instance = VarCache::Singleton();
+  ScopeJEnv scope_jenv(cache_instance->GetJvm());
+  JNIEnv* env = scope_jenv.GetEnv();
 
-	jstring path = (jstring)JNU_CallStaticMethodByMethodInfo(env, KC2Java_getAppFilePath).l;
-	if (NULL == path) {
-		xerror2(TSF"getAppFilePath error return null");
-		return "";
-	}
+  jstring path = (jstring) JNU_CallStaticMethodByMethodInfo(env, KC2Java_getAppFilePath).l;
+  if (NULL == path) {
+    xerror2(TSF"getAppFilePath error return null");
+    return "";
+  }
 
-	std::string app_path = ScopedJstring(env, path).GetChar();
-	env->DeleteLocalRef(path);
+  std::string app_path = ScopedJstring(env, path).GetChar();
+  env->DeleteLocalRef(path);
 
-	return app_path;
+  return app_path;
 }
 
-DEFINE_FIND_STATIC_METHOD(KC2Java_getAccountInfo, KC2Java, "getAccountInfo", "()Lcom/tencent/mars/app/AppLogic$AccountInfo;")
+DEFINE_FIND_STATIC_METHOD(KC2Java_getAccountInfo, KC2Java, "getAccountInfo",
+                          "()Lcom/tencent/mars/app/AppLogic$AccountInfo;")
+
 AccountInfo GetAccountInfo() {
-	xverbose_function();
+  xverbose_function();
 
-    VarCache* cache_instance = VarCache::Singleton();
-	ScopeJEnv scope_jenv(cache_instance->GetJvm());
-	JNIEnv *env = scope_jenv.GetEnv();
+  VarCache* cache_instance = VarCache::Singleton();
+  ScopeJEnv scope_jenv(cache_instance->GetJvm());
+  JNIEnv* env = scope_jenv.GetEnv();
 
-	AccountInfo info;
-	jobject ret_obj = JNU_CallStaticMethodByMethodInfo(env, KC2Java_getAccountInfo).l;
-	if (NULL == ret_obj) {
-		xerror2(TSF"getAccountInfo error return null");
-		return info;
-	}
+  AccountInfo info;
+  jobject ret_obj = JNU_CallStaticMethodByMethodInfo(env, KC2Java_getAccountInfo).l;
+  if (NULL == ret_obj) {
+    xerror2(TSF"getAccountInfo error return null");
+    return info;
+  }
 
-	jlong uin = JNU_GetField(env, ret_obj, "uin", "J").i;
-	jstring username_jstr = (jstring)JNU_GetField(env, ret_obj, "userName", "Ljava/lang/String;").l;
+  jlong uin = JNU_GetField(env, ret_obj, "uin", "J").i;
+  jstring username_jstr = (jstring) JNU_GetField(env, ret_obj, "userName", "Ljava/lang/String;").l;
 
-	info.uin = (long)uin;
+  info.uin = (long) uin;
 
-	if (username_jstr != NULL) {
-		info.username = ScopedJstring(env, username_jstr).GetChar();
-		env->DeleteLocalRef(username_jstr);
-	}
+  if (username_jstr != NULL) {
+    info.username = ScopedJstring(env, username_jstr).GetChar();
+    env->DeleteLocalRef(username_jstr);
+  }
 
-	env->DeleteLocalRef(ret_obj);
-	return info;
+  env->DeleteLocalRef(ret_obj);
+  return info;
 }
 
 std::string GetUserName() {
-    xverbose_function();
+  xverbose_function();
 
-    VarCache* cache_instance = VarCache::Singleton();
-    ScopeJEnv scope_jenv(cache_instance->GetJvm());
-    JNIEnv *env = scope_jenv.GetEnv();
+  VarCache* cache_instance = VarCache::Singleton();
+  ScopeJEnv scope_jenv(cache_instance->GetJvm());
+  JNIEnv* env = scope_jenv.GetEnv();
 
-    jobject ret_obj = JNU_CallStaticMethodByMethodInfo(env, KC2Java_getAccountInfo).l;
- 	if (NULL == ret_obj) {
- 		return std::string();
- 	}
+  jobject ret_obj = JNU_CallStaticMethodByMethodInfo(env, KC2Java_getAccountInfo).l;
+  if (NULL == ret_obj) {
+    return std::string();
+  }
 
- 	jstring username_jstr = (jstring)JNU_GetField(env, ret_obj, "userName", "Ljava/lang/String;").l;
+  jstring username_jstr = (jstring) JNU_GetField(env, ret_obj, "userName", "Ljava/lang/String;").l;
 
- 	env->DeleteLocalRef(ret_obj);
+  env->DeleteLocalRef(ret_obj);
 
-     if (username_jstr != NULL) {
-         const char* name = env->GetStringUTFChars(username_jstr, NULL);
-         std::string user_name(name);
-         env->ReleaseStringUTFChars(username_jstr, name);
-         env->DeleteLocalRef(username_jstr);
-         return user_name;
-     } else {
-         return std::string();
-     }
+  if (username_jstr != NULL) {
+    const char* name = env->GetStringUTFChars(username_jstr, NULL);
+    std::string user_name(name);
+    env->ReleaseStringUTFChars(username_jstr, name);
+    env->DeleteLocalRef(username_jstr);
+    return user_name;
+  } else {
+    return std::string();
+  }
 }
 
 std::string GetRecentUserName() {
-	return GetUserName();
+  return GetUserName();
 }
 
 DEFINE_FIND_STATIC_METHOD(KC2Java_getClientVersion, KC2Java, "getClientVersion", "()I")
+
 unsigned int GetClientVersion() {
 
-	static unsigned int s_version = 0;
-	if (0 != s_version) {
-		return s_version;
-	}
+  static unsigned int s_version = 0;
+  if (0 != s_version) {
+    return s_version;
+  }
 
-	VarCache* cache_instance = VarCache::Singleton();
-	ScopeJEnv scope_jenv(cache_instance->GetJvm());
-	JNIEnv *env = scope_jenv.GetEnv();
-	s_version = (unsigned int)JNU_CallStaticMethodByMethodInfo(env, KC2Java_getClientVersion).i;
+  VarCache* cache_instance = VarCache::Singleton();
+  ScopeJEnv scope_jenv(cache_instance->GetJvm());
+  JNIEnv* env = scope_jenv.GetEnv();
+  s_version = (unsigned int) JNU_CallStaticMethodByMethodInfo(env, KC2Java_getClientVersion).i;
 
-	return s_version;
+  return s_version;
 }
 
-DEFINE_FIND_STATIC_METHOD(KC2Java_getDeviceType, KC2Java, "getDeviceType", "()Lcom/tencent/mars/app/AppLogic$DeviceInfo;")
+DEFINE_FIND_STATIC_METHOD(KC2Java_getDeviceType, KC2Java, "getDeviceType",
+                          "()Lcom/tencent/mars/app/AppLogic$DeviceInfo;")
+
 DeviceInfo GetDeviceInfo() {
-	xverbose_function();
+  xverbose_function();
 
-	static DeviceInfo s_info;
-	if (!s_info.devicename.empty() || !s_info.devicetype.empty()) {
-		return s_info;
-	}
+  static DeviceInfo s_info;
+  if (!s_info.devicename.empty() || !s_info.devicetype.empty()) {
+    return s_info;
+  }
 
-	VarCache* cache_instance = VarCache::Singleton();
-	ScopeJEnv scope_jenv(cache_instance->GetJvm());
-	JNIEnv *env = scope_jenv.GetEnv();
+  VarCache* cache_instance = VarCache::Singleton();
+  ScopeJEnv scope_jenv(cache_instance->GetJvm());
+  JNIEnv* env = scope_jenv.GetEnv();
 
-	jobject ret_obj = JNU_CallStaticMethodByMethodInfo(env, KC2Java_getDeviceType).l;
-	if (NULL == ret_obj) {
-		xerror2(TSF"GetDeviceInfo error return null");
-		return s_info;
-	}
+  jobject ret_obj = JNU_CallStaticMethodByMethodInfo(env, KC2Java_getDeviceType).l;
+  if (NULL == ret_obj) {
+    xerror2(TSF"GetDeviceInfo error return null");
+    return s_info;
+  }
 
-	jstring devicename_jstr = (jstring)JNU_GetField(env, ret_obj, "devicename", "Ljava/lang/String;").l;
+  jstring devicename_jstr = (jstring) JNU_GetField(env, ret_obj, "devicename", "Ljava/lang/String;").l;
 
-	static Mutex mutex;
-	ScopedLock lock(mutex);
+  static Mutex mutex;
+  ScopedLock lock(mutex);
 
-	if (NULL != devicename_jstr) {
-		ScopedJstring scoped_jstr(env, devicename_jstr);
-		
-		jsize len = env->GetStringUTFLength(devicename_jstr);
-		s_info.devicename = std::string(scoped_jstr.GetChar(), len);
-		
-		env->DeleteLocalRef(devicename_jstr);
-	}
+  if (NULL != devicename_jstr) {
+    ScopedJstring scoped_jstr(env, devicename_jstr);
 
-	jstring devicetype_jstr = (jstring)JNU_GetField(env, ret_obj, "devicetype", "Ljava/lang/String;").l;
-	if (NULL != devicetype_jstr) {
-		ScopedJstring scoped_jstr(env, devicetype_jstr);
+    jsize len = env->GetStringUTFLength(devicename_jstr);
+    s_info.devicename = std::string(scoped_jstr.GetChar(), len);
 
-		jsize len = env->GetStringUTFLength(devicetype_jstr);
-		s_info.devicetype = std::string(scoped_jstr.GetChar(), len);
-		
-		env->DeleteLocalRef(devicetype_jstr);
-	}
+    env->DeleteLocalRef(devicename_jstr);
+  }
 
-	return s_info;
+  jstring devicetype_jstr = (jstring) JNU_GetField(env, ret_obj, "devicetype", "Ljava/lang/String;").l;
+  if (NULL != devicetype_jstr) {
+    ScopedJstring scoped_jstr(env, devicetype_jstr);
+
+    jsize len = env->GetStringUTFLength(devicetype_jstr);
+    s_info.devicetype = std::string(scoped_jstr.GetChar(), len);
+
+    env->DeleteLocalRef(devicetype_jstr);
+  }
+
+  return s_info;
 }
 
 
 mars::comm::ProxyInfo GetProxyInfo(const std::string& _host) {
-    return mars::comm::ProxyInfo();
+  return mars::comm::ProxyInfo();
 }
 
 
-
-}}
+}
+}

@@ -40,15 +40,15 @@
 #endif
 
 #if BOOST_WORKAROUND(__BORLANDC__, BOOST_TESTED_AT(0x610)) \
-    || (BOOST_MPL_CFG_GCC != 0) \
-    || BOOST_WORKAROUND(__IBMCPP__, <= 600)
+ || (BOOST_MPL_CFG_GCC != 0) \
+ || BOOST_WORKAROUND(__IBMCPP__, <= 600)
 #   define BOOST_MPL_CFG_ASSERT_USE_RELATION_NAMES
 #endif
 
 #if BOOST_WORKAROUND(__MWERKS__, < 0x3202) \
-    || BOOST_WORKAROUND(__EDG_VERSION__, <= 238) \
-    || BOOST_WORKAROUND(__BORLANDC__, BOOST_TESTED_AT(0x610)) \
-    || BOOST_WORKAROUND(__DMC__, BOOST_TESTED_AT(0x840))
+ || BOOST_WORKAROUND(__EDG_VERSION__, <= 238) \
+ || BOOST_WORKAROUND(__BORLANDC__, BOOST_TESTED_AT(0x610)) \
+ || BOOST_WORKAROUND(__DMC__, BOOST_TESTED_AT(0x840))
 #   define BOOST_MPL_CFG_ASSERT_BROKEN_POINTER_TO_POINTER_TO_MEMBER
 #endif
 
@@ -56,7 +56,7 @@
 // and GCC (which issues "unused variable" warnings when static constants are used 
 // at a function scope)
 #if BOOST_WORKAROUND(__BORLANDC__, BOOST_TESTED_AT(0x610)) \
-    || (BOOST_MPL_CFG_GCC != 0) || (BOOST_MPL_CFG_GPU != 0)
+ || (BOOST_MPL_CFG_GCC != 0) || (BOOST_MPL_CFG_GPU != 0)
 #   define BOOST_MPL_AUX_ASSERT_CONSTANT(T, expr) enum { expr }
 #else
 #   define BOOST_MPL_AUX_ASSERT_CONSTANT(T, expr) BOOST_STATIC_CONSTANT(T, expr)
@@ -65,7 +65,8 @@
 
 BOOST_MPL_AUX_ADL_BARRIER_NAMESPACE_OPEN
 
-struct failed {};
+struct failed {
+};
 
 // agurt, 24/aug/04: MSVC 7.1 workaround here and below: return/accept 
 // 'assert<false>' by reference; can't apply it unconditionally -- apparently it
@@ -76,31 +77,38 @@ struct failed {};
 #   define AUX778076_ASSERT_ARG(x) x
 #endif
 
-template< bool C >  struct assert        { typedef void* type; };
-template<>          struct assert<false> { typedef AUX778076_ASSERT_ARG(assert) type; };
+template<bool C>
+struct assert {
+  typedef void* type;
+};
+template<>
+struct assert<false> {
+  typedef AUX778076_ASSERT_ARG(assert) type;
+};
 
-template< bool C >
-int assertion_failed( typename assert<C>::type );
+template<bool C>
+int assertion_failed(typename assert<C>::type);
 
-template< bool C >
-struct assertion
-{
-    static int failed( assert<false> );
+template<bool C>
+struct assertion {
+  static int failed(assert<false>);
 };
 
 template<>
-struct assertion<true>
-{
-    static int failed( void* );
+struct assertion<true> {
+  static int failed(void*);
 };
 
-struct assert_
-{
+struct assert_ {
 #if !defined(BOOST_MPL_CFG_NO_DEFAULT_PARAMETERS_IN_NESTED_TEMPLATES)
-    template< typename T1, typename T2 = na, typename T3 = na, typename T4 = na > struct types {};
+  template<typename T1, typename T2 = na, typename T3 = na, typename T4 = na>
+  struct types {
+  };
 #endif
-    static assert_ const arg;
-    enum relations { equal = 1, not_equal, greater, greater_equal, less, less_equal };
+  static assert_ const arg;
+  enum relations {
+    equal = 1, not_equal, greater, greater_equal, less, less_equal
+  };
 };
 
 
@@ -124,16 +132,23 @@ struct assert_relation {};
 
 #else // BOOST_MPL_CFG_ASSERT_USE_RELATION_NAMES
 
-mars_boost::mpl::aux::weighted_tag<1>::type operator==( assert_, assert_ );
-mars_boost::mpl::aux::weighted_tag<2>::type operator!=( assert_, assert_ );
-mars_boost::mpl::aux::weighted_tag<3>::type operator>(  assert_, assert_ );
-mars_boost::mpl::aux::weighted_tag<4>::type operator>=( assert_, assert_ );
-mars_boost::mpl::aux::weighted_tag<5>::type operator<( assert_, assert_ );
-mars_boost::mpl::aux::weighted_tag<6>::type operator<=( assert_, assert_ );
+mars_boost::mpl::aux::weighted_tag<1>::type operator==(assert_, assert_);
 
-template< assert_::relations r, long x, long y > struct assert_relation {};
+mars_boost::mpl::aux::weighted_tag<2>::type operator!=(assert_, assert_);
 
-#endif 
+mars_boost::mpl::aux::weighted_tag<3>::type operator>(assert_, assert_);
+
+mars_boost::mpl::aux::weighted_tag<4>::type operator>=(assert_, assert_);
+
+mars_boost::mpl::aux::weighted_tag<5>::type operator<(assert_, assert_);
+
+mars_boost::mpl::aux::weighted_tag<6>::type operator<=(assert_, assert_);
+
+template<assert_::relations r, long x, long y>
+struct assert_relation {
+};
+
+#endif
 
 #if BOOST_WORKAROUND(BOOST_MSVC, == 1700)
 
@@ -168,43 +183,49 @@ T make_assert_arg();
 
 #elif !defined(BOOST_MPL_CFG_ASSERT_BROKEN_POINTER_TO_POINTER_TO_MEMBER)
 
-template< bool > struct assert_arg_pred_impl { typedef int type; };
-template<> struct assert_arg_pred_impl<true> { typedef void* type; };
-
-template< typename P > struct assert_arg_pred
-{
-    typedef typename P::type p_type;
-    typedef typename assert_arg_pred_impl< p_type::value >::type type;
+template<bool>
+struct assert_arg_pred_impl {
+  typedef int type;
+};
+template<>
+struct assert_arg_pred_impl<true> {
+  typedef void* type;
 };
 
-template< typename P > struct assert_arg_pred_not
-{
-    typedef typename P::type p_type;
-    BOOST_MPL_AUX_ASSERT_CONSTANT( bool, p = !p_type::value );
-    typedef typename assert_arg_pred_impl<p>::type type;
+template<typename P>
+struct assert_arg_pred {
+  typedef typename P::type p_type;
+  typedef typename assert_arg_pred_impl<p_type::value>::type type;
 };
 
-template< typename Pred >
-failed ************ (Pred::************ 
-      assert_arg( void (*)(Pred), typename assert_arg_pred<Pred>::type )
-    );
+template<typename P>
+struct assert_arg_pred_not {
+  typedef typename P::type p_type;
+  BOOST_MPL_AUX_ASSERT_CONSTANT(bool, p = !p_type::value);
+  typedef typename assert_arg_pred_impl<p>::type type;
+};
 
-template< typename Pred >
-failed ************ (mars_boost::mpl::not_<Pred>::************ 
-      assert_not_arg( void (*)(Pred), typename assert_arg_pred_not<Pred>::type )
-    );
+template<typename Pred>
+failed************ (Pred::************
+assert_arg(void (*)(Pred), typename assert_arg_pred<Pred>::type)
+);
 
-template< typename Pred >
+template<typename Pred>
+failed************ (mars_boost::mpl::not_<Pred>::************
+assert_not_arg(void (*)(Pred), typename assert_arg_pred_not<Pred>::type)
+);
+
+template<typename Pred>
 AUX778076_ASSERT_ARG(assert<false>)
-assert_arg( void (*)(Pred), typename assert_arg_pred_not<Pred>::type );
+assert_arg(void (*)(Pred), typename assert_arg_pred_not<Pred>::type);
 
-template< typename Pred >
+template<typename Pred>
 AUX778076_ASSERT_ARG(assert<false>)
-assert_not_arg( void (*)(Pred), typename assert_arg_pred<Pred>::type );
+assert_not_arg(void (*)(Pred), typename assert_arg_pred<Pred>::type);
 
 
 #else // BOOST_MPL_CFG_ASSERT_BROKEN_POINTER_TO_POINTER_TO_MEMBER
-        
+
 template< bool c, typename Pred > struct assert_arg_type_impl
 {
     typedef failed      ************ Pred::* mwcw83_wknd;
@@ -416,7 +437,7 @@ BOOST_MPL_AUX_ASSERT_CONSTANT( \
     ) \
 /**/
 #else
-#   define BOOST_MPL_ASSERT_MSG_IMPL( counter, c, msg, types_ )  \
+#   define BOOST_MPL_ASSERT_MSG_IMPL(counter, c, msg, types_)  \
 struct msg; \
 typedef struct BOOST_PP_CAT(msg,counter) : mars_boost::mpl::assert_ \
 { \
@@ -432,7 +453,7 @@ BOOST_MPL_AUX_ASSERT_CONSTANT( \
 /**/
 #endif
 
-#define BOOST_MPL_ASSERT_MSG( c, msg, types_ ) \
+#define BOOST_MPL_ASSERT_MSG(c, msg, types_) \
 BOOST_MPL_ASSERT_MSG_IMPL( BOOST_MPL_AUX_PP_COUNTER(), c, msg, types_ ) \
 /**/
 

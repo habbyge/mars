@@ -26,83 +26,109 @@
 #include "socket/socket_address.h"
 
 class XLogger;
+
 class SocketSelect;
 
 class TcpClientFSM {
-  public:
-    enum TSocketStatus {
-        EStart,
-        EConnecting,
-        EReadWrite,
-        EEnd,
-    };
+public:
+  enum TSocketStatus {
+    EStart,
+    EConnecting,
+    EReadWrite,
+    EEnd,
+  };
 
-  public:
-    TcpClientFSM(const sockaddr& _addr);
-    virtual ~TcpClientFSM();
+public:
+  TcpClientFSM(const sockaddr& _addr);
 
-    void RequestSend();
+  virtual ~TcpClientFSM();
 
-    TSocketStatus Status() const;
-    TSocketStatus LastStatus() const;
-    void Status(TSocketStatus _status);
-    bool IsEndStatus() const;
-    int Error() const;
+  void RequestSend();
 
-    SOCKET Socket() const;
-    void Socket(SOCKET _sock);
-    const sockaddr& Address() const;
-    const char* IP() const;
-    uint16_t Port() const;
+  TSocketStatus Status() const;
 
-    void Close(bool _notify = true);
-    bool RemoteClose() const;
+  TSocketStatus LastStatus() const;
 
-    virtual void PreSelect(SocketSelect& _sel, XLogger& _log);
-    virtual void AfterSelect(SocketSelect& _sel, XLogger& _log);
-    virtual int Timeout() const;
-    int Rtt() const;
+  void Status(TSocketStatus _status);
 
-  private:
-    TcpClientFSM(const TcpClientFSM&);
-    TcpClientFSM& operator=(const TcpClientFSM&);
+  bool IsEndStatus() const;
 
-  protected:
-    virtual void PreConnectSelect(SocketSelect& _sel, XLogger& _log);
-    virtual void AfterConnectSelect(const SocketSelect& _sel, XLogger& _log);
-    virtual void PreReadWriteSelect(SocketSelect& _sel, XLogger& _log);
-    virtual void AfterReadWriteSelect(const SocketSelect& _sel, XLogger& _log);
+  int Error() const;
 
-    virtual int ConnectTimeout() const;
-    virtual int ReadWriteTimeout() const;
+  SOCKET Socket() const;
 
-    virtual int ConnectAbsTimeout() const;
-    virtual int ReadWriteAbsTimeout() const;
+  void Socket(SOCKET _sock);
 
-    virtual void _OnCreate() = 0;
-    virtual void _OnConnect() = 0;
-    virtual void _OnConnected(int _rtt) = 0;
-    virtual void _OnRecv(AutoBuffer& _recv_buff, ssize_t _recv_len) = 0;
-    virtual void _OnRequestSend(AutoBuffer& _send_buff) {}
-    virtual void _OnSend(AutoBuffer& _send_buff, ssize_t _send_len) = 0;
-    virtual void _OnClose(TSocketStatus _status, int _error, bool _userclose) = 0;
+  const sockaddr& Address() const;
+
+  const char* IP() const;
+
+  uint16_t Port() const;
+
+  void Close(bool _notify = true);
+
+  bool RemoteClose() const;
+
+  virtual void PreSelect(SocketSelect& _sel, XLogger& _log);
+
+  virtual void AfterSelect(SocketSelect& _sel, XLogger& _log);
+
+  virtual int Timeout() const;
+
+  int Rtt() const;
+
+private:
+  TcpClientFSM(const TcpClientFSM&);
+
+  TcpClientFSM& operator=(const TcpClientFSM&);
+
+protected:
+  virtual void PreConnectSelect(SocketSelect& _sel, XLogger& _log);
+
+  virtual void AfterConnectSelect(const SocketSelect& _sel, XLogger& _log);
+
+  virtual void PreReadWriteSelect(SocketSelect& _sel, XLogger& _log);
+
+  virtual void AfterReadWriteSelect(const SocketSelect& _sel, XLogger& _log);
+
+  virtual int ConnectTimeout() const;
+
+  virtual int ReadWriteTimeout() const;
+
+  virtual int ConnectAbsTimeout() const;
+
+  virtual int ReadWriteAbsTimeout() const;
+
+  virtual void _OnCreate() = 0;
+
+  virtual void _OnConnect() = 0;
+
+  virtual void _OnConnected(int _rtt) = 0;
+
+  virtual void _OnRecv(AutoBuffer& _recv_buff, ssize_t _recv_len) = 0;
+
+  virtual void _OnRequestSend(AutoBuffer& _send_buff) {}
+
+  virtual void _OnSend(AutoBuffer& _send_buff, ssize_t _send_len) = 0;
+
+  virtual void _OnClose(TSocketStatus _status, int _error, bool _userclose) = 0;
 
 
-  protected:
-    TSocketStatus status_;
-    TSocketStatus last_status_;
-    int           error_;
-    bool           remote_close_;
-    bool           request_send_;
+protected:
+  TSocketStatus status_;
+  TSocketStatus last_status_;
+  int error_;
+  bool remote_close_;
+  bool request_send_;
 
-    socket_address addr_;
-    SOCKET sock_;
+  socket_address addr_;
+  SOCKET sock_;
 
-    uint64_t start_connecttime_;
-    uint64_t end_connecttime_;
+  uint64_t start_connecttime_;
+  uint64_t end_connecttime_;
 
-    AutoBuffer send_buf_;
-    AutoBuffer recv_buf_;
+  AutoBuffer send_buf_;
+  AutoBuffer recv_buf_;
 };
 
 #endif /* TCPCLIENTFSM_H_ */

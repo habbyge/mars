@@ -36,36 +36,42 @@ namespace sdt {
 
 class TcpQuery {
 
-    enum TcpStatus {
-        kTcpInit = 0,
-        kTcpInitErr,
-        kTcpConnectErr,
-        kTcpConnected,
-        kTcpDisConnected,
-    };
+  enum TcpStatus {
+    kTcpInit = 0,
+    kTcpInitErr,
+    kTcpConnectErr,
+    kTcpConnected,
+    kTcpDisConnected,
+  };
 
-  public:
-    TcpQuery(const char* _ip, uint16_t _port, unsigned int connTimeout, NetCheckTrafficMonitor* trafficMonitor = NULL);
-    virtual ~TcpQuery();
+public:
+  TcpQuery(const char* _ip, uint16_t _port, unsigned int connTimeout, NetCheckTrafficMonitor* trafficMonitor = NULL);
 
-  public:
-    TcpErrCode tcp_send(const unsigned char* buff, unsigned int unSize, int timeoutMs);
-    TcpErrCode tcp_receive(AutoBuffer& recvBuf, unsigned int unSize, int timeoutMs);
+  virtual ~TcpQuery();
 
-    void send_break();
-    std::string getStatus();
-    int getErrorCode();
-  private:
-    char* ip_;
-    uint16_t port_;
-    SOCKET sock_;
-    SocketBreaker pipe_;
-    SocketSelect select_;
-    TcpStatus status_;
-    int errcode_;
-    unsigned int conn_timeout_;
+public:
+  TcpErrCode tcp_send(const unsigned char* buff, unsigned int unSize, int timeoutMs);
+
+  TcpErrCode tcp_receive(AutoBuffer& recvBuf, unsigned int unSize, int timeoutMs);
+
+  void send_break();
+
+  std::string getStatus();
+
+  int getErrorCode();
+
+private:
+  char* ip_;
+  uint16_t port_;
+  SOCKET sock_;
+  SocketBreaker pipe_;
+  SocketSelect select_;
+  TcpStatus status_;
+  int errcode_;
+  unsigned int conn_timeout_;
 };
 
-}}
+}
+}
 
 #endif /* SDT_SRC_CHECKIMPL_TCPQUERY_H_ */

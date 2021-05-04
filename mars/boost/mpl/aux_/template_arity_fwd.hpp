@@ -14,10 +14,17 @@
 // $Date$
 // $Revision$
 
-namespace mars_boost {} namespace boost = mars_boost; namespace mars_boost { namespace mpl { namespace aux {
+namespace mars_boost {}
+namespace boost = mars_boost;
+namespace mars_boost {
+namespace mpl {
+namespace aux {
 
-template< typename F > struct template_arity;
+template<typename F>
+struct template_arity;
 
-}}}
+}
+}
+}
 
 #endif // BOOST_MPL_AUX_TEMPLATE_ARITY_FWD_HPP_INCLUDED

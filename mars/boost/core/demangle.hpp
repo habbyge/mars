@@ -26,6 +26,7 @@
 #endif
 
 #if defined( BOOST_CORE_HAS_CXXABI_H )
+
 # include <cxxabi.h>
 // For some archtectures (mips, mips64, x86, x86_64) cxxabi.h in Android NDK is implemented by gabi++ library
 // (https://android.googlesource.com/platform/ndk/+/master/sources/cxx-stl/gabi++/), which does not implement
@@ -33,72 +34,66 @@
 # if defined( __GABIXX_CXXABI_H__ )
 #  undef BOOST_CORE_HAS_CXXABI_H
 # else
+
 #  include <cstdlib>
 #  include <cstddef>
+
 # endif
 #endif
 
-namespace mars_boost {} namespace boost = mars_boost; namespace mars_boost
-{
+namespace mars_boost {}
+namespace boost = mars_boost;
+namespace mars_boost {
 
-namespace core
-{
+namespace core {
 
-inline char const * demangle_alloc( char const * name ) BOOST_NOEXCEPT;
-inline void demangle_free( char const * name ) BOOST_NOEXCEPT;
+inline char const* demangle_alloc(char const* name) BOOST_NOEXCEPT;
 
-class scoped_demangled_name
-{
+inline void demangle_free(char const* name) BOOST_NOEXCEPT;
+
+class scoped_demangled_name {
 private:
-    char const * m_p;
+  char const* m_p;
 
 public:
-    explicit scoped_demangled_name( char const * name ) BOOST_NOEXCEPT :
-        m_p( demangle_alloc( name ) )
-    {
-    }
+  explicit scoped_demangled_name(char const* name) BOOST_NOEXCEPT:
+      m_p(demangle_alloc(name)) {
+  }
 
-    ~scoped_demangled_name() BOOST_NOEXCEPT
-    {
-        demangle_free( m_p );
-    }
+  ~scoped_demangled_name() BOOST_NOEXCEPT {
+    demangle_free(m_p);
+  }
 
-    char const * get() const BOOST_NOEXCEPT
-    {
-        return m_p;
-    }
+  char const* get() const BOOST_NOEXCEPT {
+    return m_p;
+  }
 
-    BOOST_DELETED_FUNCTION(scoped_demangled_name( scoped_demangled_name const& ))
-    BOOST_DELETED_FUNCTION(scoped_demangled_name& operator= ( scoped_demangled_name const& ))
+  BOOST_DELETED_FUNCTION(scoped_demangled_name(scoped_demangled_name const& ))
+
+  BOOST_DELETED_FUNCTION(scoped_demangled_name& operator=(scoped_demangled_name const&))
 };
 
 
 #if defined( BOOST_CORE_HAS_CXXABI_H )
 
-inline char const * demangle_alloc( char const * name ) BOOST_NOEXCEPT
-{
-    int status = 0;
-    std::size_t size = 0;
-    return abi::__cxa_demangle( name, NULL, &size, &status );
+inline char const* demangle_alloc(char const* name) BOOST_NOEXCEPT {
+  int status = 0;
+  std::size_t size = 0;
+  return abi::__cxa_demangle(name, NULL, &size, &status);
 }
 
-inline void demangle_free( char const * name ) BOOST_NOEXCEPT
-{
-    std::free( const_cast< char* >( name ) );
+inline void demangle_free(char const* name) BOOST_NOEXCEPT {
+  std::free(const_cast< char* >( name ));
 }
 
-inline std::string demangle( char const * name )
-{
-    scoped_demangled_name demangled_name( name );
-    char const * const p = demangled_name.get();
-    if( p )
-    {
-        return p;
-    }
-    else
-    {
-        return name;
-    }
+inline std::string demangle(char const* name) {
+  scoped_demangled_name demangled_name(name);
+  char const* const p = demangled_name.get();
+  if (p) {
+    return p;
+  } else {
+    return name;
+  }
 }
 
 #else

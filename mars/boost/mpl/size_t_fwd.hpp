@@ -20,7 +20,8 @@
 
 BOOST_MPL_AUX_ADL_BARRIER_NAMESPACE_OPEN
 
-template< std::size_t N > struct size_t;
+template<std::size_t N>
+struct size_t;
 
 BOOST_MPL_AUX_ADL_BARRIER_NAMESPACE_CLOSE
 BOOST_MPL_AUX_ADL_BARRIER_DECL(size_t)

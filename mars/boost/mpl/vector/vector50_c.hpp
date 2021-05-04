@@ -15,8 +15,10 @@
 // $Revision$
 
 #if !defined(BOOST_MPL_PREPROCESSING_MODE)
+
 #   include <boost/mpl/vector/vector40_c.hpp>
 #   include <boost/mpl/vector/vector50.hpp>
+
 #endif
 
 #include <boost/mpl/aux_/config/use_preprocessed.hpp>
@@ -25,6 +27,7 @@
  && !defined(BOOST_MPL_PREPROCESSING_MODE)
 
 #   define BOOST_MPL_PREPROCESSED_HEADER vector50_c.hpp
+
 #   include <boost/mpl/vector/aux_/include_preprocessed.hpp>
 
 #else

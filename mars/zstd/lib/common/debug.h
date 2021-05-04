@@ -95,7 +95,7 @@ extern "C" {
  * by modifying g_debug_level.
  */
 
-#if (DEBUGLEVEL>=1)
+#if (DEBUGLEVEL >= 1)
 #  include <assert.h>
 #else
 #  ifndef assert   /* assert may be already defined, due to prior #include <assert.h> */
@@ -103,7 +103,7 @@ extern "C" {
 #  endif
 #endif
 
-#if (DEBUGLEVEL>=2)
+#if (DEBUGLEVEL >= 2)
 #  include <stdio.h>
 extern int g_debuglevel; /* the variable is only declared,
                             it actually lives in debug.c,

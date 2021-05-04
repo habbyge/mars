@@ -303,18 +303,17 @@ mars_boost
 
 #include <boost/config.hpp>
 
-namespace mars_boost {} namespace boost = mars_boost; namespace
-mars_boost
-    {
-    namespace
-    exception_detail
-        {
-        int
-        clone_current_exception_non_intrusive( clone_base const * & )
-            {
-            return clone_current_exception_result::not_supported;
-            }
-        }
-    }
+namespace mars_boost {}
+namespace boost = mars_boost;
+namespace
+mars_boost {
+namespace
+exception_detail {
+int
+clone_current_exception_non_intrusive(clone_base const*&) {
+  return clone_current_exception_result::not_supported;
+}
+}
+}
 
 #endif

@@ -32,21 +32,21 @@ ZSTDv04_decompress() : decompress ZSTD frames compliant with v0.4.x format
     return : the number of bytes decompressed into destination buffer (originalSize)
              or an errorCode if it fails (which can be tested using ZSTDv01_isError())
 */
-size_t ZSTDv04_decompress( void* dst, size_t maxOriginalSize,
-                     const void* src, size_t compressedSize);
+size_t ZSTDv04_decompress(void* dst, size_t maxOriginalSize,
+                          const void* src, size_t compressedSize);
 
- /**
- ZSTDv04_findFrameSizeInfoLegacy() : get the source length and decompressed bound of a ZSTD frame compliant with v0.4.x format
-     srcSize : The size of the 'src' buffer, at least as large as the frame pointed to by 'src'
-     cSize (output parameter)  : the number of bytes that would be read to decompress this frame
-                                 or an error code if it fails (which can be tested using ZSTDv01_isError())
-     dBound (output parameter) : an upper-bound for the decompressed size of the data in the frame
-                                 or ZSTD_CONTENTSIZE_ERROR if an error occurs
+/**
+ZSTDv04_findFrameSizeInfoLegacy() : get the source length and decompressed bound of a ZSTD frame compliant with v0.4.x format
+    srcSize : The size of the 'src' buffer, at least as large as the frame pointed to by 'src'
+    cSize (output parameter)  : the number of bytes that would be read to decompress this frame
+                                or an error code if it fails (which can be tested using ZSTDv01_isError())
+    dBound (output parameter) : an upper-bound for the decompressed size of the data in the frame
+                                or ZSTD_CONTENTSIZE_ERROR if an error occurs
 
-    note : assumes `cSize` and `dBound` are _not_ NULL.
- */
- void ZSTDv04_findFrameSizeInfoLegacy(const void *src, size_t srcSize,
-                                      size_t* cSize, unsigned long long* dBound);
+   note : assumes `cSize` and `dBound` are _not_ NULL.
+*/
+void ZSTDv04_findFrameSizeInfoLegacy(const void* src, size_t srcSize,
+                                     size_t* cSize, unsigned long long* dBound);
 
 /**
 ZSTDv04_isError() : tells if the result of ZSTDv04_decompress() is an error
@@ -63,7 +63,7 @@ size_t ZSTDv04_freeDCtx(ZSTDv04_Dctx* dctx);
 
 size_t ZSTDv04_decompressDCtx(ZSTDv04_Dctx* dctx,
                               void* dst, size_t maxOriginalSize,
-                        const void* src, size_t compressedSize);
+                              const void* src, size_t compressedSize);
 
 
 /* *************************************
@@ -87,12 +87,13 @@ size_t ZSTDv04_decompressContinue(ZSTDv04_Dctx* dctx, void* dst, size_t maxDstSi
 ***************************************/
 typedef struct ZBUFFv04_DCtx_s ZBUFFv04_DCtx;
 ZBUFFv04_DCtx* ZBUFFv04_createDCtx(void);
-size_t         ZBUFFv04_freeDCtx(ZBUFFv04_DCtx* dctx);
+size_t ZBUFFv04_freeDCtx(ZBUFFv04_DCtx* dctx);
 
 size_t ZBUFFv04_decompressInit(ZBUFFv04_DCtx* dctx);
 size_t ZBUFFv04_decompressWithDictionary(ZBUFFv04_DCtx* dctx, const void* dict, size_t dictSize);
 
-size_t ZBUFFv04_decompressContinue(ZBUFFv04_DCtx* dctx, void* dst, size_t* maxDstSizePtr, const void* src, size_t* srcSizePtr);
+size_t
+ZBUFFv04_decompressContinue(ZBUFFv04_DCtx* dctx, void* dst, size_t* maxDstSizePtr, const void* src, size_t* srcSizePtr);
 
 /** ************************************************
 *  Streaming decompression

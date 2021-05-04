@@ -24,12 +24,13 @@
 
 namespace design_patterns {
 
-class TestCoreService: public design_patterns::CoreServiceBase {
+class TestCoreService : public design_patterns::CoreServiceBase {
 public:
-	TestCoreService();
-	virtual ~TestCoreService();
+  TestCoreService();
 
-	DEFINE_SERVICE();
+  virtual ~TestCoreService();
+
+  DEFINE_SERVICE();
 };
 
 } /* namespace design_patterns */

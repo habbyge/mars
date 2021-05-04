@@ -36,12 +36,13 @@
 /**
  Boost namespace.
 */
-namespace mars_boost {} namespace boost = mars_boost; namespace mars_boost
-{
+namespace mars_boost {}
+namespace boost = mars_boost;
+namespace mars_boost {
 
-#if defined( BOOST_MSVC ) && BOOST_WORKAROUND( BOOST_MSVC, == 1600 )
+#if defined( BOOST_MSVC ) && BOOST_WORKAROUND(BOOST_MSVC, == 1600)
 
-    struct ref_workaround_tag {};
+struct ref_workaround_tag {};
 
 #endif
 
@@ -56,58 +57,58 @@ namespace mars_boost {} namespace boost = mars_boost; namespace mars_boost
  usually allows the function templates to work on references
  unmodified.
 */
-template<class T> class reference_wrapper
-{
+template<class T>
+class reference_wrapper {
 public:
-    /**
-     Type `T`.
-    */
-    typedef T type;
+  /**
+   Type `T`.
+  */
+  typedef T type;
 
-    /**
-     Constructs a `reference_wrapper` object that stores a
-     reference to `t`.
+  /**
+   Constructs a `reference_wrapper` object that stores a
+   reference to `t`.
 
-     @remark Does not throw.
-    */
-    BOOST_FORCEINLINE explicit reference_wrapper(T& t): t_(mars_boost::addressof(t)) {}
+   @remark Does not throw.
+  */
+  BOOST_FORCEINLINE explicit reference_wrapper(T& t) : t_(mars_boost::addressof(t)) {}
 
-#if defined( BOOST_MSVC ) && BOOST_WORKAROUND( BOOST_MSVC, == 1600 )
+#if defined( BOOST_MSVC ) && BOOST_WORKAROUND(BOOST_MSVC, == 1600)
 
-    BOOST_FORCEINLINE explicit reference_wrapper( T & t, ref_workaround_tag ): t_( mars_boost::addressof( t ) ) {}
+  BOOST_FORCEINLINE explicit reference_wrapper( T & t, ref_workaround_tag ): t_( mars_boost::addressof( t ) ) {}
 
 #endif
 
 #if !defined(BOOST_NO_CXX11_RVALUE_REFERENCES)
-    /**
-     @remark Construction from a temporary object is disabled.
-    */
-    BOOST_DELETED_FUNCTION(reference_wrapper(T&& t))
+  /**
+   @remark Construction from a temporary object is disabled.
+  */
+  BOOST_DELETED_FUNCTION(reference_wrapper(T&& t))
 public:
 #endif
 
-    /**
-     @return The stored reference.
-     @remark Does not throw.
-    */
-    BOOST_FORCEINLINE operator T& () const { return *t_; }
+  /**
+   @return The stored reference.
+   @remark Does not throw.
+  */
+  BOOST_FORCEINLINE operator T&() const { return *t_; }
 
-    /**
-     @return The stored reference.
-     @remark Does not throw.
-    */
-    BOOST_FORCEINLINE T& get() const { return *t_; }
+  /**
+   @return The stored reference.
+   @remark Does not throw.
+  */
+  BOOST_FORCEINLINE T& get() const { return *t_; }
 
-    /**
-     @return A pointer to the object referenced by the stored
-       reference.
-     @remark Does not throw.
-    */
-    BOOST_FORCEINLINE T* get_pointer() const { return t_; }
+  /**
+   @return A pointer to the object referenced by the stored
+     reference.
+   @remark Does not throw.
+  */
+  BOOST_FORCEINLINE T* get_pointer() const { return t_; }
 
 private:
 
-    T* t_;
+  T* t_;
 };
 
 // ref
@@ -115,7 +116,7 @@ private:
 /**
  @cond
 */
-#if defined( __BORLANDC__ ) && BOOST_WORKAROUND( __BORLANDC__, BOOST_TESTED_AT(0x581) )
+#if defined( __BORLANDC__ ) && BOOST_WORKAROUND(__BORLANDC__, BOOST_TESTED_AT(0x581))
 #  define BOOST_REF_CONST
 #else
 #  define BOOST_REF_CONST const
@@ -128,15 +129,15 @@ private:
  @return `reference_wrapper<T>(t)`
  @remark Does not throw.
 */
-template<class T> BOOST_FORCEINLINE reference_wrapper<T> BOOST_REF_CONST ref( T & t )
-{
-#if defined( BOOST_MSVC ) && BOOST_WORKAROUND( BOOST_MSVC, == 1600 )
+template<class T>
+BOOST_FORCEINLINE reference_wrapper<T> BOOST_REF_CONST ref(T& t) {
+#if defined( BOOST_MSVC ) && BOOST_WORKAROUND(BOOST_MSVC, == 1600)
 
-    return reference_wrapper<T>( t, ref_workaround_tag() );
+  return reference_wrapper<T>( t, ref_workaround_tag() );
 
 #else
 
-    return reference_wrapper<T>( t );
+  return reference_wrapper<T>(t);
 
 #endif
 }
@@ -147,9 +148,9 @@ template<class T> BOOST_FORCEINLINE reference_wrapper<T> BOOST_REF_CONST ref( T 
  @return `reference_wrapper<T const>(t)`
  @remark Does not throw.
 */
-template<class T> BOOST_FORCEINLINE reference_wrapper<T const> BOOST_REF_CONST cref( T const & t )
-{
-    return reference_wrapper<T const>(t);
+template<class T>
+BOOST_FORCEINLINE reference_wrapper<T const> BOOST_REF_CONST cref(T const& t) {
+  return reference_wrapper<T const>(t);
 }
 
 #undef BOOST_REF_CONST
@@ -191,34 +192,34 @@ template<class T> void cref(T const&&) BOOST_REF_DELETE;
  The value static constant will be true if the type `T` is a
  specialization of `reference_wrapper`.
 */
-template<typename T> struct is_reference_wrapper
-{
-    BOOST_STATIC_CONSTANT( bool, value = false );
+template<typename T>
+struct is_reference_wrapper {
+  BOOST_STATIC_CONSTANT(bool, value = false);
 };
 
 /**
  @cond
 */
-template<typename T> struct is_reference_wrapper< reference_wrapper<T> >
-{
-    BOOST_STATIC_CONSTANT( bool, value = true );
+template<typename T>
+struct is_reference_wrapper<reference_wrapper<T>> {
+  BOOST_STATIC_CONSTANT(bool, value = true);
 };
 
 #if !defined(BOOST_NO_CV_SPECIALIZATIONS)
 
-template<typename T> struct is_reference_wrapper< reference_wrapper<T> const >
-{
-    BOOST_STATIC_CONSTANT( bool, value = true );
+template<typename T>
+struct is_reference_wrapper<reference_wrapper<T> const> {
+  BOOST_STATIC_CONSTANT(bool, value = true);
 };
 
-template<typename T> struct is_reference_wrapper< reference_wrapper<T> volatile >
-{
-    BOOST_STATIC_CONSTANT( bool, value = true );
+template<typename T>
+struct is_reference_wrapper<reference_wrapper<T> volatile> {
+  BOOST_STATIC_CONSTANT(bool, value = true);
 };
 
-template<typename T> struct is_reference_wrapper< reference_wrapper<T> const volatile >
-{
-    BOOST_STATIC_CONSTANT( bool, value = true );
+template<typename T>
+struct is_reference_wrapper<reference_wrapper<T> const volatile> {
+  BOOST_STATIC_CONSTANT(bool, value = true);
 };
 
 #endif // !defined(BOOST_NO_CV_SPECIALIZATIONS)
@@ -236,34 +237,34 @@ template<typename T> struct is_reference_wrapper< reference_wrapper<T> const vol
  The `typedef` type is `T::type` if `T` is a
  `reference_wrapper`, `T` otherwise.
 */
-template<typename T> struct unwrap_reference
-{
-    typedef T type;
+template<typename T>
+struct unwrap_reference {
+  typedef T type;
 };
 
 /**
  @cond
 */
-template<typename T> struct unwrap_reference< reference_wrapper<T> >
-{
-    typedef T type;
+template<typename T>
+struct unwrap_reference<reference_wrapper<T>> {
+  typedef T type;
 };
 
 #if !defined(BOOST_NO_CV_SPECIALIZATIONS)
 
-template<typename T> struct unwrap_reference< reference_wrapper<T> const >
-{
-    typedef T type;
+template<typename T>
+struct unwrap_reference<reference_wrapper<T> const> {
+  typedef T type;
 };
 
-template<typename T> struct unwrap_reference< reference_wrapper<T> volatile >
-{
-    typedef T type;
+template<typename T>
+struct unwrap_reference<reference_wrapper<T> volatile> {
+  typedef T type;
 };
 
-template<typename T> struct unwrap_reference< reference_wrapper<T> const volatile >
-{
-    typedef T type;
+template<typename T>
+struct unwrap_reference<reference_wrapper<T> const volatile> {
+  typedef T type;
 };
 
 #endif // !defined(BOOST_NO_CV_SPECIALIZATIONS)
@@ -278,9 +279,9 @@ template<typename T> struct unwrap_reference< reference_wrapper<T> const volatil
  @return `unwrap_reference<T>::type&(t)`
  @remark Does not throw.
 */
-template<class T> BOOST_FORCEINLINE typename unwrap_reference<T>::type& unwrap_ref( T & t )
-{
-    return t;
+template<class T>
+BOOST_FORCEINLINE typename unwrap_reference<T>::type& unwrap_ref(T& t) {
+  return t;
 }
 
 // get_pointer
@@ -288,9 +289,9 @@ template<class T> BOOST_FORCEINLINE typename unwrap_reference<T>::type& unwrap_r
 /**
  @cond
 */
-template<class T> BOOST_FORCEINLINE T* get_pointer( reference_wrapper<T> const & r )
-{
-    return r.get_pointer();
+template<class T>
+BOOST_FORCEINLINE T* get_pointer(reference_wrapper<T> const& r) {
+  return r.get_pointer();
 }
 /**
  @endcond

@@ -1,9 +1,12 @@
 /* Copyright 2015, Kenneth MacKay. Licensed under the BSD 2-clause license. */
 
-#ifndef _UECC_ASM_AVR_MULT_SQUARE_H_
-#define _UECC_ASM_AVR_MULT_SQUARE_H_
+#ifndef
+_UECC_ASM_AVR_MULT_SQUARE_H_
+#define
+_UECC_ASM_AVR_MULT_SQUARE_H_
 
-#define FAST_MULT_ASM_20   \
+#define
+FAST_MULT_ASM_20   \
     "adiw r30, 10 \n\t"    \
     "adiw r28, 10 \n\t"    \
     "ld r2, x+ \n\t"       \
@@ -2809,7 +2812,8 @@
     "adiw r26, 4 \n\t"             \
     "adiw r28, 4 \n\t"
 
-#define FAST_MULT_ASM_24       \
+#define
+FAST_MULT_ASM_24       \
     "adiw r30, 20 \n\t"        \
     "adiw r28, 20 \n\t"        \
     "ld r2, x+ \n\t"           \
@@ -5580,7 +5584,8 @@
     "st z+, r22 \n\t"          \
     "st z+, r23 \n\t"
 
-#define FAST_MULT_ASM_24_TO_28     \
+#define
+FAST_MULT_ASM_24_TO_28     \
     "cpi r18, 24 \n\t"             \
     "brne 1f \n\t"                 \
     "jmp 2f \n\t"                  \
@@ -6642,7 +6647,8 @@
     "adiw r26, 4 \n\t"             \
     "adiw r28, 4 \n\t"
 
-#define FAST_MULT_ASM_28   \
+#define
+FAST_MULT_ASM_28   \
     "adiw r30, 20 \n\t"    \
     "adiw r28, 20 \n\t"    \
     "ld r2, x+ \n\t"       \
@@ -10401,7 +10407,8 @@
     "st z+, r24 \n\t"      \
     "st z+, r22 \n\t"
 
-#define FAST_MULT_ASM_28_TO_32     \
+#define
+FAST_MULT_ASM_28_TO_32     \
     "cpi r18, 28 \n\t"             \
     "brne 1f \n\t"                 \
     "jmp 2f \n\t"                  \
@@ -11620,9 +11627,10 @@
     "adc r21, r1 \n\t"             \
     "st z+, r20 \n\t"              \
     "st z+, r21 \n\t"
-    /* Not necessary to move ptrs since we don't support sizes > 32 */
+/* Not necessary to move ptrs since we don't support sizes > 32 */
 
-#define FAST_MULT_ASM_32       \
+#define
+FAST_MULT_ASM_32       \
     "adiw r30, 30 \n\t"        \
     "adiw r28, 30 \n\t"        \
     "ld r2, x+ \n\t"           \
@@ -16536,7 +16544,8 @@
     "st z+, r23 \n\t"          \
     "st z+, r24 \n\t"
 
-#define FAST_SQUARE_ASM_20         \
+#define
+FAST_SQUARE_ASM_20         \
     "ld r2, x+ \n\t"               \
     "ld r3, x+ \n\t"               \
     "ld r4, x+ \n\t"               \
@@ -17694,7 +17703,8 @@
     "pop r27 \n\t"                 \
     "pop r26 \n\t"
 
-#define FAST_SQUARE_ASM_20_TO_24           \
+#define
+FAST_SQUARE_ASM_20_TO_24           \
     "cpi r20, 20 \n\t"                     \
     "brne 1f \n\t"                         \
     "jmp 2f \n\t"                          \
@@ -18250,7 +18260,8 @@
     "st z+, r24 \n\t"                      \
     "adiw r26, 4 \n\t"
 
-#define FAST_SQUARE_ASM_24             \
+#define
+FAST_SQUARE_ASM_24             \
     "ldi r25, 0 \n\t"                  \
     "movw r28, r26 \n\t"               \
     "ld r2, x+ \n\t"                   \
@@ -19896,7 +19907,8 @@
     "st z+, r23 \n\t"                  \
     "st z+, r28 \n\t"
 
-#define FAST_SQUARE_ASM_24_TO_28           \
+#define
+FAST_SQUARE_ASM_24_TO_28           \
     "cpi r20, 24 \n\t"                     \
     "brne 1f \n\t"                         \
     "jmp 2f \n\t"                          \
@@ -20544,7 +20556,8 @@
     "st z+, r11 \n\t"                      \
     "adiw r26, 4 \n\t"
 
-#define FAST_SQUARE_ASM_28         \
+#define
+FAST_SQUARE_ASM_28         \
     "ldi r25, 0 \n\t"              \
     "movw r28, r26 \n\t"           \
     "ld r2, x+ \n\t"               \
@@ -22746,7 +22759,8 @@
     "st z+, r23 \n\t"              \
     "st z+, r28 \n\t"
 
-#define FAST_SQUARE_ASM_28_TO_32           \
+#define
+FAST_SQUARE_ASM_28_TO_32           \
     "cpi r20, 28 \n\t"                     \
     "brne 1f \n\t"                         \
     "jmp 2f \n\t"                          \
@@ -23486,7 +23500,8 @@
     "st z+, r15 \n\t"                      \
     "adiw r26, 4 \n\t"
 
-#define FAST_SQUARE_ASM_32             \
+#define
+FAST_SQUARE_ASM_32             \
     "ldi r25, 0 \n\t"                  \
     "movw r28, r26 \n\t"               \
     "ld r2, x+ \n\t"                   \

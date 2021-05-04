@@ -20,13 +20,11 @@
 #import <Foundation/Foundation.h>
 
 Scope_AutoReleasePool::Scope_AutoReleasePool()
-: m_pool([[NSAutoreleasePool alloc] init])
-{
+    : m_pool([[NSAutoreleasePool alloc] init]) {
 }
 
-Scope_AutoReleasePool::~Scope_AutoReleasePool()
-{
-    [m_pool drain];
+Scope_AutoReleasePool::~Scope_AutoReleasePool() {
+  [m_pool drain];
 }
 
-void comm_export_symbols_3(){}
+void comm_export_symbols_3() {}

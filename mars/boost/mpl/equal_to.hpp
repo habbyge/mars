@@ -16,6 +16,7 @@
 
 #define AUX778076_OP_NAME equal_to
 #define AUX778076_OP_TOKEN ==
+
 #include <boost/mpl/aux_/comparison_op.hpp>
 
 #endif // BOOST_MPL_EQUAL_TO_HPP_INCLUDED

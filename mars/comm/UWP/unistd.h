@@ -31,8 +31,11 @@
 #include <sys/cdefs.h>
 #include <io.h>
 #include <dirent.h>
+
 #ifndef WP8
+
 #include <process.h>
+
 #endif
 
 __BEGIN_DECLS
@@ -52,7 +55,7 @@ __BEGIN_DECLS
 typedef unsigned short mode_t;
 
 
-extern int  _mkdir4UWP(const char *pathname, mode_t mode);
+extern int _mkdir4UWP(const char* pathname, mode_t mode);
 extern unsigned int sleep(unsigned int);
 extern void usleep(unsigned long);
 #define access _access
@@ -63,7 +66,8 @@ extern int getpid(void);
 
 #define ftruncate _chsize
 
-typedef unsigned __int64 uint64_t;
+typedef unsigned __int64
+uint64_t;
 
 __END_DECLS
 

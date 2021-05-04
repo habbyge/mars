@@ -20,6 +20,7 @@
 #  include <boost/config.hpp>
 #endif
 #
+
 #if defined(BOOST_HAS_PRAGMA_ONCE)
 #  pragma once
 #endif
@@ -69,10 +70,10 @@
 // BOOST_ALIGNMENT_OF(T) should evaluate to the alignment requirements of type T.
 
 #if defined(__MSL_CPP__) && (__MSL_CPP__ >= 0x8000)
-    // Metrowerks compiler is acquiring intrinsic type traits support
-    // post version 8.  We hook into the published interface to pick up
-    // user defined specializations as well as compiler intrinsics as
-    // and when they become available:
+// Metrowerks compiler is acquiring intrinsic type traits support
+// post version 8.  We hook into the published interface to pick up
+// user defined specializations as well as compiler intrinsics as
+// and when they become available:
 #   include <msl_utility>
 #   define BOOST_MOVE_IS_UNION(T) BOOST_STD_EXTENSION_NAMESPACE::is_union<T>::value
 #   define BOOST_MOVE_IS_POD(T) BOOST_STD_EXTENSION_NAMESPACE::is_POD<T>::value
@@ -82,8 +83,8 @@
 #   define BOOST_MOVE_HAS_TRIVIAL_DESTRUCTOR(T) BOOST_STD_EXTENSION_NAMESPACE::has_trivial_dtor<T>::value
 #endif
 
-#if (defined(BOOST_MSVC) && defined(BOOST_MSVC_FULL_VER) && (BOOST_MSVC_FULL_VER >=140050215))\
-         || (defined(BOOST_INTEL) && defined(_MSC_VER) && (_MSC_VER >= 1500))
+#if (defined(BOOST_MSVC) && defined(BOOST_MSVC_FULL_VER) && (BOOST_MSVC_FULL_VER >= 140050215))\
+ || (defined(BOOST_INTEL) && defined(_MSC_VER) && (_MSC_VER >= 1500))
 #   define BOOST_MOVE_IS_UNION(T) __is_union(T)
 #   define BOOST_MOVE_IS_POD(T)                    (__is_pod(T) && __has_trivial_constructor(T))
 #   define BOOST_MOVE_IS_EMPTY(T)                  __is_empty(T)
@@ -169,9 +170,9 @@
 
 #   define BOOST_MOVE_IS_ENUM(T) __is_enum(T)
 #   if (!defined(unix) && !defined(__unix__)) || defined(__LP64__)
-      // GCC sometimes lies about alignment requirements
-      // of type double on 32-bit unix platforms, use the
-      // old implementation instead in that case:
+// GCC sometimes lies about alignment requirements
+// of type double on 32-bit unix platforms, use the
+// old implementation instead in that case:
 #     define BOOST_MOVE_ALIGNMENT_OF(T) __alignof__(T)
 #   endif
 #endif
@@ -213,118 +214,122 @@
 //Fallback definitions
 
 #ifdef BOOST_MOVE_IS_UNION
-   #define BOOST_MOVE_IS_UNION_IMPL(T) BOOST_MOVE_IS_UNION(T)
+#define BOOST_MOVE_IS_UNION_IMPL(T) BOOST_MOVE_IS_UNION(T)
 #else
-   #define BOOST_MOVE_IS_UNION_IMPL(T) false
+#define BOOST_MOVE_IS_UNION_IMPL(T) false
 #endif
 
 #ifdef BOOST_MOVE_IS_POD
-   //in some compilers the intrinsic is limited to class types so add scalar and void
-   #define BOOST_MOVE_IS_POD_IMPL(T) (::mars_boost::move_detail::is_scalar<T>::value ||\
+//in some compilers the intrinsic is limited to class types so add scalar and void
+#define BOOST_MOVE_IS_POD_IMPL(T) (::mars_boost::move_detail::is_scalar<T>::value ||\
                                       ::mars_boost::move_detail::is_void<T>::value   ||\
                                        BOOST_MOVE_IS_POD(T))
 #else
-   #define BOOST_MOVE_IS_POD_IMPL(T) \
+#define BOOST_MOVE_IS_POD_IMPL(T) \
       (::mars_boost::move_detail::is_scalar<T>::value || ::mars_boost::move_detail::is_void<T>::value)
 #endif
 
 #ifdef BOOST_MOVE_IS_EMPTY
-   #define BOOST_MOVE_IS_EMPTY_IMPL(T) BOOST_MOVE_IS_EMPTY(T)
+#define BOOST_MOVE_IS_EMPTY_IMPL(T) BOOST_MOVE_IS_EMPTY(T)
 #else
-   #define BOOST_MOVE_IS_EMPTY_IMPL(T)    ::mars_boost::move_detail::is_empty_nonintrinsic<T>::value
+#define BOOST_MOVE_IS_EMPTY_IMPL(T)    ::mars_boost::move_detail::is_empty_nonintrinsic<T>::value
 #endif
 
 #ifdef BOOST_MOVE_HAS_TRIVIAL_COPY
-   #define BOOST_MOVE_IS_TRIVIALLY_COPY_CONSTRUCTIBLE(T)   BOOST_MOVE_HAS_TRIVIAL_COPY(T)
+#define BOOST_MOVE_IS_TRIVIALLY_COPY_CONSTRUCTIBLE(T)   BOOST_MOVE_HAS_TRIVIAL_COPY(T)
 #else
-   #define BOOST_MOVE_IS_TRIVIALLY_COPY_CONSTRUCTIBLE(T)   ::mars_boost::move_detail::is_pod<T>::value
+#define BOOST_MOVE_IS_TRIVIALLY_COPY_CONSTRUCTIBLE(T)   ::mars_boost::move_detail::is_pod<T>::value
 #endif
 
 #ifdef BOOST_MOVE_HAS_TRIVIAL_CONSTRUCTOR
-   #define BOOST_MOVE_IS_TRIVIALLY_DEFAULT_CONSTRUCTIBLE(T)  BOOST_MOVE_HAS_TRIVIAL_CONSTRUCTOR(T)
+#define BOOST_MOVE_IS_TRIVIALLY_DEFAULT_CONSTRUCTIBLE(T)  BOOST_MOVE_HAS_TRIVIAL_CONSTRUCTOR(T)
 #else
-   #define BOOST_MOVE_IS_TRIVIALLY_DEFAULT_CONSTRUCTIBLE(T)  ::mars_boost::move_detail::is_pod<T>::value
+#define BOOST_MOVE_IS_TRIVIALLY_DEFAULT_CONSTRUCTIBLE(T)  ::mars_boost::move_detail::is_pod<T>::value
 #endif
 
 #ifdef BOOST_MOVE_HAS_TRIVIAL_COPY
-   #define BOOST_MOVE_IS_TRIVIALLY_COPY_CONSTRUCTIBLE(T)   BOOST_MOVE_HAS_TRIVIAL_COPY(T)
+#define BOOST_MOVE_IS_TRIVIALLY_COPY_CONSTRUCTIBLE(T)   BOOST_MOVE_HAS_TRIVIAL_COPY(T)
 #else
-   #define BOOST_MOVE_IS_TRIVIALLY_COPY_CONSTRUCTIBLE(T)   ::mars_boost::move_detail::is_pod<T>::value
+#define BOOST_MOVE_IS_TRIVIALLY_COPY_CONSTRUCTIBLE(T)   ::mars_boost::move_detail::is_pod<T>::value
 #endif
 
 #ifdef BOOST_MOVE_HAS_TRIVIAL_MOVE_CONSTRUCTOR
-   #define BOOST_MOVE_IS_TRIVIALLY_MOVE_CONSTRUCTIBLE(T)   BOOST_MOVE_HAS_TRIVIAL_MOVE_CONSTRUCTOR(T)
+#define BOOST_MOVE_IS_TRIVIALLY_MOVE_CONSTRUCTIBLE(T)   BOOST_MOVE_HAS_TRIVIAL_MOVE_CONSTRUCTOR(T)
 #else
-   #define BOOST_MOVE_IS_TRIVIALLY_MOVE_CONSTRUCTIBLE(T)   ::mars_boost::move_detail::is_pod<T>::value
+#define BOOST_MOVE_IS_TRIVIALLY_MOVE_CONSTRUCTIBLE(T)   ::mars_boost::move_detail::is_pod<T>::value
 #endif
 
 #ifdef BOOST_MOVE_HAS_TRIVIAL_ASSIGN
-   #define BOOST_MOVE_IS_TRIVIALLY_COPY_ASSIGNABLE(T) BOOST_MOVE_HAS_TRIVIAL_ASSIGN(T)
+#define BOOST_MOVE_IS_TRIVIALLY_COPY_ASSIGNABLE(T) BOOST_MOVE_HAS_TRIVIAL_ASSIGN(T)
 #else
-   #define BOOST_MOVE_IS_TRIVIALLY_COPY_ASSIGNABLE(T) ::mars_boost::move_detail::is_pod<T>::value
+#define BOOST_MOVE_IS_TRIVIALLY_COPY_ASSIGNABLE(T) ::mars_boost::move_detail::is_pod<T>::value
 #endif
 
 #ifdef BOOST_MOVE_HAS_TRIVIAL_MOVE_ASSIGN
-   #define BOOST_MOVE_IS_TRIVIALLY_MOVE_ASSIGNABLE(T)  BOOST_MOVE_HAS_TRIVIAL_MOVE_ASSIGN(T)
+#define BOOST_MOVE_IS_TRIVIALLY_MOVE_ASSIGNABLE(T)  BOOST_MOVE_HAS_TRIVIAL_MOVE_ASSIGN(T)
 #else
-   #define BOOST_MOVE_IS_TRIVIALLY_MOVE_ASSIGNABLE(T)  ::mars_boost::move_detail::is_pod<T>::value
+#define BOOST_MOVE_IS_TRIVIALLY_MOVE_ASSIGNABLE(T)  ::mars_boost::move_detail::is_pod<T>::value
 #endif
 
 #ifdef BOOST_MOVE_HAS_TRIVIAL_DESTRUCTOR
-   #define BOOST_MOVE_IS_TRIVIALLY_DESTRUCTIBLE(T)   BOOST_MOVE_HAS_TRIVIAL_DESTRUCTOR(T)
+#define BOOST_MOVE_IS_TRIVIALLY_DESTRUCTIBLE(T)   BOOST_MOVE_HAS_TRIVIAL_DESTRUCTOR(T)
 #else
-   #define BOOST_MOVE_IS_TRIVIALLY_DESTRUCTIBLE(T)   ::mars_boost::move_detail::is_pod<T>::value
+#define BOOST_MOVE_IS_TRIVIALLY_DESTRUCTIBLE(T)   ::mars_boost::move_detail::is_pod<T>::value
 #endif
 
 #ifdef BOOST_MOVE_HAS_NOTHROW_CONSTRUCTOR
-   #define BOOST_MOVE_IS_NOTHROW_DEFAULT_CONSTRUCTIBLE(T)  BOOST_MOVE_HAS_NOTHROW_CONSTRUCTOR(T)
+#define BOOST_MOVE_IS_NOTHROW_DEFAULT_CONSTRUCTIBLE(T)  BOOST_MOVE_HAS_NOTHROW_CONSTRUCTOR(T)
 #else
-   #define BOOST_MOVE_IS_NOTHROW_DEFAULT_CONSTRUCTIBLE(T)  ::mars_boost::move_detail::is_pod<T>::value
+#define BOOST_MOVE_IS_NOTHROW_DEFAULT_CONSTRUCTIBLE(T)  ::mars_boost::move_detail::is_pod<T>::value
 #endif
 
 #ifdef BOOST_MOVE_HAS_NOTHROW_COPY
-   #define BOOST_MOVE_IS_NOTHROW_COPY_CONSTRUCTIBLE(T)   BOOST_MOVE_HAS_NOTHROW_COPY(T)
+#define BOOST_MOVE_IS_NOTHROW_COPY_CONSTRUCTIBLE(T)   BOOST_MOVE_HAS_NOTHROW_COPY(T)
 #else
-   #define BOOST_MOVE_IS_NOTHROW_COPY_CONSTRUCTIBLE(T)   ::mars_boost::move_detail::is_pod<T>::value
+#define BOOST_MOVE_IS_NOTHROW_COPY_CONSTRUCTIBLE(T)   ::mars_boost::move_detail::is_pod<T>::value
 #endif
 
 #ifdef BOOST_MOVE_HAS_NOTHROW_MOVE
-   #define BOOST_MOVE_IS_NOTHROW_MOVE_CONSTRUCTIBLE(T)   BOOST_MOVE_HAS_NOTHROW_MOVE(T)
+#define BOOST_MOVE_IS_NOTHROW_MOVE_CONSTRUCTIBLE(T)   BOOST_MOVE_HAS_NOTHROW_MOVE(T)
 #else
-   #define BOOST_MOVE_IS_NOTHROW_MOVE_CONSTRUCTIBLE(T)   ::mars_boost::move_detail::is_pod<T>::value
+#define BOOST_MOVE_IS_NOTHROW_MOVE_CONSTRUCTIBLE(T)   ::mars_boost::move_detail::is_pod<T>::value
 #endif
 
 #ifdef BOOST_MOVE_HAS_NOTHROW_ASSIGN
-   #define BOOST_MOVE_IS_NOTHROW_COPY_ASSIGNABLE(T) BOOST_MOVE_HAS_NOTHROW_ASSIGN(T)
+#define BOOST_MOVE_IS_NOTHROW_COPY_ASSIGNABLE(T) BOOST_MOVE_HAS_NOTHROW_ASSIGN(T)
 #else
-   #define BOOST_MOVE_IS_NOTHROW_COPY_ASSIGNABLE(T) ::mars_boost::move_detail::is_pod<T>::value
+#define BOOST_MOVE_IS_NOTHROW_COPY_ASSIGNABLE(T) ::mars_boost::move_detail::is_pod<T>::value
 #endif
 
 #ifdef BOOST_MOVE_HAS_NOTHROW_MOVE_ASSIGN
-   #define BOOST_MOVE_IS_NOTHROW_MOVE_ASSIGNABLE(T) BOOST_MOVE_HAS_NOTHROW_MOVE_ASSIGN(T)
+#define BOOST_MOVE_IS_NOTHROW_MOVE_ASSIGNABLE(T) BOOST_MOVE_HAS_NOTHROW_MOVE_ASSIGN(T)
 #else
-   #define BOOST_MOVE_IS_NOTHROW_MOVE_ASSIGNABLE(T) ::mars_boost::move_detail::is_pod<T>::value
+#define BOOST_MOVE_IS_NOTHROW_MOVE_ASSIGNABLE(T) ::mars_boost::move_detail::is_pod<T>::value
 #endif
 
 #ifdef BOOST_MOVE_IS_ENUM
-   #define BOOST_MOVE_IS_ENUM_IMPL(T)   BOOST_MOVE_IS_ENUM(T)
+#define BOOST_MOVE_IS_ENUM_IMPL(T)   BOOST_MOVE_IS_ENUM(T)
 #else
-   #define BOOST_MOVE_IS_ENUM_IMPL(T)   ::mars_boost::move_detail::is_enum_nonintrinsic<T>::value
+#define BOOST_MOVE_IS_ENUM_IMPL(T)   ::mars_boost::move_detail::is_enum_nonintrinsic<T>::value
 #endif
 
-namespace mars_boost {} namespace boost = mars_boost; namespace mars_boost {
+namespace mars_boost {}
+namespace boost = mars_boost;
+namespace mars_boost {
 namespace move_detail {
 
 //////////////////////////
 //    is_reference
 //////////////////////////
 template<class T>
-struct is_reference
-{  static const bool value = false; };
+struct is_reference {
+  static const bool value = false;
+};
 
 template<class T>
-struct is_reference<T&>
-{  static const bool value = true; };
+struct is_reference<T&> {
+  static const bool value = true;
+};
 
 #if !defined(BOOST_NO_CXX11_RVALUE_REFERENCES)
 template<class T>
@@ -336,225 +341,352 @@ struct is_reference<T&&>
 //    is_pointer
 //////////////////////////
 template<class T>
-struct is_pointer
-{  static const bool value = false; };
+struct is_pointer {
+  static const bool value = false;
+};
 
 template<class T>
-struct is_pointer<T*>
-{  static const bool value = true; };
+struct is_pointer<T*> {
+  static const bool value = true;
+};
 
 //////////////////////////
 //       is_const
 //////////////////////////
 template<class T>
-struct is_const
-{  static const bool value = false; };
+struct is_const {
+  static const bool value = false;
+};
 
 template<class T>
-struct is_const<const T>
-{  static const bool value = true; };
+struct is_const<const T> {
+  static const bool value = true;
+};
 
 //////////////////////////
 //       unvoid_ref
 //////////////////////////
-template <typename T> struct unvoid_ref : add_lvalue_reference<T>{};
-template <> struct unvoid_ref<void>                { typedef unvoid_ref & type; };
-template <> struct unvoid_ref<const void>          { typedef unvoid_ref & type; };
-template <> struct unvoid_ref<volatile void>       { typedef unvoid_ref & type; };
-template <> struct unvoid_ref<const volatile void> { typedef unvoid_ref & type; };
+template<typename T>
+struct unvoid_ref : add_lvalue_reference<T> {
+};
+template<>
+struct unvoid_ref<void> {
+  typedef unvoid_ref& type;
+};
+template<>
+struct unvoid_ref<const void> {
+  typedef unvoid_ref& type;
+};
+template<>
+struct unvoid_ref<volatile void> {
+  typedef unvoid_ref& type;
+};
+template<>
+struct unvoid_ref<const volatile void> {
+  typedef unvoid_ref& type;
+};
 
-template <typename T>
-struct add_reference : add_lvalue_reference<T>
-{};
+template<typename T>
+struct add_reference : add_lvalue_reference<T> {
+};
 
 //////////////////////////
 //    add_const_reference
 //////////////////////////
-template <class T>
-struct add_const_reference
-{  typedef const T &type;   };
+template<class T>
+struct add_const_reference {
+  typedef const T& type;
+};
 
-template <class T>
-struct add_const_reference<T&>
-{  typedef T& type;   };
+template<class T>
+struct add_const_reference<T&> {
+  typedef T& type;
+};
 
 //////////////////////////
 //    add_const_if_c
 //////////////////////////
 template<class T, bool Add>
 struct add_const_if_c
-   : if_c<Add, typename add_const<T>::type, T>
-{};
+    : if_c<Add, typename add_const<T>::type, T> {
+};
 
 //////////////////////////
 //    remove_const
 //////////////////////////
 template<class T>
-struct remove_const
-{  typedef T type;   };
+struct remove_const {
+  typedef T type;
+};
 
 template<class T>
-struct remove_const< const T>
-{  typedef T type;   };
+struct remove_const<const T> {
+  typedef T type;
+};
 
 //////////////////////////
 //    remove_cv
 //////////////////////////
-template<typename T> struct remove_cv                    {  typedef T type;   };
-template<typename T> struct remove_cv<const T>           {  typedef T type;   };
-template<typename T> struct remove_cv<const volatile T>  {  typedef T type;   };
-template<typename T> struct remove_cv<volatile T>        {  typedef T type;   };
+template<typename T>
+struct remove_cv {
+  typedef T type;
+};
+template<typename T>
+struct remove_cv<const T> {
+  typedef T type;
+};
+template<typename T>
+struct remove_cv<const volatile T> {
+  typedef T type;
+};
+template<typename T>
+struct remove_cv<volatile T> {
+  typedef T type;
+};
 
 //////////////////////////
 //    make_unsigned
 //////////////////////////
-template <class T>
-struct make_unsigned_impl                                         {  typedef T type;   };
-template <> struct make_unsigned_impl<signed char>                {  typedef unsigned char  type; };
-template <> struct make_unsigned_impl<signed short>               {  typedef unsigned short type; };
-template <> struct make_unsigned_impl<signed int>                 {  typedef unsigned int   type; };
-template <> struct make_unsigned_impl<signed long>                {  typedef unsigned long  type; };
+template<class T>
+struct make_unsigned_impl {
+  typedef T type;
+};
+template<>
+struct make_unsigned_impl<signed char> {
+  typedef unsigned char type;
+};
+template<>
+struct make_unsigned_impl<signed short> {
+  typedef unsigned short type;
+};
+template<>
+struct make_unsigned_impl<signed int> {
+  typedef unsigned int type;
+};
+template<>
+struct make_unsigned_impl<signed long> {
+  typedef unsigned long type;
+};
 #ifdef BOOST_HAS_LONG_LONG
-template <> struct make_unsigned_impl< ::mars_boost::long_long_type >  {  typedef ::mars_boost::ulong_long_type type; };
+template<>
+struct make_unsigned_impl<::mars_boost::long_long_type> {
+  typedef ::mars_boost::ulong_long_type type;
+};
 #endif
 
-template <class T>
+template<class T>
 struct make_unsigned
-   : make_unsigned_impl<typename remove_cv<T>::type>
-{};
+    : make_unsigned_impl<typename remove_cv<T>::type> {
+};
 
 //////////////////////////
 //    is_floating_point
 //////////////////////////
-template<class T> struct is_floating_point_cv               {  static const bool value = false; };
-template<>        struct is_floating_point_cv<float>        {  static const bool value = true; };
-template<>        struct is_floating_point_cv<double>       {  static const bool value = true; };
-template<>        struct is_floating_point_cv<long double>  {  static const bool value = true; };
+template<class T>
+struct is_floating_point_cv {
+  static const bool value = false;
+};
+template<>
+struct is_floating_point_cv<float> {
+  static const bool value = true;
+};
+template<>
+struct is_floating_point_cv<double> {
+  static const bool value = true;
+};
+template<>
+struct is_floating_point_cv<long double> {
+  static const bool value = true;
+};
 
 template<class T>
 struct is_floating_point
-   : is_floating_point_cv<typename remove_cv<T>::type>
-{};
+    : is_floating_point_cv<typename remove_cv<T>::type> {
+};
 
 //////////////////////////
 //    is_integral
 //////////////////////////
-template<class T> struct is_integral_cv                    {  static const bool value = false; };
-template<> struct is_integral_cv<                     bool>{  static const bool value = true; };
-template<> struct is_integral_cv<                     char>{  static const bool value = true; };
-template<> struct is_integral_cv<            unsigned char>{  static const bool value = true; };
-template<> struct is_integral_cv<              signed char>{  static const bool value = true; };
+template<class T>
+struct is_integral_cv {
+  static const bool value = false;
+};
+template<>
+struct is_integral_cv<bool> {
+  static const bool value = true;
+};
+template<>
+struct is_integral_cv<char> {
+  static const bool value = true;
+};
+template<>
+struct is_integral_cv<unsigned char> {
+  static const bool value = true;
+};
+template<>
+struct is_integral_cv<signed char> {
+  static const bool value = true;
+};
 #ifndef BOOST_NO_CXX11_CHAR16_T
-template<> struct is_integral_cv<                 char16_t>{  static const bool value = true; };
+template<>
+struct is_integral_cv<char16_t> {
+  static const bool value = true;
+};
 #endif
 #ifndef BOOST_NO_CXX11_CHAR32_T
-template<> struct is_integral_cv<                 char32_t>{  static const bool value = true; };
+template<>
+struct is_integral_cv<char32_t> {
+  static const bool value = true;
+};
 #endif
 #ifndef BOOST_NO_INTRINSIC_WCHAR_T
-template<> struct is_integral_cv<                  wchar_t>{  static const bool value = true; };
+template<>
+struct is_integral_cv<wchar_t> {
+  static const bool value = true;
+};
 #endif
-template<> struct is_integral_cv<                    short>{  static const bool value = true; };
-template<> struct is_integral_cv<           unsigned short>{  static const bool value = true; };
-template<> struct is_integral_cv<                      int>{  static const bool value = true; };
-template<> struct is_integral_cv<             unsigned int>{  static const bool value = true; };
-template<> struct is_integral_cv<                     long>{  static const bool value = true; };
-template<> struct is_integral_cv<            unsigned long>{  static const bool value = true; };
+template<>
+struct is_integral_cv<short> {
+  static const bool value = true;
+};
+template<>
+struct is_integral_cv<unsigned short> {
+  static const bool value = true;
+};
+template<>
+struct is_integral_cv<int> {
+  static const bool value = true;
+};
+template<>
+struct is_integral_cv<unsigned int> {
+  static const bool value = true;
+};
+template<>
+struct is_integral_cv<long> {
+  static const bool value = true;
+};
+template<>
+struct is_integral_cv<unsigned long> {
+  static const bool value = true;
+};
 #ifdef BOOST_HAS_LONG_LONG
-template<> struct is_integral_cv< ::mars_boost:: long_long_type>{  static const bool value = true; };
-template<> struct is_integral_cv< ::mars_boost::ulong_long_type>{  static const bool value = true; };
+template<>
+struct is_integral_cv<::mars_boost::long_long_type> {
+  static const bool value = true;
+};
+template<>
+struct is_integral_cv<::mars_boost::ulong_long_type> {
+  static const bool value = true;
+};
 #endif
 
 template<class T>
 struct is_integral
-   : public is_integral_cv<typename remove_cv<T>::type>
-{};
+    : public is_integral_cv<typename remove_cv<T>::type> {
+};
 
 //////////////////////////////////////
 //          remove_all_extents
 //////////////////////////////////////
-template <class T>
-struct remove_all_extents
-{  typedef T type;};
+template<class T>
+struct remove_all_extents {
+  typedef T type;
+};
 
-template <class T>
-struct remove_all_extents<T[]>
-{  typedef typename remove_all_extents<T>::type type; };
+template<class T>
+struct remove_all_extents<T[]> {
+  typedef typename remove_all_extents<T>::type type;
+};
 
-template <class T, std::size_t N>
-struct remove_all_extents<T[N]>
-{  typedef typename remove_all_extents<T>::type type;};
+template<class T, std::size_t N>
+struct remove_all_extents<T[N]> {
+  typedef typename remove_all_extents<T>::type type;
+};
 
 //////////////////////////
 //    is_scalar
 //////////////////////////
 template<class T>
-struct is_scalar
-{  static const bool value = is_integral<T>::value || is_floating_point<T>::value; };
+struct is_scalar {
+  static const bool value = is_integral<T>::value || is_floating_point<T>::value;
+};
 
 //////////////////////////
 //       is_void
 //////////////////////////
 template<class T>
-struct is_void_cv
-{  static const bool value = false; };
+struct is_void_cv {
+  static const bool value = false;
+};
 
 template<>
-struct is_void_cv<void>
-{  static const bool value = true; };
+struct is_void_cv<void> {
+  static const bool value = true;
+};
 
 template<class T>
 struct is_void
-   : is_void_cv<typename remove_cv<T>::type>
-{};
+    : is_void_cv<typename remove_cv<T>::type> {
+};
 
 //////////////////////////////////////
 //          is_array
 //////////////////////////////////////
 template<class T>
-struct is_array
-{  static const bool value = false; };
+struct is_array {
+  static const bool value = false;
+};
 
 template<class T>
-struct is_array<T[]>
-{  static const bool value = true;  };
+struct is_array<T[]> {
+  static const bool value = true;
+};
 
 template<class T, std::size_t N>
-struct is_array<T[N]>
-{  static const bool value = true;  };
+struct is_array<T[N]> {
+  static const bool value = true;
+};
 
 //////////////////////////////////////
 //           is_member_pointer
 //////////////////////////////////////
-template <class T>         struct is_member_pointer_cv         {  static const bool value = false; };
-template <class T, class U>struct is_member_pointer_cv<T U::*> {  static const bool value = true; };
+template<class T>
+struct is_member_pointer_cv {
+  static const bool value = false;
+};
+template<class T, class U>
+struct is_member_pointer_cv<T U::*> {
+  static const bool value = true;
+};
 
-template <class T>
+template<class T>
 struct is_member_pointer
-    : is_member_pointer_cv<typename remove_cv<T>::type>
-{};
+    : is_member_pointer_cv<typename remove_cv<T>::type> {
+};
 
 //////////////////////////////////////
 //          is_nullptr_t
 //////////////////////////////////////
-template <class T>
-struct is_nullptr_t_cv
-{  static const bool value = false; };
+template<class T>
+struct is_nullptr_t_cv {
+  static const bool value = false;
+};
 
 #if !defined(BOOST_NO_CXX11_NULLPTR)
 template <>
 struct is_nullptr_t_cv
-   #if !defined(BOOST_NO_CXX11_DECLTYPE)
+#if !defined(BOOST_NO_CXX11_DECLTYPE)
    <decltype(nullptr)>
-   #else
+#else
    <std::nullptr_t>
-   #endif
+#endif
 {  static const bool value = true; };
 #endif
 
-template <class T>
+template<class T>
 struct is_nullptr_t
-   : is_nullptr_t_cv<typename remove_cv<T>::type>
-{};
+    : is_nullptr_t_cv<typename remove_cv<T>::type> {
+};
 
 //////////////////////////////////////
 //          is_function
@@ -563,87 +695,94 @@ struct is_nullptr_t
 //For a function to pointer an lvalue of function type T can be implicitly converted to a prvalue
 //pointer to that function. This does not apply to non-static member functions because lvalues
 //that refer to non-static member functions do not exist.
-template <class T>
-struct is_reference_convertible_to_pointer
-{
-   struct twochar { char dummy[2]; };
-   template <class U> static char    test(U*);
-   template <class U> static twochar test(...);
-   static T& source();
-   static const bool value = sizeof(char) == sizeof(test<T>(source()));
+template<class T>
+struct is_reference_convertible_to_pointer {
+  struct twochar {
+    char dummy[2];
+  };
+
+  template<class U>
+  static char test(U*);
+
+  template<class U>
+  static twochar test(...);
+
+  static T& source();
+
+  static const bool value = sizeof(char) == sizeof(test<T>(source()));
 };
+
 //Filter out:
 // - class types that might have implicit conversions
 // - void (to avoid forming a reference to void later)
 // - references (e.g.: filtering reference to functions)
 // - nullptr_t (convertible to pointer)
-template < class T
-         , bool Filter = is_class_or_union<T>::value  ||
-                         is_void<T>::value            ||
-                         is_reference<T>::value       ||
-                         is_nullptr_t<T>::value       >
-struct is_function_impl
-{  static const bool value = is_reference_convertible_to_pointer<T>::value; };
+template<class T, bool Filter = is_class_or_union<T>::value ||
+                                is_void<T>::value ||
+                                is_reference<T>::value ||
+                                is_nullptr_t<T>::value>
+struct is_function_impl {
+  static const bool value = is_reference_convertible_to_pointer<T>::value;
+};
 
-template <class T>
-struct is_function_impl<T, true>
-{  static const bool value = false; };
+template<class T>
+struct is_function_impl<T, true> {
+  static const bool value = false;
+};
 
-template <class T>
+template<class T>
 struct is_function
-   : is_function_impl<T>
-{};
+    : is_function_impl<T> {
+};
 
 //////////////////////////////////////
 //       is_union
 //////////////////////////////////////
 template<class T>
-struct is_union_noextents_cv
-{  static const bool value = BOOST_MOVE_IS_UNION_IMPL(T); };
+struct is_union_noextents_cv {
+  static const bool value = BOOST_MOVE_IS_UNION_IMPL(T);
+};
 
 template<class T>
 struct is_union
-   : is_union_noextents_cv<typename remove_cv<typename remove_all_extents<T>::type>::type>
-{};
+    : is_union_noextents_cv<typename remove_cv<typename remove_all_extents<T>::type>::type> {
+};
 
 //////////////////////////////////////
 //             is_class
 //////////////////////////////////////
-template <class T>
-struct is_class
-{
-   static const bool value = is_class_or_union<T>::value && ! is_union<T>::value;
+template<class T>
+struct is_class {
+  static const bool value = is_class_or_union<T>::value && !is_union<T>::value;
 };
 
 
 //////////////////////////////////////
 //             is_arithmetic
 //////////////////////////////////////
-template <class T>
-struct is_arithmetic
-{
-   static const bool value = is_floating_point<T>::value ||
-                             is_integral<T>::value;
+template<class T>
+struct is_arithmetic {
+  static const bool value = is_floating_point<T>::value ||
+                            is_integral<T>::value;
 };
 
 //////////////////////////////////////
 //    is_member_function_pointer
 //////////////////////////////////////
-template <class T>
-struct is_member_function_pointer_cv
-{
-   static const bool value = false;
+template<class T>
+struct is_member_function_pointer_cv {
+  static const bool value = false;
 };
 
-template <class T, class C>
+template<class T, class C>
 struct is_member_function_pointer_cv<T C::*>
-   : is_function<T>
-{};
+    : is_function<T> {
+};
 
-template <class T>
+template<class T>
 struct is_member_function_pointer
-    : is_member_function_pointer_cv<typename remove_cv<T>::type>
-{};
+    : is_member_function_pointer_cv<typename remove_cv<T>::type> {
+};
 
 //////////////////////////////////////
 //             is_enum
@@ -665,103 +804,111 @@ struct is_enum_nonintrinsic
 };
 #endif
 
-template <class T>
-struct is_enum
-{  static const bool value = BOOST_MOVE_IS_ENUM_IMPL(T);  };
+template<class T>
+struct is_enum {
+  static const bool value = BOOST_MOVE_IS_ENUM_IMPL(T);
+};
 
 //////////////////////////////////////
 //       is_pod
 //////////////////////////////////////
 template<class T>
 struct is_pod_noextents_cv  //for non-c++11 compilers, a safe fallback
-{  static const bool value = BOOST_MOVE_IS_POD_IMPL(T); };
+{
+  static const bool value = BOOST_MOVE_IS_POD_IMPL(T);
+};
 
 template<class T>
 struct is_pod
-   : is_pod_noextents_cv<typename remove_cv<typename remove_all_extents<T>::type>::type>
-{};
+    : is_pod_noextents_cv<typename remove_cv<typename remove_all_extents<T>::type>::type> {
+};
 
 //////////////////////////////////////
 //             is_empty
 //////////////////////////////////////
 #if !defined(BOOST_MOVE_IS_EMPTY)
 
-template <typename T>
-struct empty_helper_t1 : public T
-{
-   empty_helper_t1();  // hh compiler bug workaround
-   int i[256];
-   private:
+template<typename T>
+struct empty_helper_t1 : public T {
+  empty_helper_t1();  // hh compiler bug workaround
+  int i[256];
+private:
 
-   empty_helper_t1(const empty_helper_t1&);
-   empty_helper_t1& operator=(const empty_helper_t1&);
+  empty_helper_t1(const empty_helper_t1&);
+
+  empty_helper_t1& operator=(const empty_helper_t1&);
 };
 
-struct empty_helper_t2 { int i[256]; };
-
-template <typename T, bool IsClass = is_class<T>::value >
-struct is_empty_nonintrinsic
-{
-   static const bool value = false;
+struct empty_helper_t2 {
+  int i[256];
 };
 
-template <typename T>
-struct is_empty_nonintrinsic<T, true>
-{
-   static const bool value = sizeof(empty_helper_t1<T>) == sizeof(empty_helper_t2);
+template<typename T, bool IsClass = is_class<T>::value>
+struct is_empty_nonintrinsic {
+  static const bool value = false;
+};
+
+template<typename T>
+struct is_empty_nonintrinsic<T, true> {
+  static const bool value = sizeof(empty_helper_t1<T>) == sizeof(empty_helper_t2);
 };
 #endif
 
-template <class T>
-struct is_empty
-{  static const bool value = BOOST_MOVE_IS_EMPTY_IMPL(T);  };
+template<class T>
+struct is_empty {
+  static const bool value = BOOST_MOVE_IS_EMPTY_IMPL(T);
+};
 
 
 template<class T>
-struct has_boost_move_no_copy_constructor_or_assign_type
-{
-   template <class U>
-   static yes_type test(typename U::boost_move_no_copy_constructor_or_assign*);
+struct has_boost_move_no_copy_constructor_or_assign_type {
+  template<class U>
+  static yes_type test(typename U::boost_move_no_copy_constructor_or_assign*);
 
-   template <class U>
-   static no_type test(...);
+  template<class U>
+  static no_type test(...);
 
-   static const bool value = sizeof(test<T>(0)) == sizeof(yes_type);
+  static const bool value = sizeof(test<T>(0)) == sizeof(yes_type);
 };
 
 //////////////////////////////////////
 //       is_copy_constructible
 //////////////////////////////////////
 #if !defined(BOOST_NO_CXX11_DELETED_FUNCTIONS) && !defined(BOOST_NO_CXX11_DECLTYPE) \
-   && !defined(BOOST_INTEL_CXX_VERSION) && \
+ && !defined(BOOST_INTEL_CXX_VERSION) && \
       !(defined(BOOST_MSVC) && _MSC_VER == 1800)
 #define BOOST_MOVE_TT_CXX11_IS_COPY_CONSTRUCTIBLE
 #endif
 
 template<class T>
-struct is_copy_constructible
-{
-   // Intel compiler has problems with SFINAE for copy constructors and deleted functions:
-   //
-   // error: function *function_name* cannot be referenced -- it is a deleted function
-   // static yes_type test(U&, decltype(U(mars_boost::declval<U&>()))* = 0);
-   //                                                        ^ 
-   // MSVC 12.0 (Visual 2013) has problems when the copy constructor has been deleted. See:
-   // https://connect.microsoft.com/VisualStudio/feedback/details/800328/std-is-copy-constructible-is-broken
-   #if defined(BOOST_MOVE_TT_CXX11_IS_COPY_CONSTRUCTIBLE)
-      template<class U> static typename add_reference<U>::type source();
-      static no_type test(...);
-      #ifdef BOOST_NO_CXX11_DECLTYPE
-         template <class U>
-         static yes_type test(U&, bool_<sizeof(U(source<U>()))>* = 0);
-      #else
-         template <class U>
-         static yes_type test(U&, decltype(U(source<U>()))* = 0);
-      #endif
-      static const bool value = sizeof(test(source<T>())) == sizeof(yes_type);
-   #else
-   static const bool value = !has_boost_move_no_copy_constructor_or_assign_type<T>::value;
-   #endif
+struct is_copy_constructible {
+  // Intel compiler has problems with SFINAE for copy constructors and deleted functions:
+  //
+  // error: function *function_name* cannot be referenced -- it is a deleted function
+  // static yes_type test(U&, decltype(U(mars_boost::declval<U&>()))* = 0);
+  //                                                        ^
+  // MSVC 12.0 (Visual 2013) has problems when the copy constructor has been deleted. See:
+  // https://connect.microsoft.com/VisualStudio/feedback/details/800328/std-is-copy-constructible-is-broken
+#if defined(BOOST_MOVE_TT_CXX11_IS_COPY_CONSTRUCTIBLE)
+
+  template<class U>
+  static typename add_reference<U>::type source();
+
+  static no_type test(...);
+
+#ifdef BOOST_NO_CXX11_DECLTYPE
+  template <class U>
+  static yes_type test(U&, bool_<sizeof(U(source<U>()))>* = 0);
+#else
+
+  template<class U>
+  static yes_type test(U&, decltype(U(source<U>()))* = 0);
+
+#endif
+  static const bool value = sizeof(test(source<T>())) == sizeof(yes_type);
+#else
+  static const bool value = !has_boost_move_no_copy_constructor_or_assign_type<T>::value;
+#endif
 };
 
 
@@ -769,14 +916,13 @@ struct is_copy_constructible
 //       is_copy_assignable
 //////////////////////////////////////
 #if !defined(BOOST_NO_CXX11_DELETED_FUNCTIONS) && !defined(BOOST_NO_CXX11_DECLTYPE) \
-   && !defined(BOOST_INTEL_CXX_VERSION) && \
+ && !defined(BOOST_INTEL_CXX_VERSION) && \
       !(defined(BOOST_MSVC) && _MSC_VER == 1800)
 #define BOOST_MOVE_TT_CXX11_IS_COPY_ASSIGNABLE
 #endif
 
-template <class T>
-struct is_copy_assignable
-{
+template<class T>
+struct is_copy_assignable {
 // Intel compiler has problems with SFINAE for copy constructors and deleted functions:
 //
 // error: function *function_name* cannot be referenced -- it is a deleted function
@@ -786,16 +932,23 @@ struct is_copy_assignable
 // MSVC 12.0 (Visual 2013) has problems when the copy constructor has been deleted. See:
 // https://connect.microsoft.com/VisualStudio/feedback/details/800328/std-is-copy-constructible-is-broken
 #if defined(BOOST_MOVE_TT_CXX11_IS_COPY_ASSIGNABLE)
-   typedef char yes_type;
-   struct no_type { char dummy[2]; };
-   
-   template <class U>   static typename add_reference<U>::type source();
-   template <class U>   static decltype(source<U&>() = source<const U&>(), yes_type() ) test(int);
-   template <class>     static no_type test(...);
+  typedef char yes_type;
+  struct no_type {
+    char dummy[2];
+  };
 
-   static const bool value = sizeof(test<T>(0)) == sizeof(yes_type);
+  template<class U>
+  static typename add_reference<U>::type source();
+
+  template<class U>
+  static decltype(source<U&>() = source<const U&>(), yes_type()) test(int);
+
+  template<class>
+  static no_type test(...);
+
+  static const bool value = sizeof(test<T>(0)) == sizeof(yes_type);
 #else
-   static const bool value = !has_boost_move_no_copy_constructor_or_assign_type<T>::value;
+  static const bool value = !has_boost_move_no_copy_constructor_or_assign_type<T>::value;
 #endif
 };
 
@@ -803,165 +956,178 @@ struct is_copy_assignable
 //       is_trivially_destructible
 //////////////////////////////////////
 template<class T>
-struct is_trivially_destructible
-{  static const bool value = BOOST_MOVE_IS_TRIVIALLY_DESTRUCTIBLE(T); };
+struct is_trivially_destructible {
+  static const bool value = BOOST_MOVE_IS_TRIVIALLY_DESTRUCTIBLE(T);
+};
 
 //////////////////////////////////////
 //       is_trivially_default_constructible
 //////////////////////////////////////
 template<class T>
-struct is_trivially_default_constructible
-{  static const bool value = BOOST_MOVE_IS_TRIVIALLY_DEFAULT_CONSTRUCTIBLE(T); };
+struct is_trivially_default_constructible {
+  static const bool value = BOOST_MOVE_IS_TRIVIALLY_DEFAULT_CONSTRUCTIBLE(T);
+};
 
 //////////////////////////////////////
 //       is_trivially_copy_constructible
 //////////////////////////////////////
 template<class T>
-struct is_trivially_copy_constructible
-{
-   //In several compilers BOOST_MOVE_IS_TRIVIALLY_COPY_CONSTRUCTIBLE return true even with
-   //deleted copy constructors so make sure the type is copy constructible.
-   static const bool value = ::mars_boost::move_detail::is_pod<T>::value ||
-                             ( ::mars_boost::move_detail::is_copy_constructible<T>::value &&
-                               BOOST_MOVE_IS_TRIVIALLY_COPY_CONSTRUCTIBLE(T) );
+struct is_trivially_copy_constructible {
+  //In several compilers BOOST_MOVE_IS_TRIVIALLY_COPY_CONSTRUCTIBLE return true even with
+  //deleted copy constructors so make sure the type is copy constructible.
+  static const bool value = ::mars_boost::move_detail::is_pod<T>::value ||
+                            (::mars_boost::move_detail::is_copy_constructible<T>::value &&
+                             BOOST_MOVE_IS_TRIVIALLY_COPY_CONSTRUCTIBLE(T));
 };
 
 //////////////////////////////////////
 //       is_trivially_move_constructible
 //////////////////////////////////////
 template<class T>
-struct is_trivially_move_constructible
-{  static const bool value = BOOST_MOVE_IS_TRIVIALLY_MOVE_CONSTRUCTIBLE(T); };
+struct is_trivially_move_constructible {
+  static const bool value = BOOST_MOVE_IS_TRIVIALLY_MOVE_CONSTRUCTIBLE(T);
+};
 
 //////////////////////////////////////
 //       is_trivially_copy_assignable
 //////////////////////////////////////
 template<class T>
-struct is_trivially_copy_assignable
-{
-   //In several compilers BOOST_MOVE_IS_TRIVIALLY_COPY_CONSTRUCTIBLE return true even with
-   //deleted copy constructors so make sure the type is copy constructible.
-   static const bool value = ::mars_boost::move_detail::is_pod<T>::value ||
-                             ( ::mars_boost::move_detail::is_copy_assignable<T>::value &&
-                               BOOST_MOVE_IS_TRIVIALLY_COPY_ASSIGNABLE(T) );
-};                             
+struct is_trivially_copy_assignable {
+  //In several compilers BOOST_MOVE_IS_TRIVIALLY_COPY_CONSTRUCTIBLE return true even with
+  //deleted copy constructors so make sure the type is copy constructible.
+  static const bool value = ::mars_boost::move_detail::is_pod<T>::value ||
+                            (::mars_boost::move_detail::is_copy_assignable<T>::value &&
+                             BOOST_MOVE_IS_TRIVIALLY_COPY_ASSIGNABLE(T));
+};
 
 //////////////////////////////////////
 //       is_trivially_move_assignable
 //////////////////////////////////////
 template<class T>
-struct is_trivially_move_assignable
-{  static const bool value = BOOST_MOVE_IS_TRIVIALLY_MOVE_ASSIGNABLE(T);  };
+struct is_trivially_move_assignable {
+  static const bool value = BOOST_MOVE_IS_TRIVIALLY_MOVE_ASSIGNABLE(T);
+};
 
 //////////////////////////////////////
 //       is_nothrow_default_constructible
 //////////////////////////////////////
 template<class T>
 struct is_nothrow_default_constructible
-   : is_pod<T>
-{  static const bool value = BOOST_MOVE_IS_NOTHROW_DEFAULT_CONSTRUCTIBLE(T);  };
+    : is_pod<T> {
+  static const bool value = BOOST_MOVE_IS_NOTHROW_DEFAULT_CONSTRUCTIBLE(T);
+};
 
 //////////////////////////////////////
 //    is_nothrow_copy_constructible
 //////////////////////////////////////
 template<class T>
-struct is_nothrow_copy_constructible
-{  static const bool value = BOOST_MOVE_IS_NOTHROW_COPY_CONSTRUCTIBLE(T);  };
+struct is_nothrow_copy_constructible {
+  static const bool value = BOOST_MOVE_IS_NOTHROW_COPY_CONSTRUCTIBLE(T);
+};
 
 //////////////////////////////////////
 //    is_nothrow_move_constructible
 //////////////////////////////////////
 template<class T>
-struct is_nothrow_move_constructible
-{  static const bool value = BOOST_MOVE_IS_NOTHROW_MOVE_CONSTRUCTIBLE(T);  };
+struct is_nothrow_move_constructible {
+  static const bool value = BOOST_MOVE_IS_NOTHROW_MOVE_CONSTRUCTIBLE(T);
+};
 
 //////////////////////////////////////
 //       is_nothrow_copy_assignable
 //////////////////////////////////////
 template<class T>
-struct is_nothrow_copy_assignable
-{  static const bool value = BOOST_MOVE_IS_NOTHROW_COPY_ASSIGNABLE(T);  };
+struct is_nothrow_copy_assignable {
+  static const bool value = BOOST_MOVE_IS_NOTHROW_COPY_ASSIGNABLE(T);
+};
 
 //////////////////////////////////////
 //    is_nothrow_move_assignable
 //////////////////////////////////////
 template<class T>
-struct is_nothrow_move_assignable
-{  static const bool value = BOOST_MOVE_IS_NOTHROW_MOVE_ASSIGNABLE(T);  };
+struct is_nothrow_move_assignable {
+  static const bool value = BOOST_MOVE_IS_NOTHROW_MOVE_ASSIGNABLE(T);
+};
 
 //////////////////////////////////////
 //    is_nothrow_swappable
 //////////////////////////////////////
 template<class T>
-struct is_nothrow_swappable
-{
-   static const bool value = is_empty<T>::value || is_pod<T>::value;
+struct is_nothrow_swappable {
+  static const bool value = is_empty<T>::value || is_pod<T>::value;
 };
 
 //////////////////////////////////////
 //       alignment_of
 //////////////////////////////////////
-template <typename T>
-struct alignment_of_hack
-{
-   T t1;
-   char c;
-   T t2;
-   alignment_of_hack();
+template<typename T>
+struct alignment_of_hack {
+  T t1;
+  char c;
+  T t2;
+
+  alignment_of_hack();
 };
 
-template <unsigned A, unsigned S>
-struct alignment_logic
-{  static const std::size_t value = A < S ? A : S; };
+template<unsigned A, unsigned S>
+struct alignment_logic {
+  static const std::size_t value = A < S ? A : S;
+};
 
-template< typename T >
+template<typename T>
 struct alignment_of_impl
 #if defined(BOOST_MSVC) && (BOOST_MSVC >= 1400)
-    // With MSVC both the native __alignof operator
-    // and our own logic gets things wrong from time to time :-(
-    // Using a combination of the two seems to make the most of a bad job:
-   : alignment_logic< sizeof(alignment_of_hack<T>) - 2*sizeof(T), __alignof(T)>
+  // With MSVC both the native __alignof operator
+  // and our own logic gets things wrong from time to time :-(
+  // Using a combination of the two seems to make the most of a bad job:
+ : alignment_logic< sizeof(alignment_of_hack<T>) - 2*sizeof(T), __alignof(T)>
 {};
 #elif !defined(BOOST_MOVE_ALIGNMENT_OF)
-   : alignment_logic< sizeof(alignment_of_hack<T>) - 2*sizeof(T), sizeof(T)>
+  : alignment_logic< sizeof(alignment_of_hack<T>) - 2*sizeof(T), sizeof(T)>
 {};
 #else
-{  static const std::size_t value = BOOST_MOVE_ALIGNMENT_OF(T);  };
+{
+  static const std::size_t value = BOOST_MOVE_ALIGNMENT_OF(T);
+};
 #endif
 
-template< typename T >
+template<typename T>
 struct alignment_of
-   : alignment_of_impl<T>
-{};
+    : alignment_of_impl<T> {
+};
 
 class alignment_dummy;
-typedef void (*function_ptr)();
+
+typedef void (* function_ptr)();
+
 typedef int (alignment_dummy::*member_ptr);
+
 typedef int (alignment_dummy::*member_function_ptr)();
-struct alignment_struct
-{  long double dummy[4];  };
+
+struct alignment_struct {
+  long double dummy[4];
+};
 
 /////////////////////////////
 //    max_align_t
 /////////////////////////////
 //This is not standard, but should work with all compilers
-union max_align
-{
-   char        char_;
-   short       short_;
-   int         int_;
-   long        long_;
-   #ifdef BOOST_HAS_LONG_LONG
-   ::mars_boost::long_long_type   long_long_;
-   #endif
-   float       float_;
-   double      double_;
-   void *      void_ptr_;
-   long double long_double_[4];
-   alignment_dummy *unknown_class_ptr_;
-   function_ptr function_ptr_;
-   member_function_ptr member_function_ptr_;
-   alignment_struct alignment_struct_;
+union max_align {
+  char char_;
+  short short_;
+  int int_;
+  long long_;
+#ifdef BOOST_HAS_LONG_LONG
+  ::mars_boost::long_long_type long_long_;
+#endif
+  float float_;
+  double double_;
+  void* void_ptr_;
+  long double long_double_[4];
+  alignment_dummy* unknown_class_ptr_;
+  function_ptr function_ptr_;
+  member_function_ptr member_function_ptr_;
+  alignment_struct alignment_struct_;
 };
 
 typedef union max_align max_align_t;
@@ -1034,12 +1200,12 @@ struct aligned_next<Len, Align, max_align_t, false>
    //
    BOOST_MOVE_ALIGNED_NEXT_STEP(long double, max_align_t)
    BOOST_MOVE_ALIGNED_NEXT_STEP(double, long double)
-   #ifdef BOOST_HAS_LONG_LONG
+#ifdef BOOST_HAS_LONG_LONG
       BOOST_MOVE_ALIGNED_NEXT_STEP(::mars_boost::long_long_type, double)
       BOOST_MOVE_ALIGNED_NEXT_STEP(long, ::mars_boost::long_long_type)
-   #else
+#else
       BOOST_MOVE_ALIGNED_NEXT_STEP(long, double)
-   #endif
+#endif
    BOOST_MOVE_ALIGNED_NEXT_STEP(int, long)
    BOOST_MOVE_ALIGNED_NEXT_STEP(short, int)
    BOOST_MOVE_ALIGNED_NEXT_STEP(char, short)
@@ -1053,21 +1219,20 @@ struct aligned_storage_impl
 #endif
 
 template<std::size_t Len, std::size_t Align = alignment_of<max_align_t>::value>
-struct aligned_storage
-{
-   //Sanity checks for input parameters
-   BOOST_STATIC_ASSERT(Align > 0);
+struct aligned_storage {
+  //Sanity checks for input parameters
+  BOOST_STATIC_ASSERT(Align > 0);
 
-   //Sanity checks for output type
-   typedef typename aligned_storage_impl<Len ? Len : 1, Align>::type type;
-   static const std::size_t value = alignment_of<type>::value;
-   BOOST_STATIC_ASSERT(value >= Align);
-   BOOST_STATIC_ASSERT((value % Align) == 0);
+  //Sanity checks for output type
+  typedef typename aligned_storage_impl<Len ? Len : 1, Align>::type type;
+  static const std::size_t value = alignment_of<type>::value;
+  BOOST_STATIC_ASSERT(value >= Align);
+  BOOST_STATIC_ASSERT((value % Align) == 0);
 
-   //Just in case someone instantiates aligned_storage
-   //instead of aligned_storage::type (typical error).
-   private:
-   aligned_storage();
+  //Just in case someone instantiates aligned_storage
+  //instead of aligned_storage::type (typical error).
+private:
+  aligned_storage();
 };
 
 }  //namespace move_detail {

@@ -22,13 +22,13 @@
 
 
 #if !defined(BOOST_RANGE_DETAIL_MICROSOFT_RANGE_VERSION_1)
-    #define BOOST_RANGE_DETAIL_MICROSOFT_range_mutable_iterator range_mutable_iterator
-    #define BOOST_RANGE_DETAIL_MICROSOFT_range_begin            range_begin
-    #define BOOST_RANGE_DETAIL_MICROSOFT_range_end              range_end
+#define BOOST_RANGE_DETAIL_MICROSOFT_range_mutable_iterator range_mutable_iterator
+#define BOOST_RANGE_DETAIL_MICROSOFT_range_begin            range_begin
+#define BOOST_RANGE_DETAIL_MICROSOFT_range_end              range_end
 #else
-    #define BOOST_RANGE_DETAIL_MICROSOFT_range_mutable_iterator range_mutable_iterator
-    #define BOOST_RANGE_DETAIL_MICROSOFT_range_begin            range_begin
-    #define BOOST_RANGE_DETAIL_MICROSOFT_range_end              range_end
+#define BOOST_RANGE_DETAIL_MICROSOFT_range_mutable_iterator range_mutable_iterator
+#define BOOST_RANGE_DETAIL_MICROSOFT_range_begin            range_begin
+#define BOOST_RANGE_DETAIL_MICROSOFT_range_end              range_end
 #endif
 
 
@@ -60,152 +60,153 @@
 #include <boost/utility/enable_if.hpp> // disable_if
 
 #if !defined(BOOST_RANGE_DETAIL_MICROSOFT_RANGE_VERSION_1)
-    #include <boost/range/mutable_iterator.hpp>
+#include <boost/range/mutable_iterator.hpp>
 #else
-    #include <iterator> // distance
-    #include <boost/range/begin.hpp>
-    #include <boost/range/end.hpp>
-    #include <boost/range/iterator.hpp>
+
+#include <iterator> // distance
+#include <boost/range/begin.hpp>
+#include <boost/range/end.hpp>
+#include <boost/range/iterator.hpp>
+
 #endif
 
 
-namespace mars_boost {} namespace boost = mars_boost; namespace mars_boost { namespace range_detail_microsoft {
+namespace mars_boost {}
+namespace boost = mars_boost;
+namespace mars_boost {
+namespace range_detail_microsoft {
 
 
-    // customization point
-    //
+// customization point
+//
 
-    template< class Tag >
-    struct customization;
-
-
-    template< class T >
-    struct customization_tag;
+template<class Tag>
+struct customization;
 
 
-    struct using_type_as_tag
-    { };
+template<class T>
+struct customization_tag;
 
 
-    // Topic:
-    // In fact, it is unnecessary for VC++.
-    // VC++'s behavior seems conforming, while GCC fails without this.
-    template< class Iterator, class T >
-    struct mutable_ :
-        disable_if< is_const<T>, Iterator >
-    { };
+struct using_type_as_tag {
+};
 
 
-    // helpers
-    //
-
-    template< class Tag, class T >
-    struct customization_tag_of
-    {
-        typedef typename mpl::if_< is_same<using_type_as_tag, Tag>,
-            T,
-            Tag
-        >::type type;
-    };
+// Topic:
+// In fact, it is unnecessary for VC++.
+// VC++'s behavior seems conforming, while GCC fails without this.
+template<class Iterator, class T>
+struct mutable_ :
+    disable_if<is_const<T>, Iterator> {
+};
 
 
-    template< class T >
-    struct customization_of
-    {
-        typedef typename remove_cv<T>::type bare_t;
-        typedef typename customization_tag<bare_t>::type tag_t;
-        typedef customization<tag_t> type;
-    };
+// helpers
+//
+
+template<class Tag, class T>
+struct customization_tag_of {
+  typedef typename mpl::if_<is_same<using_type_as_tag, Tag>,
+      T,
+      Tag
+  >::type type;
+};
 
 
-    template< class T >
-    struct mutable_iterator_of
-    {
-        typedef typename remove_cv<T>::type bare_t;
-        typedef typename customization_of<bare_t>::type cust_t;
-        typedef typename cust_t::template meta<bare_t>::mutable_iterator type;
-    };
+template<class T>
+struct customization_of {
+  typedef typename remove_cv<T>::type bare_t;
+  typedef typename customization_tag<bare_t>::type tag_t;
+  typedef customization<tag_t> type;
+};
 
 
-    template< class T >
-    struct const_iterator_of
-    {
-        typedef typename remove_cv<T>::type bare_t;
-        typedef typename customization_of<bare_t>::type cust_t;
-        typedef typename cust_t::template meta<bare_t>::const_iterator type;
-    };
+template<class T>
+struct mutable_iterator_of {
+  typedef typename remove_cv<T>::type bare_t;
+  typedef typename customization_of<bare_t>::type cust_t;
+  typedef typename cust_t::template meta<bare_t>::mutable_iterator type;
+};
 
 
-    template< class T >
-    struct size_type_of
-    {
-        typedef typename range_detail_microsoft::mutable_iterator_of<T>::type miter_t;
-        typedef typename iterator_difference<miter_t>::type type;
-    };
+template<class T>
+struct const_iterator_of {
+  typedef typename remove_cv<T>::type bare_t;
+  typedef typename customization_of<bare_t>::type cust_t;
+  typedef typename cust_t::template meta<bare_t>::const_iterator type;
+};
 
 
-    template< class T > inline
-    typename mutable_iterator_of<T>::type
-    begin_of(T& x)
-    {
-        typedef typename customization_of<T>::type cust_t;
-        return cust_t().template begin<typename mutable_iterator_of<T>::type>(x);
-    }
+template<class T>
+struct size_type_of {
+  typedef typename range_detail_microsoft::mutable_iterator_of<T>::type miter_t;
+  typedef typename iterator_difference<miter_t>::type type;
+};
 
 
-    template< class T > inline
-    typename const_iterator_of<T>::type
-    begin_of(T const& x)
-    {
-        typedef typename customization_of<T>::type cust_t;
-        return cust_t().template begin<typename const_iterator_of<T>::type>(x);
-    }
+template<class T>
+inline
+typename mutable_iterator_of<T>::type
+begin_of(T& x) {
+  typedef typename customization_of<T>::type cust_t;
+  return cust_t().template begin<typename mutable_iterator_of<T>::type>(x);
+}
 
 
-    template< class T > inline
-    typename mutable_iterator_of<T>::type
-    end_of(T& x)
-    {
-        typedef typename customization_of<T>::type cust_t;
-        return cust_t().template end<typename mutable_iterator_of<T>::type>(x);
-    }
+template<class T>
+inline
+typename const_iterator_of<T>::type
+begin_of(T const& x) {
+  typedef typename customization_of<T>::type cust_t;
+  return cust_t().template begin<typename const_iterator_of<T>::type>(x);
+}
 
 
-    template< class T > inline
-    typename const_iterator_of<T>::type
-    end_of(T const& x)
-    {
-        typedef typename customization_of<T>::type cust_t;
-        return cust_t().template end<typename const_iterator_of<T>::type>(x);
-    }
+template<class T>
+inline
+typename mutable_iterator_of<T>::type
+end_of(T& x) {
+  typedef typename customization_of<T>::type cust_t;
+  return cust_t().template end<typename mutable_iterator_of<T>::type>(x);
+}
+
+
+template<class T>
+inline
+typename const_iterator_of<T>::type
+end_of(T const& x) {
+  typedef typename customization_of<T>::type cust_t;
+  return cust_t().template end<typename const_iterator_of<T>::type>(x);
+}
 
 
 #if defined(BOOST_RANGE_DETAIL_MICROSOFT_RANGE_VERSION_1)
 
-    template< class T > inline
-    typename size_type_of<T>::type
-    size_of(T const& x)
-    {
-        return std::distance(mars_boost::begin(x), mars_boost::end(x));
-    }
+template<class T>
+inline
+typename size_type_of<T>::type
+size_of(T const& x) {
+  return std::distance(mars_boost::begin(x), mars_boost::end(x));
+}
 
 #endif
 
 
-    template< class Range >
-    struct compatible_mutable_iterator : 
-        BOOST_RANGE_DETAIL_MICROSOFT_range_mutable_iterator<Range>
-    { };
+template<class Range>
+struct compatible_mutable_iterator :
+    BOOST_RANGE_DETAIL_MICROSOFT_range_mutable_iterator<Range> {
+};
 
 
-} } // namespace mars_boost {} namespace boost = mars_boost; namespace mars_boost::range_detail_microsoft
+}
+} // namespace mars_boost {} namespace boost = mars_boost; namespace mars_boost::range_detail_microsoft
 
 
 #define BOOST_RANGE_DETAIL_MICROSOFT_CUSTOMIZATION_namespace_open(NamespaceList) \
     BOOST_PP_LIST_FOR_EACH(BOOST_RANGE_DETAIL_MICROSOFT_CUSTOMIZATION_namespace_open_op, ~, NamespaceList) \
 /**/
 
-    #define BOOST_RANGE_DETAIL_MICROSOFT_CUSTOMIZATION_namespace_open_op(r, data, elem) \
+#define BOOST_RANGE_DETAIL_MICROSOFT_CUSTOMIZATION_namespace_open_op(r, data, elem) \
         namespace elem { \
     /**/
 
@@ -214,7 +215,7 @@ namespace mars_boost {} namespace boost = mars_boost; namespace mars_boost { nam
     BOOST_PP_LIST_FOR_EACH(BOOST_RANGE_DETAIL_MICROSOFT_CUSTOMIZATION_namespace_close_op, ~, NamespaceList) \
 /**/
 
-    #define BOOST_RANGE_DETAIL_MICROSOFT_CUSTOMIZATION_namespace_close_op(r, data, elem) \
+#define BOOST_RANGE_DETAIL_MICROSOFT_CUSTOMIZATION_namespace_close_op(r, data, elem) \
         } \
     /**/
 
@@ -245,12 +246,12 @@ namespace mars_boost {} namespace boost = mars_boost; namespace mars_boost { nam
 /**/
 
 
-    #define BOOST_RANGE_DETAIL_MICROSOFT_CUSTOMIZATION_TYPE_fullname(NamespaceList, Name) \
+#define BOOST_RANGE_DETAIL_MICROSOFT_CUSTOMIZATION_TYPE_fullname(NamespaceList, Name) \
         BOOST_PP_LIST_FOR_EACH(BOOST_RANGE_DETAIL_MICROSOFT_CUSTOMIZATION_namespace_expand_op, ~, NamespaceList) :: Name \
     /**/
 
 
-    #define BOOST_RANGE_DETAIL_MICROSOFT_CUSTOMIZATION_TYPE_tag(Tag, Fullname) \
+#define BOOST_RANGE_DETAIL_MICROSOFT_CUSTOMIZATION_TYPE_tag(Tag, Fullname) \
         template< > \
         struct customization_tag< Fullname > : \
             customization_tag_of< Tag, Fullname > \
@@ -258,10 +259,10 @@ namespace mars_boost {} namespace boost = mars_boost; namespace mars_boost { nam
     /**/
 
 
-    // metafunctions
-    //
+// metafunctions
+//
 
-    #define BOOST_RANGE_DETAIL_MICROSOFT_CUSTOMIZATION_TYPE_mutable_iterator(Fullname) \
+#define BOOST_RANGE_DETAIL_MICROSOFT_CUSTOMIZATION_TYPE_mutable_iterator(Fullname) \
         template< > \
         struct BOOST_RANGE_DETAIL_MICROSOFT_range_mutable_iterator< Fullname > : \
             range_detail_microsoft::mutable_iterator_of< Fullname > \
@@ -269,7 +270,7 @@ namespace mars_boost {} namespace boost = mars_boost; namespace mars_boost { nam
     /**/
 
 
-    #define BOOST_RANGE_DETAIL_MICROSOFT_CUSTOMIZATION_TYPE_const_iterator(Fullname) \
+#define BOOST_RANGE_DETAIL_MICROSOFT_CUSTOMIZATION_TYPE_const_iterator(Fullname) \
         template< > \
         struct range_const_iterator< Fullname > : \
             range_detail_microsoft::const_iterator_of< Fullname > \
@@ -277,7 +278,7 @@ namespace mars_boost {} namespace boost = mars_boost; namespace mars_boost { nam
     /**/
 
 
-    #define BOOST_RANGE_DETAIL_MICROSOFT_CUSTOMIZATION_TYPE_size_type(Fullname) \
+#define BOOST_RANGE_DETAIL_MICROSOFT_CUSTOMIZATION_TYPE_size_type(Fullname) \
         template< > \
         struct range_size< Fullname > : \
             range_detail_microsoft::size_type_of< Fullname > \
@@ -285,10 +286,10 @@ namespace mars_boost {} namespace boost = mars_boost; namespace mars_boost { nam
     /**/
 
 
-    // functions
-    //
+// functions
+//
 
-    #define BOOST_RANGE_DETAIL_MICROSOFT_CUSTOMIZATION_TYPE_begin(Fullname) \
+#define BOOST_RANGE_DETAIL_MICROSOFT_CUSTOMIZATION_TYPE_begin(Fullname) \
         inline \
         mars_boost::range_detail_microsoft::mutable_iterator_of< Fullname >::type \
         BOOST_RANGE_DETAIL_MICROSOFT_range_begin(Fullname& x) \
@@ -298,7 +299,7 @@ namespace mars_boost {} namespace boost = mars_boost; namespace mars_boost { nam
     /**/
 
 
-    #define BOOST_RANGE_DETAIL_MICROSOFT_CUSTOMIZATION_TYPE_begin_const(Fullname) \
+#define BOOST_RANGE_DETAIL_MICROSOFT_CUSTOMIZATION_TYPE_begin_const(Fullname) \
         inline \
         mars_boost::range_detail_microsoft::const_iterator_of< Fullname >::type \
         BOOST_RANGE_DETAIL_MICROSOFT_range_begin(Fullname const& x) \
@@ -308,7 +309,7 @@ namespace mars_boost {} namespace boost = mars_boost; namespace mars_boost { nam
     /**/
 
 
-    #define BOOST_RANGE_DETAIL_MICROSOFT_CUSTOMIZATION_TYPE_end(Fullname) \
+#define BOOST_RANGE_DETAIL_MICROSOFT_CUSTOMIZATION_TYPE_end(Fullname) \
         inline \
         mars_boost::range_detail_microsoft::mutable_iterator_of< Fullname >::type \
         BOOST_RANGE_DETAIL_MICROSOFT_range_end(Fullname& x) \
@@ -318,7 +319,7 @@ namespace mars_boost {} namespace boost = mars_boost; namespace mars_boost { nam
     /**/
 
 
-    #define BOOST_RANGE_DETAIL_MICROSOFT_CUSTOMIZATION_TYPE_end_const(Fullname) \
+#define BOOST_RANGE_DETAIL_MICROSOFT_CUSTOMIZATION_TYPE_end_const(Fullname) \
         inline \
         mars_boost::range_detail_microsoft::const_iterator_of< Fullname >::type \
         BOOST_RANGE_DETAIL_MICROSOFT_range_end(Fullname const& x) \
@@ -328,14 +329,14 @@ namespace mars_boost {} namespace boost = mars_boost; namespace mars_boost { nam
     /**/
 
 
-    #if !defined(BOOST_RANGE_DETAIL_MICROSOFT_RANGE_VERSION_1)
+#if !defined(BOOST_RANGE_DETAIL_MICROSOFT_RANGE_VERSION_1)
 
-        #define BOOST_RANGE_DETAIL_MICROSOFT_CUSTOMIZATION_TYPE_size(Fullname) \
+#define BOOST_RANGE_DETAIL_MICROSOFT_CUSTOMIZATION_TYPE_size(Fullname) \
         /**/
 
-    #else
+#else
 
-        #define BOOST_RANGE_DETAIL_MICROSOFT_CUSTOMIZATION_TYPE_size(Fullname) \
+#define BOOST_RANGE_DETAIL_MICROSOFT_CUSTOMIZATION_TYPE_size(Fullname) \
             inline \
             mars_boost::range_detail_microsoft::size_type_of< Fullname >::type \
             boost_range_size(Fullname const& x) \
@@ -344,7 +345,7 @@ namespace mars_boost {} namespace boost = mars_boost; namespace mars_boost { nam
             } \
         /**/
 
-    #endif
+#endif
 
 
 #define BOOST_RANGE_DETAIL_MICROSOFT_CUSTOMIZATION_TEMPLATE(Tag, NamespaceList, Name, ParamSeqOrCount) \
@@ -354,14 +355,14 @@ namespace mars_boost {} namespace boost = mars_boost; namespace mars_boost { nam
     ) \
 /**/
 
-    #define BOOST_RANGE_DETAIL_MICROSOFT_CUSTOMIZATION_TEMPLATE_to_param_seq(ParamSeqOrCount) \
+#define BOOST_RANGE_DETAIL_MICROSOFT_CUSTOMIZATION_TEMPLATE_to_param_seq(ParamSeqOrCount) \
         BOOST_PP_IIF(BOOST_PP_IS_UNARY(ParamSeqOrCount), \
             ParamSeqOrCount BOOST_PP_TUPLE_EAT(3), \
             BOOST_PP_REPEAT \
         )(ParamSeqOrCount, BOOST_RANGE_DETAIL_MICROSOFT_CUSTOMIZATION_TEMPLATE_to_param_seq_op, ~) \
     /**/
 
-        #define BOOST_RANGE_DETAIL_MICROSOFT_CUSTOMIZATION_TEMPLATE_to_param_seq_op(z, n, _) \
+#define BOOST_RANGE_DETAIL_MICROSOFT_CUSTOMIZATION_TEMPLATE_to_param_seq_op(z, n, _) \
             (class) \
         /**/
 
@@ -416,22 +417,22 @@ namespace mars_boost {} namespace boost = mars_boost; namespace mars_boost { nam
 /**/
 
 
-    #define BOOST_RANGE_DETAIL_MICROSOFT_CUSTOMIZATION_TEMPLATE_params(ParamSeq) \
+#define BOOST_RANGE_DETAIL_MICROSOFT_CUSTOMIZATION_TEMPLATE_params(ParamSeq) \
         BOOST_PP_SEQ_FOR_EACH_I(BOOST_RANGE_DETAIL_MICROSOFT_CUSTOMIZATION_TEMPLATE_params_op, ~, ParamSeq) \
     /**/
 
-        #define BOOST_RANGE_DETAIL_MICROSOFT_CUSTOMIZATION_TEMPLATE_params_op(r, data, i, elem) \
+#define BOOST_RANGE_DETAIL_MICROSOFT_CUSTOMIZATION_TEMPLATE_params_op(r, data, i, elem) \
             BOOST_PP_COMMA_IF(i) elem BOOST_PP_CAT(T, i) \
         /**/
 
 
-    #define BOOST_RANGE_DETAIL_MICROSOFT_CUSTOMIZATION_TEMPLATE_fullname(NamespaceList, Name, ParamSeq) \
+#define BOOST_RANGE_DETAIL_MICROSOFT_CUSTOMIZATION_TEMPLATE_fullname(NamespaceList, Name, ParamSeq) \
         BOOST_PP_LIST_FOR_EACH(BOOST_RANGE_DETAIL_MICROSOFT_CUSTOMIZATION_namespace_expand_op, ~, NamespaceList) \
         :: Name < BOOST_PP_ENUM_PARAMS(BOOST_PP_SEQ_SIZE(ParamSeq), T) > \
     /**/
 
 
-    #define BOOST_RANGE_DETAIL_MICROSOFT_CUSTOMIZATION_TEMPLATE_tag(Tag, Params, Fullname) \
+#define BOOST_RANGE_DETAIL_MICROSOFT_CUSTOMIZATION_TEMPLATE_tag(Tag, Params, Fullname) \
         template< Params > \
         struct customization_tag< Fullname > : \
             customization_tag_of< Tag, Fullname > \
@@ -439,10 +440,10 @@ namespace mars_boost {} namespace boost = mars_boost; namespace mars_boost { nam
     /**/
 
 
-    // metafunctions
-    //
+// metafunctions
+//
 
-    #define BOOST_RANGE_DETAIL_MICROSOFT_CUSTOMIZATION_TEMPLATE_mutable_iterator(Params, Fullname) \
+#define BOOST_RANGE_DETAIL_MICROSOFT_CUSTOMIZATION_TEMPLATE_mutable_iterator(Params, Fullname) \
         template< Params > \
         struct BOOST_RANGE_DETAIL_MICROSOFT_range_mutable_iterator< Fullname > : \
             range_detail_microsoft::mutable_iterator_of< Fullname > \
@@ -450,7 +451,7 @@ namespace mars_boost {} namespace boost = mars_boost; namespace mars_boost { nam
     /**/
 
 
-    #define BOOST_RANGE_DETAIL_MICROSOFT_CUSTOMIZATION_TEMPLATE_const_iterator(Params, Fullname) \
+#define BOOST_RANGE_DETAIL_MICROSOFT_CUSTOMIZATION_TEMPLATE_const_iterator(Params, Fullname) \
         template< Params > \
         struct range_const_iterator< Fullname > : \
             range_detail_microsoft::const_iterator_of< Fullname > \
@@ -458,7 +459,7 @@ namespace mars_boost {} namespace boost = mars_boost; namespace mars_boost { nam
     /**/
 
 
-    #define BOOST_RANGE_DETAIL_MICROSOFT_CUSTOMIZATION_TEMPLATE_size_type(Params, Fullname) \
+#define BOOST_RANGE_DETAIL_MICROSOFT_CUSTOMIZATION_TEMPLATE_size_type(Params, Fullname) \
         template< Params > \
         struct range_size< Fullname > : \
             range_detail_microsoft::size_type_of< Fullname > \
@@ -466,10 +467,10 @@ namespace mars_boost {} namespace boost = mars_boost; namespace mars_boost { nam
     /**/
 
 
-    // functions
-    //
+// functions
+//
 
-    #define BOOST_RANGE_DETAIL_MICROSOFT_CUSTOMIZATION_TEMPLATE_begin(Params, Fullname) \
+#define BOOST_RANGE_DETAIL_MICROSOFT_CUSTOMIZATION_TEMPLATE_begin(Params, Fullname) \
         template< Params > inline \
         typename mars_boost::range_detail_microsoft::mutable_iterator_of< Fullname >::type \
         BOOST_RANGE_DETAIL_MICROSOFT_range_begin(Fullname& x) \
@@ -479,7 +480,7 @@ namespace mars_boost {} namespace boost = mars_boost; namespace mars_boost { nam
     /**/
 
 
-    #define BOOST_RANGE_DETAIL_MICROSOFT_CUSTOMIZATION_TEMPLATE_begin_const(Params, Fullname) \
+#define BOOST_RANGE_DETAIL_MICROSOFT_CUSTOMIZATION_TEMPLATE_begin_const(Params, Fullname) \
         template< Params > inline \
         typename mars_boost::range_detail_microsoft::const_iterator_of< Fullname >::type \
         BOOST_RANGE_DETAIL_MICROSOFT_range_begin(Fullname const& x) \
@@ -489,7 +490,7 @@ namespace mars_boost {} namespace boost = mars_boost; namespace mars_boost { nam
     /**/
 
 
-    #define BOOST_RANGE_DETAIL_MICROSOFT_CUSTOMIZATION_TEMPLATE_end(Params, Fullname) \
+#define BOOST_RANGE_DETAIL_MICROSOFT_CUSTOMIZATION_TEMPLATE_end(Params, Fullname) \
         template< Params > inline \
         typename mars_boost::range_detail_microsoft::mutable_iterator_of< Fullname >::type \
         BOOST_RANGE_DETAIL_MICROSOFT_range_end(Fullname& x) \
@@ -499,7 +500,7 @@ namespace mars_boost {} namespace boost = mars_boost; namespace mars_boost { nam
     /**/
 
 
-    #define BOOST_RANGE_DETAIL_MICROSOFT_CUSTOMIZATION_TEMPLATE_end_const(Params, Fullname) \
+#define BOOST_RANGE_DETAIL_MICROSOFT_CUSTOMIZATION_TEMPLATE_end_const(Params, Fullname) \
         template< Params > inline \
         typename mars_boost::range_detail_microsoft::const_iterator_of< Fullname >::type \
         BOOST_RANGE_DETAIL_MICROSOFT_range_end(Fullname const& x) \
@@ -509,14 +510,14 @@ namespace mars_boost {} namespace boost = mars_boost; namespace mars_boost { nam
     /**/
 
 
-    #if !defined(BOOST_RANGE_DETAIL_MICROSOFT_RANGE_VERSION_1)
+#if !defined(BOOST_RANGE_DETAIL_MICROSOFT_RANGE_VERSION_1)
 
-        #define BOOST_RANGE_DETAIL_MICROSOFT_CUSTOMIZATION_TEMPLATE_size(Params, Fullname) \
+#define BOOST_RANGE_DETAIL_MICROSOFT_CUSTOMIZATION_TEMPLATE_size(Params, Fullname) \
         /**/
 
-    #else
+#else
 
-        #define BOOST_RANGE_DETAIL_MICROSOFT_CUSTOMIZATION_TEMPLATE_size(Params, Fullname) \
+#define BOOST_RANGE_DETAIL_MICROSOFT_CUSTOMIZATION_TEMPLATE_size(Params, Fullname) \
             template< Params > inline \
             typename mars_boost::range_detail_microsoft::size_type_of< Fullname >::type \
             boost_range_size(Fullname const& x) \
@@ -525,7 +526,7 @@ namespace mars_boost {} namespace boost = mars_boost; namespace mars_boost { nam
             } \
         /**/
 
-    #endif
+#endif
 
 
 
@@ -544,150 +545,142 @@ namespace mars_boost {} namespace boost = mars_boost; namespace mars_boost { nam
 // POSITION's header is undocumented, so is NULL.
 //
 struct __POSITION; // incomplete, but used as just a pointer.
-typedef __POSITION *POSITION;
+typedef __POSITION* POSITION;
 
 
-namespace mars_boost {} namespace boost = mars_boost; namespace mars_boost { namespace range_detail_microsoft {
+namespace mars_boost {}
+namespace boost = mars_boost;
+namespace mars_boost {
+namespace range_detail_microsoft {
 
 
-    template<
-        class ListT,
-        class Value,
-        class Reference,
-        class Traversal
-    >
-    struct list_iterator;
+template<
+    class ListT,
+    class Value,
+    class Reference,
+    class Traversal
+>
+struct list_iterator;
 
 
-    template<
-        class ListT,
-        class Value,
-        class Reference,
-        class Traversal
-    >
-    struct list_iterator_super
-    {
-        typedef typename mpl::if_< is_same<use_default, Reference>,
-            Value&,
-            Reference
-        >::type ref_t;
+template<
+    class ListT,
+    class Value,
+    class Reference,
+    class Traversal
+>
+struct list_iterator_super {
+  typedef typename mpl::if_<is_same<use_default, Reference>,
+      Value&,
+      Reference
+  >::type ref_t;
 
-        typedef typename mpl::if_< is_same<use_default, Traversal>,
-            bidirectional_traversal_tag,
-            Traversal
-        >::type trv_t;
+  typedef typename mpl::if_<is_same<use_default, Traversal>,
+      bidirectional_traversal_tag,
+      Traversal
+  >::type trv_t;
 
-        typedef iterator_facade<
-            list_iterator<ListT, Value, Reference, Traversal>,
-            Value,
-            trv_t,
-            ref_t
-        > type;
-    };
-
-
-    template<
-        class ListT,
-        class Value,
-        class Reference = use_default,
-        class Traversal = use_default
-    >
-    struct list_iterator :
-        list_iterator_super<ListT, Value, Reference, Traversal>::type
-    {
-    private:
-        typedef list_iterator self_t;
-        typedef typename list_iterator_super<ListT, Value, Reference, Traversal>::type super_t;
-        typedef typename super_t::reference ref_t;
-
-    public:
-        explicit list_iterator()
-        { }
-
-        explicit list_iterator(ListT& lst, POSITION pos) :
-            m_plst(mars_boost::addressof(lst)), m_pos(pos)
-        { }
-
-    template< class, class, class, class > friend struct list_iterator;
-        template< class ListT_, class Value_, class Reference_, class Traversal_>
-        list_iterator(list_iterator<ListT_, Value_, Reference_, Traversal_> const& other) :
-            m_plst(other.m_plst), m_pos(other.m_pos)
-        { }
-
-    private:
-        ListT *m_plst;
-        POSITION m_pos;
-
-    friend class iterator_core_access;
-        ref_t dereference() const
-        {
-            BOOST_ASSERT(m_pos != 0 && "out of range");
-            return m_plst->GetAt(m_pos);
-        }
-
-        // A    B    C    D    x
-        // Head           Tail NULL(0)
-        //
-        void increment()
-        {
-            BOOST_ASSERT(m_pos != 0 && "out of range");
-            m_plst->GetNext(m_pos);
-        }
-
-        void decrement()
-        {
-            if (m_pos == 0) {
-                m_pos = m_plst->GetTailPosition();
-                return;
-            }
-
-            m_plst->GetPrev(m_pos);
-        }
-
-        bool equal(self_t const& other) const
-        {
-            BOOST_ASSERT(m_plst == other.m_plst && "iterators incompatible");
-            return m_pos == other.m_pos;
-        }
-    };
+  typedef iterator_facade<
+      list_iterator<ListT, Value, Reference, Traversal>,
+      Value,
+      trv_t,
+      ref_t
+  > type;
+};
 
 
-    // customization helpers
-    //
+template<
+    class ListT,
+    class Value,
+    class Reference = use_default,
+    class Traversal = use_default
+>
+struct list_iterator :
+    list_iterator_super<ListT, Value, Reference, Traversal>::type {
+private:
+  typedef list_iterator self_t;
+  typedef typename list_iterator_super<ListT, Value, Reference, Traversal>::type super_t;
+  typedef typename super_t::reference ref_t;
 
-    struct array_functions
-    {
-        template< class Iterator, class X >
-        Iterator begin(X& x)
-        {
-            return x.GetData();
-        }
+public:
+  explicit list_iterator() {}
 
-        template< class Iterator, class X >
-        Iterator end(X& x)
-        {
-            return begin<Iterator>(x) + x.GetSize();
-        }
-    };
+  explicit list_iterator(ListT& lst, POSITION pos) :
+      m_plst(mars_boost::addressof(lst)), m_pos(pos) {}
+
+  template<class, class, class, class> friend
+  struct list_iterator;
+
+  template<class ListT_, class Value_, class Reference_, class Traversal_>
+  list_iterator(list_iterator<ListT_, Value_, Reference_, Traversal_> const& other) :
+      m_plst(other.m_plst), m_pos(other.m_pos) {}
+
+private:
+  ListT* m_plst;
+  POSITION m_pos;
+
+  friend class iterator_core_access;
+
+  ref_t dereference() const {
+    BOOST_ASSERT(m_pos != 0 && "out of range");
+    return m_plst->GetAt(m_pos);
+  }
+
+  // A    B    C    D    x
+  // Head           Tail NULL(0)
+  //
+  void increment() {
+    BOOST_ASSERT(m_pos != 0 && "out of range");
+    m_plst->GetNext(m_pos);
+  }
+
+  void decrement() {
+    if (m_pos == 0) {
+      m_pos = m_plst->GetTailPosition();
+      return;
+    }
+
+    m_plst->GetPrev(m_pos);
+  }
+
+  bool equal(self_t const& other) const {
+    BOOST_ASSERT(m_plst == other.m_plst && "iterators incompatible");
+    return m_pos == other.m_pos;
+  }
+};
 
 
-    struct list_functions
-    {
-        template< class Iterator, class X >
-        Iterator begin(X& x)
-        {
-            return Iterator(x, x.GetHeadPosition());
-        }
+// customization helpers
+//
 
-        template< class Iterator, class X >
-        Iterator end(X& x)
-        {
-            return Iterator(x, POSITION(0));
-        }
-    };
+struct array_functions {
+  template<class Iterator, class X>
+  Iterator begin(X& x) {
+    return x.GetData();
+  }
+
+  template<class Iterator, class X>
+  Iterator end(X& x) {
+    return begin<Iterator>(x) + x.GetSize();
+  }
+};
 
 
-} } // namespace mars_boost {} namespace boost = mars_boost; namespace mars_boost::range_detail_microsoft
+struct list_functions {
+  template<class Iterator, class X>
+  Iterator begin(X& x) {
+    return Iterator(x, x.GetHeadPosition());
+  }
+
+  template<class Iterator, class X>
+  Iterator end(X& x) {
+    return Iterator(x, POSITION(0));
+  }
+};
+
+
+}
+} // namespace mars_boost {} namespace boost = mars_boost; namespace mars_boost::range_detail_microsoft
 
 
 
@@ -925,7 +918,6 @@ namespace mars_boost {} namespace boost = mars_boost; namespace mars_boost { nam
 
 
 #endif // defined(BOOST_RANGE_DETAIL_MICROSOFT_TEST)
-
 
 
 #endif

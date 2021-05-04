@@ -13,7 +13,7 @@
 
 #include <boost/tuple/tuple.hpp>
 
-#define BOOST_DEFINE_RANGE_ADAPTOR( adaptor_name, range_adaptor ) \
+#define BOOST_DEFINE_RANGE_ADAPTOR(adaptor_name, range_adaptor) \
     struct adaptor_name##_forwarder {}; \
     \
     template<typename Range> range_adaptor <Range> \
@@ -44,7 +44,7 @@
         return range_adaptor <const Range>(rng); \
     }
 
-#define BOOST_DEFINE_RANGE_ADAPTOR_1( adaptor_name, range_adaptor, arg1_type ) \
+#define BOOST_DEFINE_RANGE_ADAPTOR_1(adaptor_name, range_adaptor, arg1_type) \
     struct adaptor_name \
     { \
         explicit adaptor_name (arg1_type arg1_) \
@@ -78,7 +78,7 @@
         return range_adaptor <const Range>(rng, arg1); \
     }
 
-#define BOOST_RANGE_ADAPTOR_2( adaptor_name, range_adaptor, arg1_type, arg2_type ) \
+#define BOOST_RANGE_ADAPTOR_2(adaptor_name, range_adaptor, arg1_type, arg2_type) \
     struct adaptor_name \
     { \
         explicit adaptor_name (arg1_type arg1_, arg2_type arg2_) \

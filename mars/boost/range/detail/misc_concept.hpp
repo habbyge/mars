@@ -10,24 +10,25 @@
 
 #include <boost/concept_check.hpp>
 
-namespace mars_boost {} namespace boost = mars_boost; namespace mars_boost
-{
-    namespace range_detail
-    {
-        template<typename T1, typename T2>
-        class SameTypeConcept
-        {
-        public:
-            BOOST_CONCEPT_USAGE(SameTypeConcept)
-            {
-                same_type(a,b);
-            }
-        private:
-            template<typename T> void same_type(T,T) {}
-            T1 a;
-            T2 b;
-        };
-    }
+namespace mars_boost {}
+namespace boost = mars_boost;
+namespace mars_boost {
+namespace range_detail {
+template<typename T1, typename T2>
+class SameTypeConcept {
+public:
+  BOOST_CONCEPT_USAGE(SameTypeConcept) {
+    same_type(a, b);
+  }
+
+private:
+  template<typename T>
+  void same_type(T, T) {}
+
+  T1 a;
+  T2 b;
+};
+}
 }
 
 #endif // include guard

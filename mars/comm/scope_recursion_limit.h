@@ -24,34 +24,35 @@
 #include "comm/thread/tss.h"
 
 class ScopeRecursionLimit {
-  public:
-    ScopeRecursionLimit(Tss* _tss): tss_(_tss) {
-        tss_->set((void*)((intptr_t)tss_->get() + 1));
-    }
+public:
+  ScopeRecursionLimit(Tss* _tss) : tss_(_tss) {
+    tss_->set((void*) ((intptr_t) tss_->get() + 1));
+  }
 
-    ~ScopeRecursionLimit() {
-        tss_->set((void*)((intptr_t)tss_->get() - 1));
-    }
+  ~ScopeRecursionLimit() {
+    tss_->set((void*) ((intptr_t) tss_->get() - 1));
+  }
 
-    /**
-     * return
-     *     true-limit
-     *     false-pass
-     */
-    bool CheckLimit(int _maxRecursionNum = 1) {
-        return (intptr_t)tss_->get() > _maxRecursionNum;
-    }
+  /**
+   * return
+   *     true-limit
+   *     false-pass
+   */
+  bool CheckLimit(int _maxRecursionNum = 1) {
+    return (intptr_t) tss_->get() > _maxRecursionNum;
+  }
 
-    intptr_t Get() const {
-        return (intptr_t)tss_->get();
-    }
+  intptr_t Get() const {
+    return (intptr_t) tss_->get();
+  }
 
-  private:
-    ScopeRecursionLimit(const ScopeRecursionLimit&);
-    ScopeRecursionLimit& operator=(const ScopeRecursionLimit&);
+private:
+  ScopeRecursionLimit(const ScopeRecursionLimit&);
 
-  private:
-    Tss* tss_;
+  ScopeRecursionLimit& operator=(const ScopeRecursionLimit&);
+
+private:
+  Tss* tss_;
 };
 
 #ifndef __CONCAT__

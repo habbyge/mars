@@ -8,9 +8,9 @@ git:
 
 branches:
   only:
-  - dev
-  - master
-  - travisTest
+    - dev
+    - master
+    - travisTest
 
 addons:
   apt:

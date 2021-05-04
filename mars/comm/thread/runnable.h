@@ -16,65 +16,72 @@
 #define RUNNABLE_H_
 
 struct Runnable {
-    virtual ~Runnable() {}
-    virtual void run() = 0;
+  virtual ~Runnable() {}
+
+  virtual void run() = 0;
 };
 
 namespace detail {
 
-template <class T>
+template<class T>
 class RunnableFunctor : public Runnable {
-  public:
-    RunnableFunctor(const T& f) : func_(f) {}
-    virtual void run() { func_(); }
-  private:
-    T func_;
+public:
+  RunnableFunctor(const T& f) : func_(f) {}
+
+  virtual void run() { func_(); }
+
+private:
+  T func_;
 };
 
-template <class T>
+template<class T>
 class RunnableFunctor<T*> : public Runnable {
-  public:
-    RunnableFunctor(T* f) : func_(f) {}
-    virtual void run() { (*func_)(); }
+public:
+  RunnableFunctor(T* f) : func_(f) {}
 
-  private:
-    RunnableFunctor(const RunnableFunctor&);
-    RunnableFunctor& operator=(const RunnableFunctor&);
+  virtual void run() { (*func_)(); }
 
-  private:
-    T* func_;
+private:
+  RunnableFunctor(const RunnableFunctor&);
+
+  RunnableFunctor& operator=(const RunnableFunctor&);
+
+private:
+  T* func_;
 };
 
-template <>
+template<>
 class RunnableFunctor<Runnable> : public Runnable {
-    RunnableFunctor();
+  RunnableFunctor();
 };
 
-template <>
+template<>
 class RunnableFunctor<Runnable*> : public Runnable {
-  public:
-    RunnableFunctor(Runnable* f) : func_(f) {}
-    virtual void run() { static_cast<Runnable*>(func_)->run();}
+public:
+  RunnableFunctor(Runnable* f) : func_(f) {}
 
-  private:
-    RunnableFunctor(const RunnableFunctor&);
-    RunnableFunctor& operator=(const RunnableFunctor&);
+  virtual void run() { static_cast<Runnable*>(func_)->run(); }
 
-  private:
-    Runnable* func_;
+private:
+  RunnableFunctor(const RunnableFunctor&);
+
+  RunnableFunctor& operator=(const RunnableFunctor&);
+
+private:
+  Runnable* func_;
 };
 
 // base template for no argument functor
-template <class T>
+template<class T>
 struct TransformImplement {
-    static Runnable* transform(const T& t) {
-        return new RunnableFunctor<T>(t);
-    }
+  static Runnable* transform(const T& t) {
+    return new RunnableFunctor<T>(t);
+  }
 };
 
-template <class T>
+template<class T>
 inline Runnable* transform(const T& t) {
-    return TransformImplement<T>::transform(t);
+  return TransformImplement<T>::transform(t);
 }
 
 }  // namespace detail

@@ -19,23 +19,26 @@
 #include <boost/mpl/aux_/lambda_support.hpp>
 #include <boost/mpl/aux_/config/eti.hpp>
 
-namespace mars_boost {} namespace boost = mars_boost; namespace mars_boost { namespace mpl {
+namespace mars_boost {}
+namespace boost = mars_boost;
+namespace mars_boost {
+namespace mpl {
 
 template<
-      typename BOOST_MPL_AUX_NA_PARAM(Iterator)
-    >
-struct deref
-{
+    typename BOOST_MPL_AUX_NA_PARAM(Iterator)
+>
+struct deref {
 #if !defined(BOOST_MPL_CFG_MSVC_70_ETI_BUG)
-    typedef typename Iterator::type type;
+  typedef typename Iterator::type type;
 #else
-    typedef typename aux::msvc_type<Iterator>::type type;
+  typedef typename aux::msvc_type<Iterator>::type type;
 #endif
-    BOOST_MPL_AUX_LAMBDA_SUPPORT(1,deref,(Iterator))
+  BOOST_MPL_AUX_LAMBDA_SUPPORT(1, deref, (Iterator))
 };
 
 BOOST_MPL_AUX_NA_SPEC(1, deref)
 
-}}
+}
+}
 
 #endif // BOOST_MPL_DEREF_HPP_INCLUDED

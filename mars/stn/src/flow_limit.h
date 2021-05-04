@@ -29,22 +29,25 @@ namespace stn {
 struct Task;
 
 class FlowLimit {
-  public:
-    FlowLimit(bool _isactive);
-    virtual ~FlowLimit();
+public:
+  FlowLimit(bool _isactive);
 
-    bool Check(const mars::stn::Task& _task, const void* _buffer, int _len);
-    void Active(bool _isactive);
+  virtual ~FlowLimit();
 
-  private:
-    void __FlashCurVol();
+  bool Check(const mars::stn::Task& _task, const void* _buffer, int _len);
 
-  private:
-    uint64_t funnel_speed_;
-    uint64_t cur_funnel_vol_;
-    uint64_t time_lastflow_computer_;
+  void Active(bool _isactive);
+
+private:
+  void __FlashCurVol();
+
+private:
+  uint64_t funnel_speed_;
+  uint64_t cur_funnel_vol_;
+  uint64_t time_lastflow_computer_;
 };
 
-}}
+}
+}
 
 #endif // STN_SRC_FLOW_LIMIT_H_

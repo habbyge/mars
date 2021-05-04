@@ -23,35 +23,36 @@
 
 #include <boost/type_traits/is_same.hpp>
 
-namespace mars_boost {} namespace boost = mars_boost; namespace mars_boost { namespace mpl {
+namespace mars_boost {}
+namespace boost = mars_boost;
+namespace mars_boost {
+namespace mpl {
 
-struct has_push_back_arg {};
+struct has_push_back_arg {
+};
 
 // agurt 05/feb/04: no default implementation; the stub definition is needed 
 // to enable the default 'has_push_back' implementation below
-template< typename Tag >
-struct push_back_impl
-{
-    template< typename Sequence, typename T > struct apply
-    {
-        // should be instantiated only in the context of 'has_push_back_impl';
-        // if you've got an assert here, you are requesting a 'push_back' 
-        // specialization that doesn't exist.
-        BOOST_MPL_ASSERT_MSG(
-              ( mars_boost::is_same< T, has_push_back_arg >::value )
-            , REQUESTED_PUSH_BACK_SPECIALIZATION_FOR_SEQUENCE_DOES_NOT_EXIST
-            , ( Sequence )
-            );
-    };
+template<typename Tag>
+struct push_back_impl {
+  template<typename Sequence, typename T>
+  struct apply {
+    // should be instantiated only in the context of 'has_push_back_impl';
+    // if you've got an assert here, you are requesting a 'push_back'
+    // specialization that doesn't exist.
+    BOOST_MPL_ASSERT_MSG(
+        (mars_boost::is_same<T, has_push_back_arg>::value),
+        REQUESTED_PUSH_BACK_SPECIALIZATION_FOR_SEQUENCE_DOES_NOT_EXIST, (Sequence)
+    );
+  };
 };
 
-template< typename Tag >
-struct has_push_back_impl
-{
-    template< typename Seq > struct apply
+template<typename Tag>
+struct has_push_back_impl {
+  template<typename Seq> struct apply
 #if !defined(BOOST_MPL_CFG_NO_NESTED_FORWARDING)
-        : aux::has_type< push_back< Seq, has_push_back_arg > >
-    {
+      : aux::has_type<push_back < Seq, has_push_back_arg> >
+  {
 #else
     {
         typedef aux::has_type< push_back< Seq, has_push_back_arg > > type;
@@ -59,12 +60,13 @@ struct has_push_back_impl
               (aux::has_type< push_back< Seq, has_push_back_arg > >::value)
             );
 #endif
-    };
+  };
 };
 
 BOOST_MPL_ALGORITM_TRAITS_LAMBDA_SPEC(2, push_back_impl)
 BOOST_MPL_ALGORITM_TRAITS_LAMBDA_SPEC(1, has_push_back_impl)
 
-}}
+}
+}
 
 #endif // BOOST_MPL_AUX_PUSH_BACK_IMPL_HPP_INCLUDED

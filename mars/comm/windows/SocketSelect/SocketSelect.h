@@ -19,72 +19,88 @@
 #include "thread/lock.h"
 
 class SocketSelectBreaker {
-  public:
-    SocketSelectBreaker();
-    ~SocketSelectBreaker();
+public:
+  SocketSelectBreaker();
 
-    bool IsCreateSuc() const;
-    bool ReCreate();
+  ~SocketSelectBreaker();
 
-    bool IsBreak() const;
+  bool IsCreateSuc() const;
 
-    bool Break();
-    bool Clear();
-    void Close();
+  bool ReCreate();
 
-    SOCKET BreakerFD() const;
+  bool IsBreak() const;
 
-  private:
-    SocketSelectBreaker(const SocketSelectBreaker&);
-    SocketSelectBreaker& operator=(const SocketSelectBreaker&);
+  bool Break();
 
-  private:
-    int  m_sendinlen;
-    SOCKET m_socket_w, m_socket_r;
-    struct sockaddr m_sendin;
-    bool m_create_success;
-    bool m_broken;
-    Mutex m_mutex;
+  bool Clear();
+
+  void Close();
+
+  SOCKET BreakerFD() const;
+
+private:
+  SocketSelectBreaker(const SocketSelectBreaker&);
+
+  SocketSelectBreaker& operator=(const SocketSelectBreaker&);
+
+private:
+  int m_sendinlen;
+  SOCKET m_socket_w, m_socket_r;
+  struct sockaddr m_sendin;
+  bool m_create_success;
+  bool m_broken;
+  Mutex m_mutex;
 };
 
 class SocketSelect {
-  public:
-    SocketSelect(SocketSelectBreaker& _breaker, bool _autoclear = false);
-    ~SocketSelect();
+public:
+  SocketSelect(SocketSelectBreaker& _breaker, bool _autoclear = false);
 
-    void PreSelect();
-    void Read_FD_SET(SOCKET _socket);
-    void Write_FD_SET(SOCKET _socket);
-    void Exception_FD_SET(SOCKET _socket);
-    int Select();
-    int Select(int _msec);
-    int Select(int _sec, int _usec);
+  ~SocketSelect();
 
-    int Errno() const;
+  void PreSelect();
 
-    int Read_FD_ISSET(SOCKET _socket) const;
-    int Write_FD_ISSET(SOCKET _socket) const;
-    int Exception_FD_ISSET(SOCKET _socket) const;
+  void Read_FD_SET(SOCKET _socket);
 
-    bool IsBreak() const;
-    bool IsException() const;
+  void Write_FD_SET(SOCKET _socket);
 
-    SocketSelectBreaker& Breaker();
+  void Exception_FD_SET(SOCKET _socket);
 
-  private:
-    SocketSelect(const SocketSelect&);
-    SocketSelect& operator=(const SocketSelect&);
+  int Select();
 
-  private:
-    SocketSelectBreaker& breaker_;
-    SOCKET maxsocket_;
+  int Select(int _msec);
 
-    fd_set readfd_;
-    fd_set writefd_;
-    fd_set exceptionfd_;
+  int Select(int _sec, int _usec);
 
-    int errno_;
-    bool autoclear_;
+  int Errno() const;
+
+  int Read_FD_ISSET(SOCKET _socket) const;
+
+  int Write_FD_ISSET(SOCKET _socket) const;
+
+  int Exception_FD_ISSET(SOCKET _socket) const;
+
+  bool IsBreak() const;
+
+  bool IsException() const;
+
+  SocketSelectBreaker& Breaker();
+
+private:
+  SocketSelect(const SocketSelect&);
+
+  SocketSelect& operator=(const SocketSelect&);
+
+private:
+  SocketSelectBreaker& breaker_;
+  SOCKET maxsocket_;
+
+  fd_set readfd_;
+  fd_set writefd_;
+  fd_set exceptionfd_;
+
+  int errno_;
+  bool autoclear_;
 };
 
 #endif

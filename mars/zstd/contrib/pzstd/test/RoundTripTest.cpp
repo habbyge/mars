@@ -9,6 +9,7 @@
 extern "C" {
 #include "datagen.h"
 }
+
 #include "Options.h"
 #include "test/RoundTrip.h"
 #include "utils/ScopeGuard.h"
@@ -37,7 +38,7 @@ writeData(size_t size, double matchProba, double litProba, unsigned seed) {
   return file;
 }
 
-template <typename Generator>
+template<typename Generator>
 string generateInputFile(Generator& gen) {
   // Use inputs ranging from 1 Byte to 2^16 Bytes
   std::uniform_int_distribution<size_t> size{1, 1 << 16};
@@ -45,7 +46,7 @@ string generateInputFile(Generator& gen) {
   return writeData(size(gen), prob(gen), prob(gen), gen());
 }
 
-template <typename Generator>
+template<typename Generator>
 Options generateOptions(Generator& gen, const string& inputFile) {
   Options options;
   options.inputFiles = {inputFile};
@@ -76,7 +77,7 @@ int main() {
       if (!roundTrip(options)) {
         std::fprintf(stderr, "numThreads: %u\n", options.numThreads);
         std::fprintf(stderr, "level: %u\n", options.compressionLevel);
-        std::fprintf(stderr, "decompress? %u\n", (unsigned)options.decompress);
+        std::fprintf(stderr, "decompress? %u\n", (unsigned) options.decompress);
         std::fprintf(stderr, "file: %s\n", inputFile.c_str());
         return 1;
       }

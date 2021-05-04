@@ -19,7 +19,7 @@
 
 
 #ifdef __cplusplus
-extern "C"{
+extern "C" {
 #endif
 /**
  *函数名:    socket_gethostbyname
@@ -33,15 +33,15 @@ extern "C"{
  */
 #define SOCKET_MAX_IP_COUNT (20)
 
-struct socket_ipinfo_t
-{
-    int  size;
+struct socket_ipinfo_t {
+  int size;
 //    int  cost;
 //    struct  in_addr dns;
-    struct  in_addr ip[SOCKET_MAX_IP_COUNT];
+  struct in_addr ip[SOCKET_MAX_IP_COUNT];
 };
 
-int socket_gethostbyname(const char* _host, struct socket_ipinfo_t* _ipinfo, int _timeout /*ms*/, const char* _dnsserver);
+int
+socket_gethostbyname(const char* _host, struct socket_ipinfo_t* _ipinfo, int _timeout /*ms*/, const char* _dnsserver);
 
 
 #ifdef __cplusplus
@@ -50,7 +50,11 @@ int socket_gethostbyname(const char* _host, struct socket_ipinfo_t* _ipinfo, int
 
 ////////
 class NetCheckTrafficMonitor;
-int socket_gethostbyname(const char* _host, struct socket_ipinfo_t* _ipinfo, int _timeout /*ms*/, const char* _dnsserver, NetCheckTrafficMonitor* _traffic_monitor);
+
+int
+socket_gethostbyname(const char* _host, struct socket_ipinfo_t* _ipinfo, int _timeout /*ms*/, const char* _dnsserver,
+                     NetCheckTrafficMonitor* _traffic_monitor);
+
 #endif
 
 #endif //SDT_SRC_CHECKIMPL_DNSQUERY_H_

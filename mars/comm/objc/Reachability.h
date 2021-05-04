@@ -48,9 +48,9 @@
 #import <TargetConditionals.h>
 
 typedef enum {
-    NotReachable = 0,
-    ReachableViaWiFi,
-    ReachableViaWWAN
+  NotReachable = 0,
+  ReachableViaWiFi,
+  ReachableViaWWAN
 } MarsNetworkStatus;
 
 #if TARGET_OS_WATCH
@@ -62,32 +62,42 @@ typedef enum {
 
 #define kReachabilityChangedNotification @"kNetworkReachabilityChangedNotification"
 
-@interface MarsReachability: NSObject
-{
-    BOOL localWiFiRef;
-    SCNetworkReachabilityRef reachabilityRef;
+@
+interface MarsReachability
+    : NSObject {
+  BOOL localWiFiRef;
+  SCNetworkReachabilityRef reachabilityRef;
 }
 
 // reachabilityWithHostName- Use to check the reachability of a particular host name. 
-+ (MarsReachability*) reachabilityWithHostName: (NSString*) hostName;
++ (MarsReachability*)reachabilityWithHostName:(NSString*)
+    hostName;
 
 // reachabilityWithAddress- Use to check the reachability of a particular IP address. 
-+ (MarsReachability*) reachabilityWithAddress: (const struct sockaddr*) hostAddress;
++ (MarsReachability*)reachabilityWithAddress:(const struct sockaddr*)
+    hostAddress;
 
 // reachabilityForInternetConnection- checks whether the default route is available.  
 //  Should be used by applications that do not connect to a particular host
-+ (MarsReachability*) reachabilityForInternetConnection;
++ (MarsReachability*)
+reachabilityForInternetConnection;
 
 // reachabilityForLocalWiFi- checks whether a local wifi connection is available.
-+ (MarsReachability*) reachabilityForLocalWiFi;
++ (MarsReachability*)
+reachabilityForLocalWiFi;
 
-+ (MarsNetworkStatus) getCacheReachabilityStatus:(BOOL) flash;
++ (MarsNetworkStatus)getCacheReachabilityStatus:(BOOL)
+    flash;
 
 // Start listening for reachability notifications on the current run loop
-- (BOOL) MarsstartNotifier;
-- (void) MarsstopNotifier;
+- (BOOL)
+MarsstartNotifier;
 
-- (MarsNetworkStatus) currentReachabilityStatus;
+- (void)
+MarsstopNotifier;
+
+- (MarsNetworkStatus)
+currentReachabilityStatus;
 // WWAN may be available, but not active until a connection has been established.
 // WiFi may require a connection for VPN on Demand.
 

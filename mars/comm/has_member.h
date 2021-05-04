@@ -21,7 +21,7 @@
 #ifndef COMM_HAS_MEMBER_H_
 #define COMM_HAS_MEMBER_H_
 
-template <bool TYPE>
+template<bool TYPE>
 struct bool_type {
 };
 

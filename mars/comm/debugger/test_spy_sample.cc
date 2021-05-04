@@ -23,30 +23,26 @@
 #include "comm/debugger/testspy.h"
 
 
-Test_Spy_Sample::Test_Spy_Sample()
-{
-    SPY_ATTACH_CLASS(NULL);
+Test_Spy_Sample::Test_Spy_Sample() {
+  SPY_ATTACH_CLASS(NULL);
 }
 
-Test_Spy_Sample::~Test_Spy_Sample()
-{
-    SPY_DETACH_CLASS();
+Test_Spy_Sample::~Test_Spy_Sample() {
+  SPY_DETACH_CLASS();
 }
 
-void Test_Spy_Sample::TestFun0()
-{
-    SPY_HOOK_THIS_API(TestFun0);
-    int i = 0;
-    SPY_ATTACH_VARIABLE("TestFun0 i", i);
-    i++;
-    xinfo2(TSF"Test");
+void Test_Spy_Sample::TestFun0() {
+  SPY_HOOK_THIS_API(TestFun0);
+  int i = 0;
+  SPY_ATTACH_VARIABLE("TestFun0 i", i);
+  i++;
+  xinfo2(TSF"Test");
 
-    SPY_DETACH_VARIABLE("TestFun0 i");
+  SPY_DETACH_VARIABLE("TestFun0 i");
 }
 
-int Test_Spy_Sample::__TestFun1(int i)
-{
-    SPY_HOOK_THIS_API(__TestFun1, i);
-    xinfo2(TSF"Test");
-    return i+1;
+int Test_Spy_Sample::__TestFun1(int i) {
+  SPY_HOOK_THIS_API(__TestFun1, i);
+  xinfo2(TSF"Test");
+  return i + 1;
 }

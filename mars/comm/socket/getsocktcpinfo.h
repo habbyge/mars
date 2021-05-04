@@ -22,8 +22,10 @@
 #define GETSOCKTCPINFO_H_
 
 #if defined(__APPLE__) || defined(ANDROID) || defined(__linux__)
+
 #include <netinet/in.h>
 #include <netinet/tcp.h>
+
 #endif
 
 #ifdef __cplusplus
@@ -53,15 +55,14 @@ extern "C" {
 //       ENOTSOCK  The argument sockfd is a file, not a socket.
 
 #if defined(__APPLE__) && !defined(tcp_info)
-    #define tcp_info tcp_connection_info
-    #define TCP_INFO TCP_CONNECTION_INFO
+#define tcp_info tcp_connection_info
+#define TCP_INFO TCP_CONNECTION_INFO
 #endif
-    
-    
-    
+
+
 int getsocktcpinfo(int _sockfd, struct tcp_info* _info);
 char* tcpinfo2str(struct tcp_info* _info, char* _info_str_buf, size_t _buf_len);
-    
+
 #ifdef __cplusplus
 }
 #endif

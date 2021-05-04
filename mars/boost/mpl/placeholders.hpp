@@ -21,6 +21,7 @@
 
 
 #if !defined(BOOST_MPL_PREPROCESSING_MODE)
+
 #   include <boost/mpl/arg.hpp>
 #   include <boost/mpl/aux_/adl_barrier.hpp>
 
@@ -40,6 +41,7 @@
  && !defined(BOOST_MPL_PREPROCESSING_MODE)
 
 #   define BOOST_MPL_PREPROCESSED_HEADER placeholders.hpp
+
 #   include <boost/mpl/aux_/include_preprocessed.hpp>
 
 #else

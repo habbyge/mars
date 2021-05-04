@@ -15,13 +15,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-int main(int argc, char const **argv) {
-  size_t const kMaxFileSize = (size_t)1 << 27;
+int main(int argc, char const** argv) {
+  size_t const kMaxFileSize = (size_t) 1 << 27;
   int const kFollowLinks = 1;
-  char *fileNamesBuf = NULL;
-  char const **files = argv + 1;
+  char* fileNamesBuf = NULL;
+  char const** files = argv + 1;
   unsigned numFiles = argc - 1;
-  uint8_t *buffer = NULL;
+  uint8_t* buffer = NULL;
   size_t bufferSize = 0;
   unsigned i;
   int ret;
@@ -35,11 +35,11 @@ int main(int argc, char const **argv) {
   if (numFiles == 0)
     fprintf(stderr, "WARNING: No files passed to %s\n", argv[0]);
   for (i = 0; i < numFiles; ++i) {
-    char const *fileName = files[i];
+    char const* fileName = files[i];
     DEBUGLOG(3, "Running %s", fileName);
     size_t const fileSize = UTIL_getFileSize(fileName);
     size_t readSize;
-    FILE *file;
+    FILE* file;
 
     /* Check that it is a regular file, and that the fileSize is valid.
      * If it is not a regular file, then it may have been deleted since we
@@ -52,7 +52,7 @@ int main(int argc, char const **argv) {
     /* Ensure we have a large enough buffer allocated */
     if (fileSize > bufferSize) {
       free(buffer);
-      buffer = (uint8_t *)malloc(fileSize);
+      buffer = (uint8_t*) malloc(fileSize);
       FUZZ_ASSERT_MSG(buffer, fileName);
       bufferSize = fileSize;
     }

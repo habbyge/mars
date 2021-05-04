@@ -19,7 +19,11 @@
 #include <boost/mpl/aux_/config/gcc.hpp>
 #include <boost/mpl/aux_/config/workaround.hpp>
 
-namespace mars_boost {} namespace boost = mars_boost; namespace mars_boost { namespace mpl { namespace aux {
+namespace mars_boost {}
+namespace boost = mars_boost;
+namespace mars_boost {
+namespace mpl {
+namespace aux {
 
 #if defined(BOOST_MPL_CFG_MSVC_70_ETI_BUG)
 
@@ -52,26 +56,32 @@ template< typename T > struct msvc_eti_base
 
 #else // !BOOST_MPL_CFG_MSVC_70_ETI_BUG
 
-template< typename T > struct msvc_eti_base
-    : T
-{
+template<typename T>
+struct msvc_eti_base
+    : T {
 #if BOOST_WORKAROUND(BOOST_MPL_CFG_GCC, BOOST_TESTED_AT(0x0304))
-    msvc_eti_base();
+
+  msvc_eti_base();
+
 #endif
-    typedef T type;
+  typedef T type;
 };
 
-#endif 
+#endif
 
-template<> struct msvc_eti_base<int>
-{
-    typedef msvc_eti_base type;
-    typedef msvc_eti_base first;
-    typedef msvc_eti_base second;
-    typedef msvc_eti_base tag;
-    enum { value = 0 };
+template<>
+struct msvc_eti_base<int> {
+  typedef msvc_eti_base type;
+  typedef msvc_eti_base first;
+  typedef msvc_eti_base second;
+  typedef msvc_eti_base tag;
+  enum {
+    value = 0
+  };
 };
 
-}}}
+}
+}
+}
 
 #endif // BOOST_MPL_AUX_MSVC_ETI_BASE_HPP_INCLUDED

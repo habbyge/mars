@@ -42,47 +42,47 @@
 #define NetStableTestCount (3)     //We think it's time to test after NetStableCount times heartbeat using MinHeartInterval
 
 //signalling transmits timeout related constants
-const static unsigned int kBaseFirstPackageWifiTimeout = 12*1000;
-const static unsigned int kBaseFirstPackageGPRSTimeout = 15*1000;
+const static unsigned int kBaseFirstPackageWifiTimeout = 12 * 1000;
+const static unsigned int kBaseFirstPackageGPRSTimeout = 15 * 1000;
 
-const static unsigned int kMaxFirstPackageWifiTimeout = 22*1000;
-const static unsigned int kMaxFirstPackageGPRSTimeout = 30*1000;
+const static unsigned int kMaxFirstPackageWifiTimeout = 22 * 1000;
+const static unsigned int kMaxFirstPackageGPRSTimeout = 30 * 1000;
 
-const static unsigned int kGPRSMinRate = 4*1024;
-const static unsigned int kWifiMinRate = 12*1024;
+const static unsigned int kGPRSMinRate = 4 * 1024;
+const static unsigned int kWifiMinRate = 12 * 1024;
 
-const static unsigned int kWifiPackageInterval = 8*1000;
-const static unsigned int kGPRSPackageInterval = 12*1000;
+const static unsigned int kWifiPackageInterval = 8 * 1000;
+const static unsigned int kGPRSPackageInterval = 12 * 1000;
 
 const static unsigned int kWifiTaskDelay = 1500;
 const static unsigned int kGPRSTaskDelay = 3000;
 
-const static unsigned int kMaxRecvLen = 64*1024;
+const static unsigned int kMaxRecvLen = 64 * 1024;
 
 //dynamic timeout related constants
-const static unsigned int kDynTimeSmallPackageLen = 3*1024;
-const static unsigned int kDynTimeMiddlePackageLen = 10*1024;
-const static unsigned int kDynTimeBigPackageLen = 30*1024;
+const static unsigned int kDynTimeSmallPackageLen = 3 * 1024;
+const static unsigned int kDynTimeMiddlePackageLen = 10 * 1024;
+const static unsigned int kDynTimeBigPackageLen = 30 * 1024;
 
 const static unsigned int kDynTimeSmallPackageWifiCosttime = 500;
-const static unsigned int kDynTimeMiddlePackageWifiCosttime = 2*1000;
-const static unsigned int kDynTimeBigPackageWifiCosttime = 4*1000;
-const static unsigned int kDynTimeBiggerPackageWifiCosttime = 6*1000;
+const static unsigned int kDynTimeMiddlePackageWifiCosttime = 2 * 1000;
+const static unsigned int kDynTimeBigPackageWifiCosttime = 4 * 1000;
+const static unsigned int kDynTimeBiggerPackageWifiCosttime = 6 * 1000;
 
 
-const static unsigned int kDynTimeSmallPackageGPRSCosttime = 1*1000;
-const static unsigned int kDynTimeMiddlePackageGPRSCosttime = 3*1000;
-const static unsigned int kDynTimeBigPackageGPRSCosttime = 5*1000;
-const static unsigned int kDynTimeBiggerPackageGPRSCosttime = 7*1000;
+const static unsigned int kDynTimeSmallPackageGPRSCosttime = 1 * 1000;
+const static unsigned int kDynTimeMiddlePackageGPRSCosttime = 3 * 1000;
+const static unsigned int kDynTimeBigPackageGPRSCosttime = 5 * 1000;
+const static unsigned int kDynTimeBiggerPackageGPRSCosttime = 7 * 1000;
 
-const static unsigned int kDynTimeFirstPackageWifiTimeout = 7*1000;
-const static unsigned int kDynTimeFirstPackageGPRSTimeout = 10*1000;
-const static unsigned int kDynTimeExtraWifiTimeout = 10*1000;
-const static unsigned int kDynTimeExtraGPRSTimeout = 15*1000;
+const static unsigned int kDynTimeFirstPackageWifiTimeout = 7 * 1000;
+const static unsigned int kDynTimeFirstPackageGPRSTimeout = 10 * 1000;
+const static unsigned int kDynTimeExtraWifiTimeout = 10 * 1000;
+const static unsigned int kDynTimeExtraGPRSTimeout = 15 * 1000;
 
 const static unsigned int kDynTimeMaxContinuousExcellentCount = 10;
 const static unsigned int kDynTimeMinNormalPkgCount = 6;
-const static unsigned long kDynTimeCountExpireTime = 5*60*1000;
+const static unsigned long kDynTimeCountExpireTime = 5 * 60 * 1000;
 
 const static unsigned int kDynTimeTaskFailedPkgLen = 0xffffffff;
 

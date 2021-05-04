@@ -24,37 +24,53 @@
 #define RETURN_LONKLINK_SYNC2ASYNC_FUNC(func) RETURN_SYNC2ASYNC_FUNC(func, )
 
 namespace mars {
-    namespace stn {
+namespace stn {
 
-LongLinkMetaData::LongLinkMetaData(const LonglinkConfig& _config, NetSource& _netsource, ActiveLogic& _activeLogic, MessageQueue::MessageQueue_t _message_id)
-    :longlink_(LongLinkChannelFactory::Create(_message_id, _netsource, _config)), longlink_monitor_(nullptr), netsource_checker_(nullptr)
-    , signal_keeper_(nullptr), config_(_config)
-    , asyncreg_(MessageQueue::InstallAsyncHandler(_message_id)) {
-        xinfo_function(TSF"create longlink with name:%_, group:%_", _config.name, _config.group);
+LongLinkMetaData::LongLinkMetaData(const LonglinkConfig& _config,
+                                   NetSource& _netsource,
+                                   ActiveLogic& _activeLogic,
+                                   MessageQueue::MessageQueue_t _message_id)
+    : longlink_(LongLinkChannelFactory::Create(_message_id, _netsource, _config)),
+      longlink_monitor_(nullptr),
+      netsource_checker_(nullptr),
+      signal_keeper_(nullptr),
+      config_(_config),
+      asyncreg_(MessageQueue::InstallAsyncHandler(_message_id)) {
 
-        netsource_checker_ = std::make_shared<NetSourceTimerCheck>(&_netsource, _activeLogic, *(longlink_.get()), _message_id);
-        netsource_checker_->fun_time_check_suc_ = boost::bind(&LongLinkMetaData::__OnTimerCheckSuc, this, config_.name);
-        
-        longlink_monitor_ = std::make_shared<LongLinkConnectMonitor>(_activeLogic, *(longlink_.get()), _message_id, _config.is_keep_alive);
+  xinfo_function(TSF "create longlink with name:%_, group:%_", _config.name, _config.group);
 
-        signal_keeper_ = std::make_shared<SignallingKeeper>(*(longlink_.get()), _message_id);
-        signal_keeper_->fun_send_signalling_buffer_ = boost::bind(&LongLink::SendWhenNoData, longlink_.get(), _1, _2, _3, Task::kSignallingKeeperTaskID);
+  netsource_checker_ = std::make_shared<NetSourceTimerCheck>(&_netsource, _activeLogic,
+                                                             *(longlink_.get()),
+                                                             _message_id);
+
+  netsource_checker_->fun_time_check_suc_ = boost::bind(&LongLinkMetaData::__OnTimerCheckSuc,
+                                                        this, config_.name);
+
+  longlink_monitor_ = std::make_shared<LongLinkConnectMonitor>(_activeLogic, *(longlink_.get()),
+                                                               _message_id,
+                                                               _config.is_keep_alive);
+
+  signal_keeper_ = std::make_shared<SignallingKeeper>(*(longlink_.get()), _message_id);
+  signal_keeper_->fun_send_signalling_buffer_ = boost::bind(&LongLink::SendWhenNoData,
+                                                            longlink_.get(), _1, _2, _3,
+                                                            Task::kSignallingKeeperTaskID);
 }
 
 LongLinkMetaData::~LongLinkMetaData() {
-    xinfo_function();
-    
+  xinfo_function();
+
 }
 
 void LongLinkMetaData::__OnTimerCheckSuc(const std::string& _name) {
-    SYNC2ASYNC_FUNC(boost::bind(&LongLinkMetaData::__OnTimerCheckSuc, this, _name));
+  SYNC2ASYNC_FUNC(boost::bind(&LongLinkMetaData::__OnTimerCheckSuc, this, _name));
 
-    if(longlink_->Profile().ip_type != IPSourceType::kIPSourceBackup) {
-        xinfo2(TSF"longlink %_ is not using backip, ignore", _name);
-        return;
-    }
-    longlink_->Disconnect(LongLink::kTimeCheckSucc);
+  if (longlink_->Profile().ip_type != IPSourceType::kIPSourceBackup) {
+    xinfo2(TSF
+               "longlink %_ is not using backip, ignore", _name);
+    return;
+  }
+  longlink_->Disconnect(LongLink::kTimeCheckSucc);
 }
 
-    }
+}
 }

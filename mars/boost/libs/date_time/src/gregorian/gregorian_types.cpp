@@ -13,7 +13,7 @@
   comprehensive list, but rather some key types to start exploring.
 
 
-**/ 
+**/
 
 /** @defgroup date_alg Date Algorithms / Generators
   Date algorithms or generators are tools for generating other dates or
@@ -21,12 +21,12 @@
   date such as a month and day and is supplied another part to then
   generate a final date.
 
-**/ 
+**/
 
 /** @defgroup date_format Date Formatting
   The functions on these page are some of the key formatting functions
   for dates.  
-**/ 
+**/
 
 
 //File doesn't have a current purpose except to generate docs

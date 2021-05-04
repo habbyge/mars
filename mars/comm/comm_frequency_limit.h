@@ -25,24 +25,25 @@
 #include <list>
 
 class CommFrequencyLimit {
-  public:
-    CommFrequencyLimit(size_t _count, uint64_t _time_span);
-    ~CommFrequencyLimit();
+public:
+  CommFrequencyLimit(size_t _count, uint64_t _time_span);
 
-    bool Check();  // true pass, false limit
+  ~CommFrequencyLimit();
 
-  private:
-    CommFrequencyLimit(CommFrequencyLimit&);
-    CommFrequencyLimit& operator=(CommFrequencyLimit&);
+  bool Check();  // true pass, false limit
 
-    void __DelOlderTouchTime(uint64_t _time);
+private:
+  CommFrequencyLimit(CommFrequencyLimit&);
 
-  private:
-    size_t count_;
-    uint64_t time_span_;
-    std::list<uint64_t> touch_times_;
+  CommFrequencyLimit& operator=(CommFrequencyLimit&);
+
+  void __DelOlderTouchTime(uint64_t _time);
+
+private:
+  size_t count_;
+  uint64_t time_span_;
+  std::list<uint64_t> touch_times_;
 };
-
 
 
 #endif /* defined(COMM_COMM_FREQUENCY_LIMIT_H_) */

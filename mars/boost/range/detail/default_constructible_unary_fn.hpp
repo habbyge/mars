@@ -14,51 +14,49 @@
 #include <boost/mpl/if.hpp>
 #include <boost/type_traits/has_trivial_constructor.hpp>
 
-namespace mars_boost {} namespace boost = mars_boost; namespace mars_boost
-{
-    namespace range_detail
-    {
+namespace mars_boost {}
+namespace boost = mars_boost;
+namespace mars_boost {
+namespace range_detail {
 
 template<typename F, typename R>
-class default_constructible_unary_fn_wrapper
-{
+class default_constructible_unary_fn_wrapper {
 public:
-    typedef R result_type;
+  typedef R result_type;
 
-    default_constructible_unary_fn_wrapper()
-    {
-    }
-    default_constructible_unary_fn_wrapper(const F& source)
-        : m_impl(source)
-    {
-    }
-    template<typename Arg>
-    R operator()(const Arg& arg) const
-    {
-        BOOST_ASSERT(m_impl);
-        return (*m_impl)(arg);
-    }
-    template<typename Arg>
-    R operator()(Arg& arg) const
-    {
-        BOOST_ASSERT(m_impl);
-        return (*m_impl)(arg);
-    }
+  default_constructible_unary_fn_wrapper() {
+  }
+
+  default_constructible_unary_fn_wrapper(const F& source)
+      : m_impl(source) {
+  }
+
+  template<typename Arg>
+  R operator()(const Arg& arg) const {
+    BOOST_ASSERT(m_impl);
+    return (*m_impl)(arg);
+  }
+
+  template<typename Arg>
+  R operator()(Arg& arg) const {
+    BOOST_ASSERT(m_impl);
+    return (*m_impl)(arg);
+  }
+
 private:
-    mars_boost::optional<F> m_impl;
+  mars_boost::optional<F> m_impl;
 };
 
 template<typename F, typename R>
-struct default_constructible_unary_fn_gen
-{
-    typedef typename mars_boost::mpl::if_<
-        mars_boost::has_trivial_default_constructor<F>,
-        F,
-        default_constructible_unary_fn_wrapper<F,R>
-    >::type type;
+struct default_constructible_unary_fn_gen {
+  typedef typename mars_boost::mpl::if_<
+      mars_boost::has_trivial_default_constructor<F>,
+      F,
+      default_constructible_unary_fn_wrapper<F, R>
+  >::type type;
 };
 
-    } // namespace range_detail
+} // namespace range_detail
 } // namespace mars_boost {} namespace boost = mars_boost; namespace mars_boost
 
 #endif // include guard

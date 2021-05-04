@@ -21,16 +21,18 @@
 #define __MicroMessenger__scope_autoreleasepool__
 
 class Scope_AutoReleasePool {
-  public:
-    Scope_AutoReleasePool();
-    ~Scope_AutoReleasePool();
+public:
+  Scope_AutoReleasePool();
 
-  private:
-    Scope_AutoReleasePool(const Scope_AutoReleasePool&);
-    Scope_AutoReleasePool& operator=(const Scope_AutoReleasePool&);
+  ~Scope_AutoReleasePool();
 
-  private:
-    id m_pool;
+private:
+  Scope_AutoReleasePool(const Scope_AutoReleasePool&);
+
+  Scope_AutoReleasePool& operator=(const Scope_AutoReleasePool&);
+
+private:
+  id m_pool;
 };
 
 #define SCOPE_POOL() Scope_AutoReleasePool __pool__##__LINE__

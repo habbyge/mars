@@ -12,14 +12,15 @@ http://boost.org/LICENSE_1_0.txt
 #include <boost/config.hpp>
 #include <cstddef>
 
-namespace mars_boost {} namespace boost = mars_boost; namespace mars_boost {
+namespace mars_boost {}
+namespace boost = mars_boost;
+namespace mars_boost {
 namespace alignment {
 namespace detail {
 
 BOOST_CONSTEXPR inline bool is_alignment(std::size_t value)
-    BOOST_NOEXCEPT
-{
-    return (value > 0) && ((value & (value - 1)) == 0);
+BOOST_NOEXCEPT {
+  return (value > 0) && ((value & (value - 1)) == 0);
 }
 
 } /* .detail */

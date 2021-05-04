@@ -23,83 +23,91 @@
 #include "assert/__assert.h"
 
 class Mutex {
-  public:
-    typedef  boost::mutex handle_type;
-    Mutex() {
-    }
+public:
+  typedef boost::mutex handle_type;
 
-    ~Mutex() {
-    }
+  Mutex() {
+  }
 
-    bool lock() {
-        // 成功返回0，失败返回错误码
-        mutex_.lock();
-        return true;
-    }
+  ~Mutex() {
+  }
 
-    bool unlock() {
-        mutex_.unlock();
-        return true;
-    }
+  bool lock() {
+    // 成功返回0，失败返回错误码
+    mutex_.lock();
+    return true;
+  }
 
-    bool trylock() {
-        return mutex_.try_lock();
-    }
+  bool unlock() {
+    mutex_.unlock();
+    return true;
+  }
 
-    bool islocked() {
-        bool ret = trylock();
+  bool trylock() {
+    return mutex_.try_lock();
+  }
 
-        if (ret) unlock();
+  bool islocked() {
+    bool ret = trylock();
 
-        return true != ret;
-    }
+    if (ret) unlock();
 
-    handle_type& internal() { return mutex_; }
-  private:
-    Mutex(const Mutex&);
-    Mutex& operator=(const Mutex&);
-  private:
-    boost::mutex mutex_;
+    return true != ret;
+  }
+
+  handle_type& internal() { return mutex_; }
+
+private:
+  Mutex(const Mutex&);
+
+  Mutex& operator=(const Mutex&);
+
+private:
+  boost::mutex mutex_;
 };
 
 class RecursiveMutex {
-  public:
-    typedef  boost::recursive_mutex handle_type;
-    RecursiveMutex() {
-    }
+public:
+  typedef boost::recursive_mutex handle_type;
 
-    ~RecursiveMutex() {
-    }
+  RecursiveMutex() {
+  }
 
-    bool lock() {
-        // 成功返回0，失败返回错误码
-        m_mutex.lock();
-        return true;
-    }
+  ~RecursiveMutex() {
+  }
 
-    bool unlock() {
-        m_mutex.unlock();
-        return true;
-    }
+  bool lock() {
+    // 成功返回0，失败返回错误码
+    m_mutex.lock();
+    return true;
+  }
 
-    bool trylock() {
-        return m_mutex.try_lock();
-    }
+  bool unlock() {
+    m_mutex.unlock();
+    return true;
+  }
 
-    bool islocked() {
-        bool ret = trylock();
+  bool trylock() {
+    return m_mutex.try_lock();
+  }
 
-        if (ret) unlock();
+  bool islocked() {
+    bool ret = trylock();
 
-        return true != ret;
-    }
+    if (ret) unlock();
 
-    handle_type& internal() { return m_mutex; }
-  private:
-    RecursiveMutex(const RecursiveMutex&);
-    RecursiveMutex& operator=(const RecursiveMutex&);
-  private:
-    boost::recursive_mutex m_mutex;
+    return true != ret;
+  }
+
+  handle_type& internal() { return m_mutex; }
+
+private:
+  RecursiveMutex(const RecursiveMutex&);
+
+  RecursiveMutex& operator=(const RecursiveMutex&);
+
+private:
+  boost::recursive_mutex m_mutex;
 };
 
 

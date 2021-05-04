@@ -17,7 +17,9 @@ extern "C" {
 
 
 #include <stddef.h>   /* size_t */
+
 #define ZSTD_STATIC_LINKING_ONLY   /* ZSTD_customMem */
+
 #include "zstd.h"
 
 typedef struct POOL_ctx_s POOL_ctx;
@@ -58,7 +60,7 @@ size_t POOL_sizeof(POOL_ctx* ctx);
 /*! POOL_function :
  *  The function type that can be added to a thread pool.
  */
-typedef void (*POOL_function)(void*);
+typedef void (* POOL_function)(void*);
 
 /*! POOL_add() :
  *  Add the job `function(opaque)` to the thread pool. `ctx` must be valid.

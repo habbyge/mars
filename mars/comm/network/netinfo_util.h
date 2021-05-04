@@ -23,15 +23,16 @@
 #include <string>
 
 typedef enum {
-    kNetworkTypeUnknown,
-    kNetworkTypeNoNet,
-    kNetworkTypeWiFi,
-    kNetworkType2G,
-    kNetworkType3G,
-    kNetworkType4G,
+  kNetworkTypeUnknown,
+  kNetworkTypeNoNet,
+  kNetworkTypeWiFi,
+  kNetworkType2G,
+  kNetworkType3G,
+  kNetworkType4G,
 } NetworkType;
 
 NetworkType GetNetworkType();
+
 std::string GetDetailNetInfo();
 
 

@@ -19,21 +19,22 @@
 #include <boost/mpl/list/aux_/item.hpp>
 #include <boost/mpl/list/aux_/tag.hpp>
 
-namespace mars_boost {} namespace boost = mars_boost; namespace mars_boost { namespace mpl {
+namespace mars_boost {}
+namespace boost = mars_boost;
+namespace mars_boost {
+namespace mpl {
 
 template<>
-struct push_front_impl< aux::list_tag >
-{
-    template< typename List, typename T > struct apply
-    {
-        typedef l_item<
-              typename next<typename List::size>::type
-            , T
-            , typename List::type
-            > type;
-    };
+struct push_front_impl<aux::list_tag> {
+  template<typename List, typename T>
+  struct apply {
+    typedef l_item<
+        typename next<typename List::size>::type, T, typename List::type
+    > type;
+  };
 };
 
-}}
+}
+}
 
 #endif // BOOST_MPL_LIST_AUX_PUSH_FRONT_HPP_INCLUDED

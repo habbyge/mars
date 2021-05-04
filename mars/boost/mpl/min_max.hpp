@@ -18,24 +18,23 @@
 #include <boost/mpl/if.hpp>
 #include <boost/mpl/aux_/na_spec.hpp>
 
-namespace mars_boost {} namespace boost = mars_boost; namespace mars_boost { namespace mpl {
+namespace mars_boost {}
+namespace boost = mars_boost;
+namespace mars_boost {
+namespace mpl {
 
 template<
-      typename BOOST_MPL_AUX_NA_PARAM(N1)
-    , typename BOOST_MPL_AUX_NA_PARAM(N2)
-    >
+    typename BOOST_MPL_AUX_NA_PARAM(N1), typename BOOST_MPL_AUX_NA_PARAM(N2)
+>
 struct min
-    : if_< less<N1,N2>,N1,N2 >
-{
+    : if_<less < N1, N2>, N1, N2 > {
 };
 
 template<
-      typename BOOST_MPL_AUX_NA_PARAM(N1)
-    , typename BOOST_MPL_AUX_NA_PARAM(N2)
-    >
+    typename BOOST_MPL_AUX_NA_PARAM(N1), typename BOOST_MPL_AUX_NA_PARAM(N2)
+>
 struct max
-    : if_< less<N1,N2>,N2,N1 >
-{
+    : if_<less < N1, N2>, N2, N1 > {
 };
 
 BOOST_MPL_AUX_NA_SPEC(2, min)

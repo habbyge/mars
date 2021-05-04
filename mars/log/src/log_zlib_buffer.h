@@ -30,22 +30,26 @@
 
 class LogCrypt;
 
-class LogZlibBuffer : public LogBaseBuffer{
+class LogZlibBuffer : public LogBaseBuffer {
 public:
-    LogZlibBuffer(void* _pbuffer, size_t _len, bool _is_compress, const char* _pubkey);
-    ~LogZlibBuffer();
-    
+  LogZlibBuffer(void* _pbuffer, size_t _len, bool _is_compress, const char* _pubkey);
+
+  ~LogZlibBuffer();
+
 public:
-    virtual size_t Compress(const void* src, size_t inLen, void* dst, size_t outLen);
-    virtual void Flush(AutoBuffer& _buff);
+  virtual size_t Compress(const void* src, size_t inLen, void* dst, size_t outLen);
+
+  virtual void Flush(AutoBuffer& _buff);
 
 private:
-    bool __Reset();
-    char __GetMagicSyncStart();
-    char __GetMagicAsyncStart();
+  bool __Reset();
+
+  char __GetMagicSyncStart();
+
+  char __GetMagicAsyncStart();
 
 private:
-    z_stream cstream_;
+  z_stream cstream_;
 };
 
 

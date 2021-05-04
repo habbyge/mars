@@ -18,26 +18,28 @@
 #include <boost/mpl/begin_end_fwd.hpp>
 #include <boost/mpl/set/aux_/iterator.hpp>
 
-namespace mars_boost {} namespace boost = mars_boost; namespace mars_boost { namespace mpl {
+namespace mars_boost {}
+namespace boost = mars_boost;
+namespace mars_boost {
+namespace mpl {
 
 template<>
-struct begin_impl< aux::set_tag >
-{
-    template< typename Set > struct apply
-        : s_iter_get<Set,typename Set::item_>
-    {
-    };
+struct begin_impl<aux::set_tag> {
+  template<typename Set>
+  struct apply
+      : s_iter_get<Set, typename Set::item_> {
+  };
 };
 
 template<>
-struct end_impl< aux::set_tag >
-{
-    template< typename Set > struct apply
-    {
-        typedef s_iter< Set,set0<> > type;
-    };
+struct end_impl<aux::set_tag> {
+  template<typename Set>
+  struct apply {
+    typedef s_iter<Set, set0<>> type;
+  };
 };
 
-}}
+}
+}
 
 #endif // BOOST_MPL_SET_AUX_BEGIN_END_IMPL_HPP_INCLUDED

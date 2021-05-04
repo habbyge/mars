@@ -17,7 +17,11 @@
 #include <boost/mpl/aux_/config/typeof.hpp>
 #include <boost/mpl/aux_/nttp_decl.hpp>
 
-namespace mars_boost {} namespace boost = mars_boost; namespace mars_boost { namespace mpl { namespace aux {
+namespace mars_boost {}
+namespace boost = mars_boost;
+namespace mars_boost {
+namespace mpl {
+namespace aux {
 
 struct v_iter_tag;
 
@@ -27,6 +31,8 @@ struct vector_tag;
 template< BOOST_MPL_AUX_NTTP_DECL(long, N) > struct vector_tag;
 #endif
 
-}}}
+}
+}
+}
 
 #endif // BOOST_MPL_VECTOR_AUX_TAG_HPP_INCLUDED

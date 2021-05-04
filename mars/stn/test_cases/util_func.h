@@ -16,7 +16,7 @@
 *
 */
 #ifndef __UTILFUNC__
-#define __UTILFUNC__ 
+#define __UTILFUNC__
 
 #include "thread/thread.h"
 #include "../../../log/windows/dirent.h"
@@ -29,102 +29,90 @@
 #include "test_constants.h"
 
 #define PRINT_IPPORTITEMS(iPPortItemVector) \
-	do { \
-	printf("-------------" __FUNCTION__ "---------------------\n"); \
-	for (std::vector<IPPortItem>::iterator iter=iPPortItemVector.begin();iter!=iPPortItemVector.end(); ++iter) \
-		{ \
-		printf("%s\t%s:%d\ttype:%d\trate:%f\n", (*iter).strHost.c_str(), (*iter).strIP.c_str(), (*iter).nPort, (*iter).eSourceType, (*iter).successRate); \
-		} \
-	} while (false)
+  do { \
+  printf("-------------" __FUNCTION__ "---------------------\n"); \
+  for (std::vector<IPPortItem>::iterator iter=iPPortItemVector.begin();iter!=iPPortItemVector.end(); ++iter) \
+    { \
+    printf("%s\t%s:%d\ttype:%d\trate:%f\n", (*iter).strHost.c_str(), (*iter).strIP.c_str(), (*iter).nPort, (*iter).eSourceType, (*iter).successRate); \
+    } \
+  } while (false)
 
 
-class UtilFunc 
-{
+class UtilFunc {
 public:
-	static void del_files(const std::string& forderPath)
-	{
-		DIR* dir = opendir(forderPath.c_str());
-		if(NULL == dir) { return; }
+  static void del_files(const std::string& forderPath) {
+    DIR* dir = opendir(forderPath.c_str());
+    if (NULL == dir) { return; }
 
-		struct dirent* entry = NULL;
-		while((entry = readdir(dir), NULL!=entry))
-		{
-			std::string fullFileName = forderPath;
-			fullFileName += "/";
-			fullFileName += entry->d_name;
-			remove(fullFileName.c_str());
-		}
-		closedir(dir);
-	}
+    struct dirent* entry = NULL;
+    while ((entry = readdir(dir), NULL != entry)) {
+      std::string fullFileName = forderPath;
+      fullFileName += "/";
+      fullFileName += entry->d_name;
+      remove(fullFileName.c_str());
+    }
+    closedir(dir);
+  }
 
 
-	static void execute_cmd()
-	{
+  static void execute_cmd() {
 
-		static bool init = false;
+    static bool init = false;
 
-		if (init)
-		{
-			return;
-		}
-		init = true;
+    if (init) {
+      return;
+    }
+    init = true;
 
-		for (size_t i=0; i< sizeof(LONGLINKTASKMANAGER_TEST_CMD)/sizeof(LONGLINKTASKMANAGER_TEST_CMD[0]); ++i)
-		{
-			FILE* f = _popen(LONGLINKTASKMANAGER_TEST_CMD[i], "rt");
-			if(NULL == f)   
-			{
-				printf("popen:%s error!\n", LONGLINKTASKMANAGER_TEST_CMD[i]);
-				continue;
-			}
-		}
+    for (size_t i = 0; i < sizeof(LONGLINKTASKMANAGER_TEST_CMD) / sizeof(LONGLINKTASKMANAGER_TEST_CMD[0]); ++i) {
+      FILE* f = _popen(LONGLINKTASKMANAGER_TEST_CMD[i], "rt");
+      if (NULL == f) {
+        printf("popen:%s error!\n", LONGLINKTASKMANAGER_TEST_CMD[i]);
+        continue;
+      }
+    }
 
-		for (size_t i=0; i< sizeof(LONGLINK_TEST_CMD)/sizeof(LONGLINK_TEST_CMD[0]); ++i)
-		{
-			FILE* f = _popen(LONGLINK_TEST_CMD[i], "rt");
-			if(NULL == f)   
-			{
-				printf("popen:%s error!\n", LONGLINK_TEST_CMD[i]);
-				continue;
-			}
-		}
+    for (size_t i = 0; i < sizeof(LONGLINK_TEST_CMD) / sizeof(LONGLINK_TEST_CMD[0]); ++i) {
+      FILE* f = _popen(LONGLINK_TEST_CMD[i], "rt");
+      if (NULL == f) {
+        printf("popen:%s error!\n", LONGLINK_TEST_CMD[i]);
+        continue;
+      }
+    }
 
-		_chdir(NETSOURCE_CHDIR_DIR);
-		FILE* f = _popen(NETSOURCE_TEST_CMD , "rt");
-		if(NULL == f)   
-		{
-			printf("popen error!\n");
-			
-		}
+    _chdir(NETSOURCE_CHDIR_DIR);
+    FILE* f = _popen(NETSOURCE_TEST_CMD, "rt");
+    if (NULL == f) {
+      printf("popen error!\n");
 
-		ThreadUtil::sleep(10);
+    }
 
-	}
+    ThreadUtil::sleep(10);
+
+  }
 
 
-	static bool save_wording_to_ini(const char* _key, const char* _value, const char* _sectionName, const char* _iniFileName)
-	{
-		INI ini(_iniFileName, false);
-		ini.Parse();
-		if (!ini.Select(_sectionName))
-		{
-			if (!ini.Create(_sectionName))
-			{
-				printf("create selection=%s err", _sectionName);
-				return false;
-			}
-		}
-		ini.Set(_key, _value);
-		ini.Save();
-		return true;
-	}
-	static  std::string get_wording_from_ini(const char* _key,const char* _sectionName, const char* _iniFileName)
-	{
-		INI ini(_iniFileName, false);
-		ini.Parse();
-		std::string value(ini.Get(_sectionName, _key, ""));
-		return value;
-	}
+  static bool
+  save_wording_to_ini(const char* _key, const char* _value, const char* _sectionName, const char* _iniFileName) {
+    INI ini(_iniFileName, false);
+    ini.Parse();
+    if (!ini.Select(_sectionName)) {
+      if (!ini.Create(_sectionName)) {
+        printf("create selection=%s err", _sectionName);
+        return false;
+      }
+    }
+    ini.Set(_key, _value);
+    ini.Save();
+    return true;
+  }
+
+  static std::string get_wording_from_ini(const char* _key, const char* _sectionName, const char* _iniFileName) {
+    INI ini(_iniFileName, false);
+    ini.Parse();
+    std::string value(ini.Get(_sectionName, _key, ""));
+    return value;
+  }
 
 };
 

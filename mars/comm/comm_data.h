@@ -25,48 +25,50 @@
 #include <stdint.h>
 
 namespace mars {
-    namespace comm {
-        
+namespace comm {
+
 enum ProxyType {
-    kProxyNone = 0,
-    kProxyHttpTunel,
-    kProxySocks5,
-    kProxyHttp,
+  kProxyNone = 0,
+  kProxyHttpTunel,
+  kProxySocks5,
+  kProxyHttp,
 };
-        
+
 class ProxyInfo {
 public:
-    ProxyInfo():ProxyInfo(kProxyNone, "", "", 0, "", ""){}
-    ProxyInfo(ProxyType _type, const std::string& _host, const std::string& _ip, uint16_t _port, const std::string& _username, const std::string& _password)
-    :type(_type), host(_host), ip(_ip), port(_port), username(_username), password(_password){}
+  ProxyInfo() : ProxyInfo(kProxyNone, "", "", 0, "", "") {}
 
-	bool operator==(const ProxyInfo& _rh) {
-        if (type != _rh.type) {
-            return false;
-        }
-        if (kProxyNone == type) {
-            return true;
-        }
-        return host == _rh.host && ip == _rh.ip
-                && port == _rh.port && username == _rh.username
-                && password == _rh.password;
+  ProxyInfo(ProxyType _type, const std::string& _host, const std::string& _ip, uint16_t _port,
+            const std::string& _username, const std::string& _password)
+      : type(_type), host(_host), ip(_ip), port(_port), username(_username), password(_password) {}
+
+  bool operator==(const ProxyInfo& _rh) {
+    if (type != _rh.type) {
+      return false;
     }
-    
-    bool IsValid() const {
-        return kProxyNone == type || ((!ip.empty() || !host.empty()) && port > 0);
+    if (kProxyNone == type) {
+      return true;
     }
-    
+    return host == _rh.host && ip == _rh.ip
+           && port == _rh.port && username == _rh.username
+           && password == _rh.password;
+  }
+
+  bool IsValid() const {
+    return kProxyNone == type || ((!ip.empty() || !host.empty()) && port > 0);
+  }
+
 public:
-    ProxyType type;
-    std::string host;
-    std::string ip;
-    uint16_t port;
-    std::string username;
-    std::string password;
+  ProxyType type;
+  std::string host;
+  std::string ip;
+  uint16_t port;
+  std::string username;
+  std::string password;
 };
-        
-    
-    }
+
+
+}
 }
 
 #endif /* comm_data_h */

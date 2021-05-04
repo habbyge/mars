@@ -28,26 +28,32 @@
 #include "mars/stn/proto/longlink_packer.h"
 
 class LongLinkIdentifyChecker {
-  public:
-    LongLinkIdentifyChecker(mars::stn::LongLinkEncoder& _encoder, const std::string& _channel_id);
-    ~LongLinkIdentifyChecker();
+public:
+  LongLinkIdentifyChecker(mars::stn::LongLinkEncoder& _encoder, const std::string& _channel_id);
 
-    bool GetIdentifyBuffer(AutoBuffer& _buffer, uint32_t& _cmd_id);
-    void SetID(uint32_t _taskid);
+  ~LongLinkIdentifyChecker();
 
-    bool IsIdentifyResp(uint32_t _cmdid, uint32_t _taskid, const AutoBuffer& _buffer, const AutoBuffer& _extend) const;
-    bool OnIdentifyResp(AutoBuffer& _buffer);
+  bool GetIdentifyBuffer(AutoBuffer& _buffer, uint32_t& _cmd_id);
 
-    void Reset();
+  void SetID(uint32_t _taskid);
+
+  bool IsIdentifyResp(uint32_t _cmdid,
+                      uint32_t _taskid,
+                      const AutoBuffer& _buffer,
+                      const AutoBuffer& _extend) const;
+
+  bool OnIdentifyResp(AutoBuffer& _buffer);
+
+  void Reset();
 
 
-  private:
-    bool has_checked_;
-    uint32_t cmd_id_;
-    uint32_t taskid_;
-    AutoBuffer hash_code_buffer_;
-    mars::stn::LongLinkEncoder& encoder_;
-    std::string channel_id_;
+private:
+  bool has_checked_;
+  uint32_t cmd_id_;
+  uint32_t taskid_;
+  AutoBuffer hash_code_buffer_;
+  mars::stn::LongLinkEncoder& encoder_;
+  std::string channel_id_;
 };
 
 

@@ -32,5 +32,4 @@
 int SendHttpQuery(const std::string& _url, int& _status_code, std::string& _errmsg, int _timeout/*ms*/);
 
 
-
 #endif /* SDT_SRC_CHECKIMPL_HTTPQUERY_H_ */

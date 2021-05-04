@@ -1,10 +1,9 @@
 #!/usr/bin/env python
-import os
-import sys
 import glob
-import time
+import os
 import shutil
-import platform
+import sys
+import time
 
 from mars_utils import *
 

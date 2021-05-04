@@ -25,12 +25,12 @@ extern "C" {
 #endif
 
 enum TLocalIPStack {
-    ELocalIPStack_None = 0,
-    ELocalIPStack_IPv4 = 1,
-    ELocalIPStack_IPv6 = 2,
-    ELocalIPStack_Dual = 3,
+  ELocalIPStack_None = 0,
+  ELocalIPStack_IPv4 = 1,
+  ELocalIPStack_IPv6 = 2,
+  ELocalIPStack_Dual = 3,
 };
-    
+
 const char* const TLocalIPStackStr[] = {
     "ELocalIPStack_None",
     "ELocalIPStack_IPv4",
@@ -39,12 +39,13 @@ const char* const TLocalIPStackStr[] = {
 };
 
 TLocalIPStack local_ipstack_detect();
-    
+
 #ifdef __cplusplus
 }
 #endif
 
 #include <string>
+
 TLocalIPStack local_ipstack_detect_log(std::string& _log);
 
 

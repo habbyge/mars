@@ -35,57 +35,77 @@ namespace mars {
 namespace stn {
 
 struct BanItem;
-    
+
 class SimpleIPPortSort {
-  public:
-    SimpleIPPortSort();
-    ~SimpleIPPortSort();
+public:
+  SimpleIPPortSort();
 
-    void InitHistory2BannedList(bool _savexml);
-    void RemoveBannedList(const std::string& _ip);
-    void Update(const std::string& _ip, uint16_t _port, bool _is_success);
+  ~SimpleIPPortSort();
 
-    void SortandFilter(std::vector<IPPortItem>& _items, int _needcount, bool _use_IPv6) const;
+  void InitHistory2BannedList(bool _savexml);
 
-    void AddServerBan(const std::string& _ip);
-    bool CanUseIPv6();
-    
-  private:
-    void __LoadXml();
-    void __SaveXml();
-    void __RemoveTimeoutXml();
+  void RemoveBannedList(const std::string& _ip);
 
-    std::vector<BanItem>::iterator __FindBannedIter(const std::string& _ip, uint16_t _port) const;
-    bool __IsBanned(std::vector<BanItem>::iterator _iter) const;
-    bool __IsBanned(const std::string& _ip, uint16_t _port) const;
-    void __UpdateBanList(bool _isSuccess, const std::string& _ip, uint16_t _port);
-    bool __CanUpdate(const std::string& _ip, uint16_t _port, bool _is_success) const;
+  void Update(const std::string& _ip, uint16_t _port, bool _is_success);
 
-    void __FilterbyBanned(std::vector<IPPortItem>& _items) const;
-    void __SortbyBanned(std::vector<IPPortItem>& _items, bool _use_IPv6) const;
-    bool __IsServerBan(const std::string& _ip) const;
-    bool __IsV6Ip(const IPPortItem& item) const;
-    void __PickIpItemRandom(std::vector<IPPortItem>& _items, std::deque<IPPortItem>& _items_history, std::deque<IPPortItem>& _items_new) const;
-    void __UpdateBanFlagAndTime(const std::string& _ip, bool _success);
-    bool __IsIPv6(const std::string& _ip);
-    int  __BanTimes(uint8_t _flag);
-    
-  private:
-    SimpleIPPortSort(const SimpleIPPortSort&);
-    SimpleIPPortSort& operator=(const SimpleIPPortSort&);
+  void SortandFilter(std::vector<IPPortItem>& _items, int _needcount, bool _use_IPv6) const;
 
-  private:
-    std::string hostpath_;
-    tinyxml2::XMLDocument recordsxml_;
+  void AddServerBan(const std::string& _ip);
 
-    mutable Mutex mutex_;
-    mutable std::vector<BanItem> _ban_fail_list_;
-    mutable std::map<std::string, uint64_t> _server_bans_;
+  bool CanUseIPv6();
 
-    uint8_t IPv6_ban_flag_;
-    uint8_t IPv4_ban_flag_;
-    bool ban_v6_;
+private:
+  void __LoadXml();
+
+  void __SaveXml();
+
+  void __RemoveTimeoutXml();
+
+  std::vector<BanItem>::iterator __FindBannedIter(const std::string& _ip, uint16_t _port) const;
+
+  bool __IsBanned(std::vector<BanItem>::iterator _iter) const;
+
+  bool __IsBanned(const std::string& _ip, uint16_t _port) const;
+
+  void __UpdateBanList(bool _isSuccess, const std::string& _ip, uint16_t _port);
+
+  bool __CanUpdate(const std::string& _ip, uint16_t _port, bool _is_success) const;
+
+  void __FilterbyBanned(std::vector<IPPortItem>& _items) const;
+
+  void __SortbyBanned(std::vector<IPPortItem>& _items, bool _use_IPv6) const;
+
+  bool __IsServerBan(const std::string& _ip) const;
+
+  bool __IsV6Ip(const IPPortItem& item) const;
+
+  void __PickIpItemRandom(std::vector<IPPortItem>& _items, std::deque<IPPortItem>& _items_history,
+                          std::deque<IPPortItem>& _items_new) const;
+
+  void __UpdateBanFlagAndTime(const std::string& _ip, bool _success);
+
+  bool __IsIPv6(const std::string& _ip);
+
+  int __BanTimes(uint8_t _flag);
+
+private:
+  SimpleIPPortSort(const SimpleIPPortSort&);
+
+  SimpleIPPortSort& operator=(const SimpleIPPortSort&);
+
+private:
+  std::string hostpath_;
+  tinyxml2::XMLDocument recordsxml_;
+
+  mutable Mutex mutex_;
+  mutable std::vector<BanItem> _ban_fail_list_;
+  mutable std::map<std::string, uint64_t> _server_bans_;
+
+  uint8_t IPv6_ban_flag_;
+  uint8_t IPv4_ban_flag_;
+  bool ban_v6_;
 };
 
-}}
+}
+}
 #endif // STN_SRC_SIMPLE_IPPORT_SORT_H_

@@ -20,18 +20,19 @@
 #include <boost/mpl/aux_/nttp_decl.hpp>
 #include <boost/mpl/aux_/na_spec.hpp>
 
-namespace mars_boost {} namespace boost = mars_boost; namespace mars_boost { namespace mpl {
+namespace mars_boost {}
+namespace boost = mars_boost;
+namespace mars_boost {
+namespace mpl {
 
 template<
-      typename BOOST_MPL_AUX_NA_PARAM(T)
-    , int not_le_ = 0
-    >
-struct protect : T
-{
+    typename BOOST_MPL_AUX_NA_PARAM(T), int not_le_ = 0
+>
+struct protect : T {
 #if BOOST_WORKAROUND(__EDG_VERSION__, == 238)
-    typedef mpl::protect type;
+  typedef mpl::protect type;
 #else
-    typedef protect type;
+  typedef protect type;
 #endif
 };
 
@@ -50,6 +51,7 @@ BOOST_MPL_AUX_NA_SPEC_MAIN(1, protect)
 BOOST_MPL_AUX_NA_SPEC_TEMPLATE_ARITY(1, 1, protect)
 #endif
 
-}}
+}
+}
 
 #endif // BOOST_MPL_PROTECT_HPP_INCLUDED

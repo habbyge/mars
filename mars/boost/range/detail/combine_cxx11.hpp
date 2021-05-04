@@ -17,21 +17,20 @@
 
 #include <fstream>
 
-namespace mars_boost {} namespace boost = mars_boost; namespace mars_boost
-{
-    namespace range
-    {
+namespace mars_boost {}
+namespace boost = mars_boost;
+namespace mars_boost {
+namespace range {
 
 template<typename... Ranges>
-auto combine(Ranges&&... rngs) ->
-    combined_range<decltype(mars_boost::make_tuple(mars_boost::begin(rngs)...))>
-{
-    return combined_range<decltype(mars_boost::make_tuple(mars_boost::begin(rngs)...))>(
-                mars_boost::make_tuple(mars_boost::begin(rngs)...),
-                mars_boost::make_tuple(mars_boost::end(rngs)...));
+auto combine(Ranges&& ... rngs) ->
+combined_range<decltype(mars_boost::make_tuple(mars_boost::begin(rngs)...))> {
+  return combined_range<decltype(mars_boost::make_tuple(mars_boost::begin(rngs)...))>(
+      mars_boost::make_tuple(mars_boost::begin(rngs)...),
+      mars_boost::make_tuple(mars_boost::end(rngs)...));
 }
 
-    } // namespace range
+} // namespace range
 
 using range::combine;
 

@@ -28,35 +28,37 @@
 
 namespace mars {
 namespace stn {
-    
+
 class WeakNetworkLogic {
 public:
-    SINGLETON_INTRUSIVE(WeakNetworkLogic, new WeakNetworkLogic, delete);
-    boost::function<void (int _key, int _value, bool _is_important)> report_weak_logic_;
-    
-    bool IsCurrentNetworkWeak();
-    void OnConnectEvent(bool _is_suc, int _rtt, int _index);
-    void OnPkgEvent(bool _is_firstpkg, int _span);
-    void OnTaskEvent(const TaskProfile& _task_profile);
-    bool IsLastValidConnectFail(int64_t &_span);
-    
+  SINGLETON_INTRUSIVE(WeakNetworkLogic, new WeakNetworkLogic, delete);
+
+  boost::function<void(int _key, int _value, bool _is_important)> report_weak_logic_;
+
+  bool IsCurrentNetworkWeak();
+  void OnConnectEvent(bool _is_suc, int _rtt, int _index);
+  void OnPkgEvent(bool _is_firstpkg, int _span);
+  void OnTaskEvent(const TaskProfile& _task_profile);
+  bool IsLastValidConnectFail(int64_t& _span);
+
 private:
-    WeakNetworkLogic();
-    virtual ~WeakNetworkLogic();
-    void __SignalForeground(bool _is_foreground);
-    void __ReportWeakLogic(int _key, int _value, bool _is_important);
-    void __MarkWeak(bool _isWeak);
-    
+  WeakNetworkLogic();
+  virtual ~WeakNetworkLogic();
+
+  void __SignalForeground(bool _is_foreground);
+  void __ReportWeakLogic(int _key, int _value, bool _is_important);
+  void __MarkWeak(bool _isWeak);
+
 private:
-    tickcount_t first_mark_tick_;
-    tickcount_t last_mark_tick_;
-    bool is_curr_weak_;
-    unsigned int connect_after_weak_;
-    tickcount_t last_connect_fail_tick_;
-    tickcount_t last_connect_suc_tick_;
-    uint32_t cgi_fail_num_;
+  tickcount_t first_mark_tick_;
+  tickcount_t last_mark_tick_;
+  bool is_curr_weak_;
+  unsigned int connect_after_weak_;
+  tickcount_t last_connect_fail_tick_;
+  tickcount_t last_connect_suc_tick_;
+  uint32_t cgi_fail_num_;
 };
-    
+
 }
 }
 

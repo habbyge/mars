@@ -22,54 +22,48 @@
 #include <boost/mpl/aux_/config/ctps.hpp>
 #include <boost/mpl/aux_/config/workaround.hpp>
 
-namespace mars_boost {} namespace boost = mars_boost; namespace mars_boost { namespace mpl {
+namespace mars_boost {}
+namespace boost = mars_boost;
+namespace mars_boost {
+namespace mpl {
 
 #if !defined(BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION)
 
 template<
-      bool C
-    , typename T1
-    , typename T2
-    >
-struct if_c
-{
-    typedef T1 type;
+    bool C, typename T1, typename T2
+>
+struct if_c {
+  typedef T1 type;
 };
 
 template<
-      typename T1
-    , typename T2
-    >
-struct if_c<false,T1,T2>
-{
-    typedef T2 type;
+    typename T1, typename T2
+>
+struct if_c<false, T1, T2> {
+  typedef T2 type;
 };
 
 // agurt, 05/sep/04: nondescriptive parameter names for the sake of DigitalMars
 // (and possibly MWCW < 8.0); see http://article.gmane.org/gmane.comp.lib.boost.devel/108959
 template<
-      typename BOOST_MPL_AUX_NA_PARAM(T1)
-    , typename BOOST_MPL_AUX_NA_PARAM(T2)
-    , typename BOOST_MPL_AUX_NA_PARAM(T3)
-    >
-struct if_
-{
- private:
-    // agurt, 02/jan/03: two-step 'type' definition for the sake of aCC 
-    typedef if_c<
+    typename BOOST_MPL_AUX_NA_PARAM(T1), typename BOOST_MPL_AUX_NA_PARAM(T2), typename BOOST_MPL_AUX_NA_PARAM(T3)
+>
+struct if_ {
+private:
+  // agurt, 02/jan/03: two-step 'type' definition for the sake of aCC
+  typedef if_c<
 #if defined(BOOST_MPL_CFG_BCC_INTEGRAL_CONSTANTS)
-          BOOST_MPL_AUX_VALUE_WKND(T1)::value
+      BOOST_MPL_AUX_VALUE_WKND(T1)::value
 #else
-          BOOST_MPL_AUX_STATIC_CAST(bool, BOOST_MPL_AUX_VALUE_WKND(T1)::value)
+      BOOST_MPL_AUX_STATIC_CAST(bool, BOOST_MPL_AUX_VALUE_WKND(T1)::value)
 #endif
-        , T2
-        , T3
-        > almost_type_;
- 
- public:
-    typedef typename almost_type_::type type;
-    
-    BOOST_MPL_AUX_LAMBDA_SUPPORT(3,if_,(T1,T2,T3))
+      , T2, T3
+  > almost_type_;
+
+public:
+  typedef typename almost_type_::type type;
+
+  BOOST_MPL_AUX_LAMBDA_SUPPORT(3, if_, (T1, T2, T3))
 };
 
 #else
@@ -130,6 +124,7 @@ struct if_
 
 BOOST_MPL_AUX_NA_SPEC(3, if_)
 
-}}
+}
+}
 
 #endif // BOOST_MPL_IF_HPP_INCLUDED

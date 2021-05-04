@@ -15,34 +15,49 @@
 
 #include <string.h>
 
-namespace mars_boost {} namespace boost = mars_boost; namespace mars_boost {
+namespace mars_boost {}
+namespace boost = mars_boost;
+namespace mars_boost {
 namespace uuids {
 
-inline bool uuid::is_nil() const BOOST_NOEXCEPT
-{
-    for (std::size_t i = 0; i < sizeof(data); ++i)
-    {
-        if (data[i] != 0U)
-            return false;
-    }
-    return true;
+inline bool uuid::is_nil() const
+
+BOOST_NOEXCEPT {
+for (
+std::size_t i = 0;
+i < sizeof(data); ++i) {
+if (data[i] != 0U)
+return false;
+}
+return true;
 }
 
-inline void uuid::swap(uuid& rhs) BOOST_NOEXCEPT
+inline void uuid::swap(uuid& rhs)
+
+BOOST_NOEXCEPT
 {
-    uuid tmp = *this;
-    *this = rhs;
-    rhs = tmp;
+uuid tmp = *this;
+*this =
+rhs;
+rhs = tmp;
 }
 
-inline bool operator== (uuid const& lhs, uuid const& rhs) BOOST_NOEXCEPT
+inline bool operator==(uuid const& lhs, uuid const& rhs)
+
+BOOST_NOEXCEPT
 {
-    return memcmp(lhs.data, rhs.data, sizeof(lhs.data)) == 0;
+return
+memcmp(lhs
+.data, rhs.data, sizeof(lhs.data)) == 0;
 }
 
-inline bool operator< (uuid const& lhs, uuid const& rhs) BOOST_NOEXCEPT
+inline bool operator<(uuid const& lhs, uuid const& rhs)
+
+BOOST_NOEXCEPT
 {
-    return memcmp(lhs.data, rhs.data, sizeof(lhs.data)) < 0;
+return
+memcmp(lhs
+.data, rhs.data, sizeof(lhs.data)) < 0;
 }
 
 } // namespace uuids

@@ -42,10 +42,10 @@
 .global _ontop_fcontext
 .balign 16
 _ontop_fcontext:
-    # prepare stack for GP + FPU
+# prepare stack for GP + FPU
     sub  sp, sp, #0x70
 
-    # save x19-x30
+# save x19-x30
     stp  x19, x20, [sp, #0x00]
     stp  x21, x22, [sp, #0x10]
     stp  x23, x24, [sp, #0x20]
@@ -53,16 +53,16 @@ _ontop_fcontext:
     stp  x27, x28, [sp, #0x40]
     stp  x29, x30, [sp, #0x50]
 
-    # save LR as PC
+# save LR as PC
     str  x30, [sp, #0x60]
 
-    # store RSP (pointing to context-data) in X5
+# store RSP (pointing to context-data) in X5
     mov  x4, sp
 
-    # restore RSP (pointing to context-data) from X1
+# restore RSP (pointing to context-data) from X1
     mov  sp, x0
 
-    # load x19-x30
+# load x19-x30
     ldp  x19, x20, [sp, #0x00]
     ldp  x21, x22, [sp, #0x10]
     ldp  x23, x24, [sp, #0x20]
@@ -70,15 +70,15 @@ _ontop_fcontext:
     ldp  x27, x28, [sp, #0x40]
     ldp  x29, x30, [sp, #0x50]
 
-    # return transfer_t from jump
-    # pass transfer_t as first arg in context function
-    # X0 == FCTX, X1 == DATA
+# return transfer_t from jump
+# pass transfer_t as first arg in context function
+# X0 == FCTX, X1 == DATA
     mov x0, x4
 
-    # skip pc
-    # restore stack from GP + FPU
+# skip pc
+# restore stack from GP + FPU
     add  sp, sp, #0x70
 
-    # jump to ontop-function
+# jump to ontop-function
     ret x2
 #endif

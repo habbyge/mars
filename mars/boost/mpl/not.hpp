@@ -20,32 +20,34 @@
 #include <boost/mpl/aux_/na_spec.hpp>
 #include <boost/mpl/aux_/lambda_support.hpp>
 
-namespace mars_boost {} namespace boost = mars_boost; namespace mars_boost { namespace mpl {
+namespace mars_boost {}
+namespace boost = mars_boost;
+namespace mars_boost {
+namespace mpl {
 
 namespace aux {
 
-template< BOOST_MPL_AUX_NTTP_DECL(long, C_) > // 'long' is intentional here
+template<BOOST_MPL_AUX_NTTP_DECL(long, C_)> // 'long' is intentional here
 struct not_impl
-    : bool_<!C_>
-{
+    : bool_<!C_> {
 };
 
 } // namespace aux
 
 
 template<
-      typename BOOST_MPL_AUX_NA_PARAM(T)
-    >
+    typename BOOST_MPL_AUX_NA_PARAM(T)
+>
 struct not_
     : aux::not_impl<
-          BOOST_MPL_AUX_NESTED_TYPE_WKND(T)::value
-        >
-{
-    BOOST_MPL_AUX_LAMBDA_SUPPORT(1,not_,(T))
+        BOOST_MPL_AUX_NESTED_TYPE_WKND(T)::value
+    > {
+  BOOST_MPL_AUX_LAMBDA_SUPPORT(1, not_, (T))
 };
 
-BOOST_MPL_AUX_NA_SPEC(1,not_)
+BOOST_MPL_AUX_NA_SPEC(1, not_)
 
-}}
+}
+}
 
 #endif // BOOST_MPL_NOT_HPP_INCLUDED

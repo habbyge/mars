@@ -14,45 +14,46 @@
 #include <stddef.h>
 
 #define ZSTD_STATIC_LINKING_ONLY
+
 #include <zstd.h>
 
 #include "data.h"
 
 typedef struct {
-    ZSTD_cParameter param;
-    int value;
+  ZSTD_cParameter param;
+  int value;
 } param_value_t;
 
 typedef struct {
-    size_t size;
-    param_value_t const* data;
+  size_t size;
+  param_value_t const* data;
 } param_values_t;
 
 /**
  * The config tells the compression method what options to use.
  */
 typedef struct {
-    const char* name;  /**< Identifies the config in the results table */
-    /**
-     * Optional arguments to pass to the CLI. If not set, CLI-based methods
-     * will skip this config.
-     */
-    char const* cli_args;
-    /**
-     * Parameters to pass to the advanced API. If the advanced API isn't used,
-     * the parameters will be derived from these.
-     */
-    param_values_t param_values;
-    /**
-     * Boolean parameter that says if we should use a dictionary. If the data
-     * doesn't have a dictionary, this config is skipped. Defaults to no.
-     */
-    int use_dictionary;
-    /**
-     * Boolean parameter that says if we should pass the pledged source size
-     * when the method allows it. Defaults to yes.
-     */
-    int no_pledged_src_size;
+  const char* name;  /**< Identifies the config in the results table */
+  /**
+   * Optional arguments to pass to the CLI. If not set, CLI-based methods
+   * will skip this config.
+   */
+  char const* cli_args;
+  /**
+   * Parameters to pass to the advanced API. If the advanced API isn't used,
+   * the parameters will be derived from these.
+   */
+  param_values_t param_values;
+  /**
+   * Boolean parameter that says if we should use a dictionary. If the data
+   * doesn't have a dictionary, this config is skipped. Defaults to no.
+   */
+  int use_dictionary;
+  /**
+   * Boolean parameter that says if we should pass the pledged source size
+   * when the method allows it. Defaults to yes.
+   */
+  int no_pledged_src_size;
 } config_t;
 
 /**
@@ -63,6 +64,7 @@ typedef struct {
 int config_skip_data(config_t const* config, data_t const* data);
 
 #define CONFIG_NO_LEVEL (-ZSTD_TARGETLENGTH_MAX - 1)
+
 /**
  * Returns the compression level specified by the config, or CONFIG_NO_LEVEL if
  * no level is specified. Note that 0 is a valid compression level, meaning

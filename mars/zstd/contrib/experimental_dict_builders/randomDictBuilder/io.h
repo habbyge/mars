@@ -14,17 +14,16 @@
 *  Structs
 ***************************************/
 typedef struct {
-    U64 totalSizeToLoad;
-    unsigned oneSampleTooLarge;
-    unsigned nbSamples;
+  U64 totalSizeToLoad;
+  unsigned oneSampleTooLarge;
+  unsigned nbSamples;
 } fileStats;
 
 typedef struct {
   const void* srcBuffer;
-  const size_t *samplesSizes;
+  const size_t* samplesSizes;
   size_t nbSamples;
-}sampleInfo;
-
+} sampleInfo;
 
 
 /*! getSampleInfo():
@@ -36,12 +35,10 @@ sampleInfo* getSampleInfo(const char** fileNamesTable, unsigned nbFiles, size_t 
                           unsigned maxDictSize, const unsigned displayLevel);
 
 
-
 /*! freeSampleInfo():
  *  Free memory allocated for info
  */
-void freeSampleInfo(sampleInfo *info);
-
+void freeSampleInfo(sampleInfo* info);
 
 
 /*! saveDict():

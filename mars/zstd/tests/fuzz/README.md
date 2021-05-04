@@ -1,8 +1,7 @@
 # Fuzzing
 
-Each fuzzing target can be built with multiple engines.
-Zstd provides a fuzz corpus for each target that can be downloaded with
-the command:
+Each fuzzing target can be built with multiple engines. Zstd provides a fuzz corpus for each target that can be
+downloaded with the command:
 
 ```
 make corpora
@@ -12,9 +11,8 @@ It will download each corpus into `./corpora/TARGET`.
 
 ## fuzz.py
 
-`fuzz.py` is a helper script for building and running fuzzers.
-Run `./fuzz.py -h` for the commands and run `./fuzz.py COMMAND -h` for
-command specific help.
+`fuzz.py` is a helper script for building and running fuzzers. Run `./fuzz.py -h` for the commands and
+run `./fuzz.py COMMAND -h` for command specific help.
 
 ### Generating Data
 
@@ -25,30 +23,25 @@ make -C ../tests decodecorpus
 ./fuzz.py gen TARGET
 ```
 
-By default it outputs 100 samples, each at most 8KB into `corpora/TARGET-seed`,
-but that can be configured with the `--number`, `--max-size-log` and `--seed`
+By default it outputs 100 samples, each at most 8KB into `corpora/TARGET-seed`, but that can be configured with
+the `--number`, `--max-size-log` and `--seed`
 flags.
 
 ### Build
-It respects the usual build environment variables `CC`, `CFLAGS`, etc.
-The environment variables can be overridden with the corresponding flags
-`--cc`, `--cflags`, etc.
-The specific fuzzing engine is selected with `LIB_FUZZING_ENGINE` or
-`--lib-fuzzing-engine`, the default is `libregression.a`.
-Alternatively, you can use Clang's built in fuzzing engine with
-`--enable-fuzzer`.
-It has flags that can easily set up sanitizers `--enable-{a,ub,m}san`, and
-coverage instrumentation `--enable-coverage`.
-It sets sane defaults which can be overridden with flags `--debug`,
-`--enable-ubsan-pointer-overflow`, etc.
-Run `./fuzz.py build -h` for help.
+
+It respects the usual build environment variables `CC`, `CFLAGS`, etc. The environment variables can be overridden with
+the corresponding flags
+`--cc`, `--cflags`, etc. The specific fuzzing engine is selected with `LIB_FUZZING_ENGINE` or
+`--lib-fuzzing-engine`, the default is `libregression.a`. Alternatively, you can use Clang's built in fuzzing engine
+with
+`--enable-fuzzer`. It has flags that can easily set up sanitizers `--enable-{a,ub,m}san`, and coverage
+instrumentation `--enable-coverage`. It sets sane defaults which can be overridden with flags `--debug`,
+`--enable-ubsan-pointer-overflow`, etc. Run `./fuzz.py build -h` for help.
 
 ### Running Fuzzers
 
-`./fuzz.py` can run `libfuzzer`, `afl`, and `regression` tests.
-See the help of the relevant command for options.
-Flags not parsed by `fuzz.py` are passed to the fuzzing engine.
-The command used to run the fuzzer is printed for debugging.
+`./fuzz.py` can run `libfuzzer`, `afl`, and `regression` tests. See the help of the relevant command for options. Flags
+not parsed by `fuzz.py` are passed to the fuzzing engine. The command used to run the fuzzer is printed for debugging.
 
 ## LibFuzzer
 
@@ -73,13 +66,11 @@ CC=clang CXX=clang++ ./fuzz.py build all --enable-fuzzer --enable-msan
 ```
 
 `fuzz.py` respects the environment variables / flags `MSAN_EXTRA_CPPFLAGS`,
-`MSAN_EXTRA_CFLAGS`, `MSAN_EXTRA_CXXFLAGS`, `MSAN_EXTRA_LDFLAGS` to easily pass
-the extra parameters only for MSAN.
+`MSAN_EXTRA_CFLAGS`, `MSAN_EXTRA_CXXFLAGS`, `MSAN_EXTRA_LDFLAGS` to easily pass the extra parameters only for MSAN.
 
 ## AFL
 
-The default `LIB_FUZZING_ENGINE` is `libregression.a`, which produces a binary
-that AFL can use.
+The default `LIB_FUZZING_ENGINE` is `libregression.a`, which produces a binary that AFL can use.
 
 ```
 # Build the fuzz targets
@@ -90,8 +81,7 @@ CC=afl-clang CXX=afl-clang++ ./fuzz.py build all --enable-asan --enable-ubsan
 
 ## Regression Testing
 
-The regression test supports the `all` target to run all the fuzzers in one
-command.
+The regression test supports the `all` target to run all the fuzzers in one command.
 
 ```
 CC=clang CXX=clang++ ./fuzz.py build all --enable-asan --enable-ubsan

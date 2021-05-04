@@ -21,21 +21,26 @@
 // resolves conflicts with 'mars_boost::numeric_cast' function template.
 // use it in your own code _only_ if you care about compatibility with
 // these outdated compilers!
-#if BOOST_WORKAROUND(BOOST_MSVC, <= 1300) || BOOST_WORKAROUND(__BORLANDC__, BOOST_TESTED_AT(0x570) )
+#if BOOST_WORKAROUND(BOOST_MSVC, <= 1300) || BOOST_WORKAROUND(__BORLANDC__, BOOST_TESTED_AT(0x570))
 #   define BOOST_MPL_AUX_NUMERIC_CAST numeric_cast_
 #else
 #   define BOOST_MPL_AUX_NUMERIC_CAST numeric_cast
 #endif
 
-namespace mars_boost {} namespace boost = mars_boost; namespace mars_boost { namespace mpl {
+namespace mars_boost {}
+namespace boost = mars_boost;
+namespace mars_boost {
+namespace mpl {
 
 // no default implementation; the definition is needed to make MSVC happy
 
-template< typename SourceTag, typename TargetTag > struct BOOST_MPL_AUX_NUMERIC_CAST
-{
-    template< typename N > struct apply;
+template<typename SourceTag, typename TargetTag>
+struct BOOST_MPL_AUX_NUMERIC_CAST {
+  template<typename N>
+  struct apply;
 };
 
-}}
+}
+}
 
 #endif // BOOST_MPL_NUMERIC_CAST_HPP_INCLUDED

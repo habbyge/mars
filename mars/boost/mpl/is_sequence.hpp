@@ -29,6 +29,7 @@
 #include <boost/mpl/aux_/config/eti.hpp>
 #include <boost/mpl/aux_/config/msvc.hpp>
 #include <boost/mpl/aux_/config/workaround.hpp>
+
 #if BOOST_WORKAROUND(BOOST_MSVC, < 1300)
 #   include <boost/mpl/aux_/msvc_is_class.hpp>
 #elif BOOST_WORKAROUND(BOOST_MSVC, == 1300)
@@ -37,7 +38,10 @@
 
 #include <boost/type_traits/is_same.hpp>
 
-namespace mars_boost {} namespace boost = mars_boost; namespace mars_boost { namespace mpl {
+namespace mars_boost {}
+namespace boost = mars_boost;
+namespace mars_boost {
+namespace mpl {
 
 #if BOOST_WORKAROUND(BOOST_MSVC, <= 1300)
 
@@ -88,12 +92,11 @@ struct is_sequence
 #else
 
 template<
-      typename BOOST_MPL_AUX_NA_PARAM(T)
-    >
+    typename BOOST_MPL_AUX_NA_PARAM(T)
+>
 struct is_sequence
-    : not_< is_same< typename begin<T>::type, void_ > >
-{
-    BOOST_MPL_AUX_LAMBDA_SUPPORT(1, is_sequence, (T))
+    : not_<is_same < typename begin<T>::type, void_> > {
+BOOST_MPL_AUX_LAMBDA_SUPPORT(1, is_sequence, (T))
 };
 
 #endif // BOOST_MSVC

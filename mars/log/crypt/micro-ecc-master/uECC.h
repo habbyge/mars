@@ -27,14 +27,14 @@ platform. */
    Optimization level 4 currently only has an effect ARM platforms where more than one
    curve is enabled. */
 #ifndef uECC_OPTIMIZATION_LEVEL
-    #define uECC_OPTIMIZATION_LEVEL 2
+#define uECC_OPTIMIZATION_LEVEL 2
 #endif
 
 /* uECC_SQUARE_FUNC - If enabled (defined as nonzero), this will cause a specific function to be
 used for (scalar) squaring instead of the generic multiplication function. This can make things
 faster somewhat faster, but increases the code size. */
 #ifndef uECC_SQUARE_FUNC
-    #define uECC_SQUARE_FUNC 0
+#define uECC_SQUARE_FUNC 0
 #endif
 
 /* uECC_VLI_NATIVE_LITTLE_ENDIAN - If enabled (defined as nonzero), this will switch to native
@@ -49,34 +49,34 @@ IMPORTANT: Keys and signatures generated with uECC_VLI_NATIVE_LITTLE_ENDIAN=1 ar
 with keys and signatures generated with uECC_VLI_NATIVE_LITTLE_ENDIAN=0; all parties must use
 the same endianness. */
 #ifndef uECC_VLI_NATIVE_LITTLE_ENDIAN
-    #define uECC_VLI_NATIVE_LITTLE_ENDIAN 0
+#define uECC_VLI_NATIVE_LITTLE_ENDIAN 0
 #endif
 
 /* Curve support selection. Set to 0 to remove that curve. */
 #ifndef uECC_SUPPORTS_secp160r1
-    #define uECC_SUPPORTS_secp160r1 1
+#define uECC_SUPPORTS_secp160r1 1
 #endif
 #ifndef uECC_SUPPORTS_secp192r1
-    #define uECC_SUPPORTS_secp192r1 1
+#define uECC_SUPPORTS_secp192r1 1
 #endif
 #ifndef uECC_SUPPORTS_secp224r1
-    #define uECC_SUPPORTS_secp224r1 1
+#define uECC_SUPPORTS_secp224r1 1
 #endif
 #ifndef uECC_SUPPORTS_secp256r1
-    #define uECC_SUPPORTS_secp256r1 1
+#define uECC_SUPPORTS_secp256r1 1
 #endif
 #ifndef uECC_SUPPORTS_secp256k1
-    #define uECC_SUPPORTS_secp256k1 1
+#define uECC_SUPPORTS_secp256k1 1
 #endif
 
 /* Specifies whether compressed point format is supported.
    Set to 0 to disable point compression/decompression functions. */
 #ifndef uECC_SUPPORT_COMPRESSED_POINT
-    #define uECC_SUPPORT_COMPRESSED_POINT 1
+#define uECC_SUPPORT_COMPRESSED_POINT 1
 #endif
 
 struct uECC_Curve_t;
-typedef const struct uECC_Curve_t * uECC_Curve;
+typedef const struct uECC_Curve_t* uECC_Curve;
 
 #ifdef __cplusplus
 extern "C"
@@ -84,19 +84,29 @@ extern "C"
 #endif
 
 #if uECC_SUPPORTS_secp160r1
+
 uECC_Curve uECC_secp160r1(void);
+
 #endif
 #if uECC_SUPPORTS_secp192r1
+
 uECC_Curve uECC_secp192r1(void);
+
 #endif
 #if uECC_SUPPORTS_secp224r1
+
 uECC_Curve uECC_secp224r1(void);
+
 #endif
 #if uECC_SUPPORTS_secp256r1
+
 uECC_Curve uECC_secp256r1(void);
+
 #endif
 #if uECC_SUPPORTS_secp256k1
+
 uECC_Curve uECC_secp256k1(void);
+
 #endif
 
 /* uECC_RNG_Function type
@@ -115,7 +125,7 @@ If you are building on another POSIX-compliant system that supports /dev/random 
 you can define uECC_POSIX to use the predefined RNG. For embedded platforms there is no predefined
 RNG function; you must provide your own.
 */
-typedef int (*uECC_RNG_Function)(uint8_t *dest, unsigned size);
+typedef int (* uECC_RNG_Function)(uint8_t* dest, unsigned size);
 
 /* uECC_set_rng() function.
 Set the function that will be used to generate random bytes. The RNG function should
@@ -163,7 +173,7 @@ Outputs:
 
 Returns 1 if the key pair was generated successfully, 0 if an error occurred.
 */
-int uECC_make_key(uint8_t *public_key, uint8_t *private_key, uECC_Curve curve);
+int uECC_make_key(uint8_t* public_key, uint8_t* private_key, uECC_Curve curve);
 
 /* uECC_shared_secret() function.
 Compute a shared secret given your secret key and someone else's public key.
@@ -180,12 +190,13 @@ Outputs:
 
 Returns 1 if the shared secret was generated successfully, 0 if an error occurred.
 */
-int uECC_shared_secret(const uint8_t *public_key,
-                       const uint8_t *private_key,
-                       uint8_t *secret,
+int uECC_shared_secret(const uint8_t* public_key,
+                       const uint8_t* private_key,
+                       uint8_t* secret,
                        uECC_Curve curve);
 
 #if uECC_SUPPORT_COMPRESSED_POINT
+
 /* uECC_compress() function.
 Compress a public key.
 
@@ -197,7 +208,7 @@ Outputs:
                  (curve size + 1) bytes long; for example, if the curve is secp256r1,
                  compressed must be 33 bytes long.
 */
-void uECC_compress(const uint8_t *public_key, uint8_t *compressed, uECC_Curve curve);
+void uECC_compress(const uint8_t* public_key, uint8_t* compressed, uECC_Curve curve);
 
 /* uECC_decompress() function.
 Decompress a compressed public key.
@@ -208,7 +219,8 @@ Inputs:
 Outputs:
     public_key - Will be filled in with the decompressed public key.
 */
-void uECC_decompress(const uint8_t *compressed, uint8_t *public_key, uECC_Curve curve);
+void uECC_decompress(const uint8_t* compressed, uint8_t* public_key, uECC_Curve curve);
+
 #endif /* uECC_SUPPORT_COMPRESSED_POINT */
 
 /* uECC_valid_public_key() function.
@@ -223,7 +235,7 @@ Inputs:
 
 Returns 1 if the public key is valid, 0 if it is invalid.
 */
-int uECC_valid_public_key(const uint8_t *public_key, uECC_Curve curve);
+int uECC_valid_public_key(const uint8_t* public_key, uECC_Curve curve);
 
 /* uECC_compute_public_key() function.
 Compute the corresponding public key for a private key.
@@ -236,7 +248,7 @@ Outputs:
 
 Returns 1 if the key was computed successfully, 0 if an error occurred.
 */
-int uECC_compute_public_key(const uint8_t *private_key, uint8_t *public_key, uECC_Curve curve);
+int uECC_compute_public_key(const uint8_t* private_key, uint8_t* public_key, uECC_Curve curve);
 
 /* uECC_sign() function.
 Generate an ECDSA signature for a given hash value.
@@ -255,10 +267,10 @@ Outputs:
 
 Returns 1 if the signature generated successfully, 0 if an error occurred.
 */
-int uECC_sign(const uint8_t *private_key,
-              const uint8_t *message_hash,
+int uECC_sign(const uint8_t* private_key,
+              const uint8_t* message_hash,
               unsigned hash_size,
-              uint8_t *signature,
+              uint8_t* signature,
               uECC_Curve curve);
 
 /* uECC_HashContext structure.
@@ -300,14 +312,17 @@ void finish_SHA256(uECC_HashContext *base, uint8_t *hash_result) {
 }
 */
 typedef struct uECC_HashContext {
-    void (*init_hash)(const struct uECC_HashContext *context);
-    void (*update_hash)(const struct uECC_HashContext *context,
-                        const uint8_t *message,
-                        unsigned message_size);
-    void (*finish_hash)(const struct uECC_HashContext *context, uint8_t *hash_result);
-    unsigned block_size; /* Hash function block size in bytes, eg 64 for SHA-256. */
-    unsigned result_size; /* Hash function result size in bytes, eg 32 for SHA-256. */
-    uint8_t *tmp; /* Must point to a buffer of at least (2 * result_size + block_size) bytes. */
+  void (* init_hash)(const struct uECC_HashContext* context);
+
+  void (* update_hash)(const struct uECC_HashContext* context,
+                       const uint8_t* message,
+                       unsigned message_size);
+
+  void (* finish_hash)(const struct uECC_HashContext* context, uint8_t* hash_result);
+
+  unsigned block_size; /* Hash function block size in bytes, eg 64 for SHA-256. */
+  unsigned result_size; /* Hash function result size in bytes, eg 32 for SHA-256. */
+  uint8_t* tmp; /* Must point to a buffer of at least (2 * result_size + block_size) bytes. */
 } uECC_HashContext;
 
 /* uECC_sign_deterministic() function.
@@ -331,11 +346,11 @@ Outputs:
 
 Returns 1 if the signature generated successfully, 0 if an error occurred.
 */
-int uECC_sign_deterministic(const uint8_t *private_key,
-                            const uint8_t *message_hash,
+int uECC_sign_deterministic(const uint8_t* private_key,
+                            const uint8_t* message_hash,
                             unsigned hash_size,
-                            const uECC_HashContext *hash_context,
-                            uint8_t *signature,
+                            const uECC_HashContext* hash_context,
+                            uint8_t* signature,
                             uECC_Curve curve);
 
 /* uECC_verify() function.
@@ -352,10 +367,10 @@ Inputs:
 
 Returns 1 if the signature is valid, 0 if it is invalid.
 */
-int uECC_verify(const uint8_t *public_key,
-                const uint8_t *message_hash,
+int uECC_verify(const uint8_t* public_key,
+                const uint8_t* message_hash,
                 unsigned hash_size,
-                const uint8_t *signature,
+                const uint8_t* signature,
                 uECC_Curve curve);
 
 #ifdef __cplusplus

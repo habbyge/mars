@@ -25,38 +25,45 @@
 #include <vector>
 #include <stdint.h>
 
-enum TAppenderMode
-{
-    kAppednerAsync,
-    kAppednerSync,
+enum TAppenderMode {
+  kAppednerAsync,
+  kAppednerSync,
 };
 
-enum TCompressMode{
-    kZlib,
-    kZstd,
+enum TCompressMode {
+  kZlib,
+  kZstd,
 };
 
-struct XLogConfig{
-    TAppenderMode mode_ = kAppednerAsync;
-    std::string logdir_;
-    std::string nameprefix_;
-    std::string pub_key_;
-    TCompressMode compress_mode_ = kZlib;
-    int compress_level_ = 6;
-    std::string cachedir_;
-    int cache_days_ = 0;
+struct XLogConfig {
+  TAppenderMode mode_ = kAppednerAsync;
+  std::string logdir_;
+  std::string nameprefix_;
+  std::string pub_key_;
+  TCompressMode compress_mode_ = kZlib;
+  int compress_level_ = 6;
+  std::string cachedir_;
+  int cache_days_ = 0;
 };
 
 void appender_open(const XLogConfig& _config);
 
 void appender_flush();
+
 void appender_flush_sync();
+
 void appender_close();
+
 void appender_setmode(TAppenderMode _mode);
+
 bool appender_getfilepath_from_timespan(int _timespan, const char* _prefix, std::vector<std::string>& _filepath_vec);
+
 bool appender_make_logfile_name(int _timespan, const char* _prefix, std::vector<std::string>& _filepath_vec);
+
 bool appender_get_current_log_path(char* _log_path, unsigned int _len);
+
 bool appender_get_current_log_cache_path(char* _logPath, unsigned int _len);
+
 void appender_set_console_log(bool _is_open);
 
 /*

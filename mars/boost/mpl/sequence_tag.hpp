@@ -23,12 +23,15 @@
 #include <boost/mpl/aux_/yes_no.hpp>
 #include <boost/mpl/aux_/config/workaround.hpp>
 
-namespace mars_boost {} namespace boost = mars_boost; namespace mars_boost { namespace mpl {
+namespace mars_boost {}
+namespace boost = mars_boost;
+namespace mars_boost {
+namespace mpl {
 
 // agurt, 27/nov/02: have to use a simplistic 'sequence_tag' implementation
 // on MSVC to avoid dreadful "internal structure overflow" error
 #if BOOST_WORKAROUND(BOOST_MSVC, < 1300) \
-    || defined(BOOST_MPL_CFG_NO_HAS_XXX)
+ || defined(BOOST_MPL_CFG_NO_HAS_XXX)
 
 template<
       typename BOOST_MPL_AUX_NA_PARAM(Sequence)
@@ -77,12 +80,12 @@ struct sequence_tag
 
 namespace aux {
 
-template< bool has_tag_, bool has_begin_ >
-struct sequence_tag_impl
-{
-    // agurt 24/nov/02: MSVC 6.5 gets confused in 'sequence_tag_impl<true>' 
-    // specialization below, if we name it 'result_' here
-    template< typename Sequence > struct result2_;
+template<bool has_tag_, bool has_begin_>
+struct sequence_tag_impl {
+  // agurt 24/nov/02: MSVC 6.5 gets confused in 'sequence_tag_impl<true>'
+  // specialization below, if we name it 'result_' here
+  template<typename Sequence>
+  struct result2_;
 };
 
 #   define AUX_CLASS_SEQUENCE_TAG_SPEC(has_tag, has_begin, result_type) \
@@ -105,20 +108,19 @@ AUX_CLASS_SEQUENCE_TAG_SPEC(false, false, non_sequence_tag)
 } // namespace aux
 
 template<
-      typename BOOST_MPL_AUX_NA_PARAM(Sequence)
-    >
+    typename BOOST_MPL_AUX_NA_PARAM(Sequence)
+>
 struct sequence_tag
     : aux::sequence_tag_impl<
-          ::mars_boost::mpl::aux::has_tag<Sequence>::value
-        , ::mars_boost::mpl::aux::has_begin<Sequence>::value
-        >::template result2_<Sequence>
-{
+        ::mars_boost::mpl::aux::has_tag<Sequence>::value, ::mars_boost::mpl::aux::has_begin<Sequence>::value
+    >::template result2_<Sequence> {
 };
 
 #endif // BOOST_MSVC
 
 BOOST_MPL_AUX_NA_SPEC(1, sequence_tag)
 
-}}
+}
+}
 
 #endif // BOOST_MPL_SEQUENCE_TAG_HPP_INCLUDED

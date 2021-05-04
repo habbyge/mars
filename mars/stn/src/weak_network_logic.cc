@@ -64,7 +64,7 @@ enum TKey {
   kFailThird,
   kFailMore,
 };
-    
+
 WeakNetworkLogic::WeakNetworkLogic() : is_curr_weak_(false),
                                        connect_after_weak_(0),
                                        last_connect_fail_tick_(false),
@@ -91,10 +91,10 @@ void WeakNetworkLogic::__SignalForeground(bool _is_foreground) {
 void WeakNetworkLogic::__ReportWeakLogic(int _key, int _value, bool _is_important) {
   xinfo2(TSF"weak idkey:(%_, %_)", _key, _value);
   if (report_weak_logic_) {
-      report_weak_logic_(_key, _value, _is_important);
+    report_weak_logic_(_key, _value, _is_important);
   }
 }
-    
+
 bool WeakNetworkLogic::IsCurrentNetworkWeak() {
   if (is_curr_weak_) {
     if (last_mark_tick_.gettickspan() < MARK_TIMEOUT)
@@ -109,34 +109,34 @@ bool WeakNetworkLogic::IsCurrentNetworkWeak() {
   return false;
 }
 
-bool WeakNetworkLogic::IsLastValidConnectFail(int64_t &_span) {
+bool WeakNetworkLogic::IsLastValidConnectFail(int64_t& _span) {
+
   xassert2((last_connect_fail_tick_.isValid() ^ last_connect_suc_tick_.isValid()),
-            TSF"last connect status wrong:(%_, %_)",
-            last_connect_fail_tick_.isValid(),
-            last_connect_suc_tick_.isValid());
+           TSF"last connect status wrong:(%_, %_)",
+           last_connect_fail_tick_.isValid(),
+           last_connect_suc_tick_.isValid());
 
   if (last_connect_fail_tick_.isValid()) {
     _span = last_connect_fail_tick_.gettickspan();
     return true;
-  } else if(last_connect_suc_tick_.isValid()) {
+  } else if (last_connect_suc_tick_.isValid()) {
     _span = last_connect_suc_tick_.gettickspan();
     return false;
   }
   return false;
 }
-    
+
 void WeakNetworkLogic::OnConnectEvent(bool _is_suc, int _rtt, int _index) {
   xdebug2(TSF"connect(%_, %_, %_", _is_suc, _rtt, _index);
-  if(_is_suc) {
-      last_connect_fail_tick_.setInvalid();
-      last_connect_suc_tick_.gettickcount();
-  }
-  else {
-      last_connect_fail_tick_.gettickcount();
-      last_connect_suc_tick_.setInvalid();
+  if (_is_suc) {
+    last_connect_fail_tick_.setInvalid();
+    last_connect_suc_tick_.gettickcount();
+  } else {
+    last_connect_fail_tick_.gettickcount();
+    last_connect_suc_tick_.setInvalid();
   }
 
-  if(!ActiveLogic::Instance()->IsForeground()) {
+  if (!ActiveLogic::Instance()->IsForeground()) {
     xdebug2(TSF"is background, this:%_", ActiveLogic::Instance().get());
     return;
   }
@@ -156,12 +156,12 @@ void WeakNetworkLogic::OnConnectEvent(bool _is_suc, int _rtt, int _index) {
   }
 
   bool is_weak = false;
-  if (_index > 0)  {
+  if (_index > 0) {
     is_weak = true;
-    if(!is_curr_weak_)  __ReportWeakLogic(kSceneIndex, 1, false);
-  } else if(_rtt > WEAK_CONNECT_RTT) {
+    if (!is_curr_weak_) __ReportWeakLogic(kSceneIndex, 1, false);
+  } else if (_rtt > WEAK_CONNECT_RTT) {
     is_weak = true;
-    if(!is_curr_weak_)  __ReportWeakLogic(kSceneRtt, 1, false);
+    if (!is_curr_weak_) __ReportWeakLogic(kSceneRtt, 1, false);
   }
 
   if (is_weak) {
@@ -175,12 +175,12 @@ void WeakNetworkLogic::OnConnectEvent(bool _is_suc, int _rtt, int _index) {
 }
 
 void WeakNetworkLogic::OnPkgEvent(bool _is_firstpkg, int _span) {
-  if(!ActiveLogic::Instance()->IsForeground())
+  if (!ActiveLogic::Instance()->IsForeground())
     return;
 
   bool is_weak = (_span > WEAK_PKG_SPAN);
-  if(is_weak) {
-    if(!is_curr_weak_) {
+  if (is_weak) {
+    if (!is_curr_weak_) {
       __MarkWeak(true);
       __ReportWeakLogic(_is_firstpkg ? kSceneFirstPkg : kScenePkgPkg, 1, false);
       xinfo2(TSF"weak network span:%_", _span);
@@ -189,10 +189,10 @@ void WeakNetworkLogic::OnPkgEvent(bool _is_firstpkg, int _span) {
     }
   }
 }
-    
+
 void WeakNetworkLogic::OnTaskEvent(const TaskProfile& _task_profile) {
-if (!ActiveLogic::Instance()->IsForeground())
-  return;
+  if (!ActiveLogic::Instance()->IsForeground())
+    return;
 
   bool old_weak = is_curr_weak_;
   bool is_weak = false;
@@ -204,14 +204,14 @@ if (!ActiveLogic::Instance()->IsForeground())
     if (!is_curr_weak_)
       __ReportWeakLogic(kSceneTask, 1, false);
   } else if (_task_profile.err_type == kEctOK
-      && (_task_profile.end_task_time - _task_profile.start_task_time) >= WEAK_TASK_SPAN) {
+             && (_task_profile.end_task_time - _task_profile.start_task_time) >= WEAK_TASK_SPAN) {
 
     is_weak = true;
     if (!is_curr_weak_)
       __ReportWeakLogic(kSceneTaskBad, 1, false);
   }
-  if(is_weak) {
-    if(!is_curr_weak_) {
+  if (is_weak) {
+    if (!is_curr_weak_) {
       __MarkWeak(true);
       xinfo2(TSF"weak network errtype:%_", _task_profile.err_type);
     } else {
@@ -231,9 +231,9 @@ if (!ActiveLogic::Instance()->IsForeground())
 
   if (is_curr_weak_ || old_weak) {
     __ReportWeakLogic(kCGICount, 1, false);
-    if(_task_profile.err_type == kEctOK) {
+    if (_task_profile.err_type == kEctOK) {
       __ReportWeakLogic(kCGISucc, 1, false);
-      __ReportWeakLogic(kCGICost, (int)(_task_profile.end_task_time - _task_profile.start_task_time), false);
+      __ReportWeakLogic(kCGICost, (int) (_task_profile.end_task_time - _task_profile.start_task_time), false);
     } else {
       ++cgi_fail_num_;
       __ReportWeakLogic(kFailStepDns + _task_profile.GetFailStep() - 1, 1, false);
@@ -243,19 +243,19 @@ if (!ActiveLogic::Instance()->IsForeground())
 }
 
 void WeakNetworkLogic::__MarkWeak(bool _isWeak) {
-if(_isWeak) {
-is_curr_weak_ = true;
-connect_after_weak_ = 0;
-cgi_fail_num_ = 0;
-first_mark_tick_.gettickcount();
-last_mark_tick_.gettickcount();
-__ReportWeakLogic(kEnterWeak, 1, false);
-} else {
-is_curr_weak_ = false;
-__ReportWeakLogic(kExitWeak, 1, false);
-__ReportWeakLogic(kWeakTime, (int)first_mark_tick_.gettickspan(), false);
+  if (_isWeak) {
+    is_curr_weak_ = true;
+    connect_after_weak_ = 0;
+    cgi_fail_num_ = 0;
+    first_mark_tick_.gettickcount();
+    last_mark_tick_.gettickcount();
+    __ReportWeakLogic(kEnterWeak, 1, false);
+  } else {
+    is_curr_weak_ = false;
+    __ReportWeakLogic(kExitWeak, 1, false);
+    __ReportWeakLogic(kWeakTime, (int) first_mark_tick_.gettickspan(), false);
+  }
 }
-}
-    
+
 }
 }

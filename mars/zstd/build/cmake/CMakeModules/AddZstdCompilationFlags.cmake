@@ -39,7 +39,7 @@ macro(ADD_ZSTD_COMPILATION_FLAGS)
         if (CMAKE_GENERATOR MATCHES "Visual Studio" AND ACTIVATE_MULTITHREADED_COMPILATION)
             EnableCompilerFlag("/MP" true true)
         endif ()
-        
+
         # UNICODE SUPPORT
         EnableCompilerFlag("/D_UNICODE" true true)
         EnableCompilerFlag("/DUNICODE" true true)
@@ -47,24 +47,24 @@ macro(ADD_ZSTD_COMPILATION_FLAGS)
 
     # Remove duplicates compilation flags
     foreach (flag_var CMAKE_C_FLAGS CMAKE_C_FLAGS_DEBUG CMAKE_C_FLAGS_RELEASE
-             CMAKE_C_FLAGS_MINSIZEREL CMAKE_C_FLAGS_RELWITHDEBINFO
-             CMAKE_CXX_FLAGS CMAKE_CXX_FLAGS_DEBUG CMAKE_CXX_FLAGS_RELEASE
-             CMAKE_CXX_FLAGS_MINSIZEREL CMAKE_CXX_FLAGS_RELWITHDEBINFO)
-        if( ${flag_var} )
+            CMAKE_C_FLAGS_MINSIZEREL CMAKE_C_FLAGS_RELWITHDEBINFO
+            CMAKE_CXX_FLAGS CMAKE_CXX_FLAGS_DEBUG CMAKE_CXX_FLAGS_RELEASE
+            CMAKE_CXX_FLAGS_MINSIZEREL CMAKE_CXX_FLAGS_RELWITHDEBINFO)
+        if (${flag_var})
             separate_arguments(${flag_var})
             list(REMOVE_DUPLICATES ${flag_var})
             string(REPLACE ";" " " ${flag_var} "${${flag_var}}")
-        endif()
+        endif ()
     endforeach ()
 
     if (MSVC AND ZSTD_USE_STATIC_RUNTIME)
         foreach (flag_var CMAKE_C_FLAGS CMAKE_C_FLAGS_DEBUG CMAKE_C_FLAGS_RELEASE
-                 CMAKE_C_FLAGS_MINSIZEREL CMAKE_C_FLAGS_RELWITHDEBINFO
-                 CMAKE_CXX_FLAGS CMAKE_CXX_FLAGS_DEBUG CMAKE_CXX_FLAGS_RELEASE
-                 CMAKE_CXX_FLAGS_MINSIZEREL CMAKE_CXX_FLAGS_RELWITHDEBINFO)
-            if ( ${flag_var} )
+                CMAKE_C_FLAGS_MINSIZEREL CMAKE_C_FLAGS_RELWITHDEBINFO
+                CMAKE_CXX_FLAGS CMAKE_CXX_FLAGS_DEBUG CMAKE_CXX_FLAGS_RELEASE
+                CMAKE_CXX_FLAGS_MINSIZEREL CMAKE_CXX_FLAGS_RELWITHDEBINFO)
+            if (${flag_var})
                 string(REGEX REPLACE "/MD" "/MT" ${flag_var} "${${flag_var}}")
-            endif()
+            endif ()
         endforeach ()
     endif ()
 

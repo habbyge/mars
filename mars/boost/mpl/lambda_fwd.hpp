@@ -24,18 +24,20 @@
 #   include <boost/mpl/aux_/lambda_arity_param.hpp>
 #   include <boost/mpl/aux_/template_arity_fwd.hpp>
 
-namespace mars_boost {} namespace boost = mars_boost; namespace mars_boost { namespace mpl {
+namespace mars_boost {}
+namespace boost = mars_boost;
+namespace mars_boost {
+namespace mpl {
 
-template< 
-      typename T = na
-    , typename Tag = void_
-    BOOST_MPL_AUX_LAMBDA_ARITY_PARAM(
-          typename Arity = int_< aux::template_arity<T>::value >
-        )
-    >
+template<
+    typename T = na, typename Tag = void_ BOOST_MPL_AUX_LAMBDA_ARITY_PARAM(
+        typename Arity = int_<aux::template_arity<T>::value>
+    )
+>
 struct lambda;
 
-}}
+}
+}
 
 #else // BOOST_MPL_CFG_NO_FULL_LAMBDA_SUPPORT
 

@@ -56,10 +56,10 @@
 
 #   include <boost/preprocessor/arithmetic/add.hpp>
 
-#   define BOOST_MPL_PP_ADD(i,j) \
+#   define BOOST_MPL_PP_ADD(i, j) \
     BOOST_PP_ADD(i,j) \
     /**/
-    
-#endif 
+
+#endif
 
 #endif // BOOST_MPL_AUX_PREPROCESSOR_ADD_HPP_INCLUDED

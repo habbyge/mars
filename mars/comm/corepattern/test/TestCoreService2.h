@@ -25,16 +25,16 @@
 
 namespace design_patterns {
 
-class TestCoreService2: public design_patterns::CoreServiceBase {
+class TestCoreService2 : public design_patterns::CoreServiceBase {
 public:
-	TestCoreService2(TServicesMap& _parentsservices)
-	:CoreServiceBase( ServiceName(), _parentsservices)
-	{
+  TestCoreService2(TServicesMap& _parentsservices)
+      : CoreServiceBase(ServiceName(), _parentsservices) {
 
-	}
-	virtual ~TestCoreService2();
+  }
 
-	DEFINE_SERVICE();
+  virtual ~TestCoreService2();
+
+  DEFINE_SERVICE();
 };
 
 } /* namespace design_patterns */

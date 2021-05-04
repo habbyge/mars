@@ -175,10 +175,10 @@ def compiler_version(cc, cxx):
     compiler = None
     version = None
     if b'clang' in cc_version_bytes:
-        assert(b'clang' in cxx_version_bytes)
+        assert (b'clang' in cxx_version_bytes)
         compiler = 'clang'
     elif b'gcc' in cc_version_bytes:
-        assert(b'gcc' in cxx_version_bytes or b'g++' in cxx_version_bytes)
+        assert (b'gcc' in cxx_version_bytes or b'g++' in cxx_version_bytes)
         compiler = 'gcc'
     if compiler is not None:
         version_regex = b'([0-9])+\.([0-9])+\.([0-9])+'
@@ -254,7 +254,7 @@ def build_parser(args):
         type=str,
         default=MSAN_EXTRA_CPPFLAGS,
         help="Extra CPPFLAGS for MSAN (default: $MSAN_EXTRA_CPPFLAGS='{}')".
-        format(MSAN_EXTRA_CPPFLAGS))
+            format(MSAN_EXTRA_CPPFLAGS))
     parser.add_argument(
         '--msan-extra-cflags',
         dest='msan_extra_cflags',
@@ -268,14 +268,14 @@ def build_parser(args):
         type=str,
         default=MSAN_EXTRA_CXXFLAGS,
         help="Extra CXXFLAGS for MSAN (default: $MSAN_EXTRA_CXXFLAGS='{}')".
-        format(MSAN_EXTRA_CXXFLAGS))
+            format(MSAN_EXTRA_CXXFLAGS))
     parser.add_argument(
         '--msan-extra-ldflags',
         dest='msan_extra_ldflags',
         type=str,
         default=MSAN_EXTRA_LDFLAGS,
         help="Extra LDFLAGS for MSAN (default: $MSAN_EXTRA_LDFLAGS='{}')".
-        format(MSAN_EXTRA_LDFLAGS))
+            format(MSAN_EXTRA_LDFLAGS))
     parser.add_argument(
         '--enable-sanitize-recover',
         dest='sanitize_recover',
@@ -472,14 +472,14 @@ def build(args):
     print(' '.join(clean_cmd))
     subprocess.check_call(clean_cmd)
     build_cmd = [
-        'make',
-        cc_str,
-        cxx_str,
-        cppflags_str,
-        cflags_str,
-        cxxflags_str,
-        ldflags_str,
-    ] + mflags + targets
+                    'make',
+                    cc_str,
+                    cxx_str,
+                    cppflags_str,
+                    cflags_str,
+                    cxxflags_str,
+                    ldflags_str,
+                ] + mflags + targets
     print(' '.join(build_cmd))
     subprocess.check_call(build_cmd)
     return 0

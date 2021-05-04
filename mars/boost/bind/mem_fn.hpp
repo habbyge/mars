@@ -25,8 +25,9 @@
 #include <boost/get_pointer.hpp>
 #include <boost/detail/workaround.hpp>
 
-namespace mars_boost {} namespace boost = mars_boost; namespace mars_boost
-{
+namespace mars_boost {}
+namespace boost = mars_boost;
+namespace mars_boost {
 
 #if defined(BOOST_NO_VOID_RETURNS)
 
@@ -307,80 +308,73 @@ namespace _mfi {
 
 // data member support
 
-namespace _mfi
-{
+namespace _mfi {
 
-template<class R, class T> class dm
-{
+template<class R, class T>
+class dm {
 public:
 
-    typedef R const & result_type;
-    typedef T const * argument_type;
+  typedef R const& result_type;
+  typedef T const* argument_type;
 
 private:
-    
-    typedef R (T::*F);
-    F f_;
 
-    template<class U> R const & call(U & u, T const *) const
-    {
-        return (u.*f_);
-    }
+  typedef R (T::*F);
+  F f_;
 
-    template<class U> R const & call(U & u, void const *) const
-    {
-        return (get_pointer(u)->*f_);
-    }
+  template<class U>
+  R const& call(U& u, T const*) const {
+    return (u.*f_);
+  }
+
+  template<class U>
+  R const& call(U& u, void const*) const {
+    return (get_pointer(u)->*f_);
+  }
 
 public:
-    
-    explicit dm(F f): f_(f) {}
 
-    R & operator()(T * p) const
-    {
-        return (p->*f_);
-    }
+  explicit dm(F f) : f_(f) {}
 
-    R const & operator()(T const * p) const
-    {
-        return (p->*f_);
-    }
+  R& operator()(T* p) const {
+    return (p->*f_);
+  }
 
-    template<class U> R const & operator()(U const & u) const
-    {
-        return call(u, &u);
-    }
+  R const& operator()(T const* p) const {
+    return (p->*f_);
+  }
+
+  template<class U>
+  R const& operator()(U const& u) const {
+    return call(u, &u);
+  }
 
 #if !BOOST_WORKAROUND(BOOST_MSVC, <= 1300) && !BOOST_WORKAROUND(__MWERKS__, < 0x3200)
 
-    R & operator()(T & t) const
-    {
-        return (t.*f_);
-    }
+  R& operator()(T& t) const {
+    return (t.*f_);
+  }
 
-    R const & operator()(T const & t) const
-    {
-        return (t.*f_);
-    }
+  R const& operator()(T const& t) const {
+    return (t.*f_);
+  }
 
 #endif
 
-    bool operator==(dm const & rhs) const
-    {
-        return f_ == rhs.f_;
-    }
+  bool operator==(dm const& rhs) const {
+    return f_ == rhs.f_;
+  }
 
-    bool operator!=(dm const & rhs) const
-    {
-        return f_ != rhs.f_;
-    }
+  bool operator!=(dm const& rhs) const {
+    return f_ != rhs.f_;
+  }
 };
 
 } // namespace _mfi
 
-template<class R, class T> _mfi::dm<R, T> mem_fn(R T::*f)
-{
-    return _mfi::dm<R, T>(f);
+template<class R, class T>
+_mfi::dm<R, T> mem_fn(R T::*f) {
+  return _mfi::dm<R, T>(f);
 }
 
 } // namespace mars_boost

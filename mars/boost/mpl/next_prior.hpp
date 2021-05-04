@@ -18,27 +18,28 @@
 #include <boost/mpl/aux_/na_spec.hpp>
 #include <boost/mpl/aux_/lambda_support.hpp>
 
-namespace mars_boost {} namespace boost = mars_boost; namespace mars_boost { namespace mpl {
+namespace mars_boost {}
+namespace boost = mars_boost;
+namespace mars_boost {
+namespace mpl {
 
 BOOST_MPL_AUX_COMMON_NAME_WKND(next)
 BOOST_MPL_AUX_COMMON_NAME_WKND(prior)
 
 template<
-      typename BOOST_MPL_AUX_NA_PARAM(T)
-    >
-struct next
-{
-    typedef typename T::next type;
-    BOOST_MPL_AUX_LAMBDA_SUPPORT(1,next,(T))
+    typename BOOST_MPL_AUX_NA_PARAM(T)
+>
+struct next {
+  typedef typename T::next type;
+  BOOST_MPL_AUX_LAMBDA_SUPPORT(1, next, (T))
 };
 
 template<
-      typename BOOST_MPL_AUX_NA_PARAM(T)
-    >
-struct prior
-{
-    typedef typename T::prior type;
-    BOOST_MPL_AUX_LAMBDA_SUPPORT(1,prior,(T))
+    typename BOOST_MPL_AUX_NA_PARAM(T)
+>
+struct prior {
+  typedef typename T::prior type;
+  BOOST_MPL_AUX_LAMBDA_SUPPORT(1, prior, (T))
 };
 
 BOOST_MPL_AUX_NA_SPEC(1, next)

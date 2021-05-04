@@ -60,7 +60,7 @@ static const std::string kLibName = "stn";
         return;\
     }\
     stn_ptr->func
-    
+
 #define STN_RETURN_WEAK_CALL(func) \
     boost::shared_ptr<NetCore> stn_ptr = NetCore::Singleton::Instance_Weak().lock();\
     if (!stn_ptr) {\
@@ -71,56 +71,56 @@ static const std::string kLibName = "stn";
     return true
 
 #define STN_WEAK_CALL_RETURN(func, ret) \
-	boost::shared_ptr<NetCore> stn_ptr = NetCore::Singleton::Instance_Weak().lock();\
+  boost::shared_ptr<NetCore> stn_ptr = NetCore::Singleton::Instance_Weak().lock();\
     if (stn_ptr) \
     {\
-    	ret = stn_ptr->func;\
+      ret = stn_ptr->func;\
     }
 
 static void onCreate() {
 #if !UWP && !defined(WIN32)
-    signal(SIGPIPE, SIG_IGN);
+  signal(SIGPIPE, SIG_IGN);
 #endif
 
-    xinfo2(TSF"stn oncreate");
-    ActiveLogic::Instance();
-    NetCore::Singleton::Instance();
+  xinfo2(TSF"stn oncreate");
+  ActiveLogic::Instance();
+  NetCore::Singleton::Instance();
 
 }
 
 static void onDestroy() {
-    xinfo2(TSF"stn onDestroy");
+  xinfo2(TSF"stn onDestroy");
 
-    NetCore::Singleton::Release();
-    SINGLETON_RELEASE_ALL();
-    
-    // others use activelogic may crash after activelogic release. eg: LongLinkConnectMonitor
-    // ActiveLogic::Singleton::Release();
+  NetCore::Singleton::Release();
+  SINGLETON_RELEASE_ALL();
+
+  // others use activelogic may crash after activelogic release. eg: LongLinkConnectMonitor
+  // ActiveLogic::Singleton::Release();
 }
 
 static void onSingalCrash(int _sig) {
-    appender_close();
+  appender_close();
 }
 
 static void onExceptionCrash() {
-    appender_close();
+  appender_close();
 }
 
 static void onNetworkChange() {
 
-    STN_WEAK_CALL(OnNetworkChange());
+  STN_WEAK_CALL(OnNetworkChange());
 }
-    
+
 static void OnNetworkDataChange(const char* _tag, ssize_t _send, ssize_t _recv) {
-    
-    if (NULL == _tag || strnlen(_tag, 1024) == 0) {
-        xassert2(false);
-        return;
-    }
-    
-    if (0 == strcmp(_tag, XLOGGER_TAG)) {
-        TrafficData(_send, _recv);
-    }
+
+  if (NULL == _tag || strnlen(_tag, 1024) == 0) {
+    xassert2(false);
+    return;
+  }
+
+  if (0 == strcmp(_tag, XLOGGER_TAG)) {
+    TrafficData(_send, _recv);
+  }
 }
 
 #ifdef ANDROID
@@ -133,81 +133,83 @@ static void onAlarm(int64_t _id) {
 static void __initbind_baseprjevent() {
 
 #ifdef WIN32
-	boost::filesystem::path::imbue(std::locale(std::locale(), new boost::filesystem::detail::utf8_codecvt_facet));
+  boost::filesystem::path::imbue(std::locale(std::locale(), new boost::filesystem::detail::utf8_codecvt_facet));
 #endif
 
 #ifdef ANDROID
-	mars::baseevent::addLoadModule(kLibName);
+  mars::baseevent::addLoadModule(kLibName);
     GetSignalOnAlarm().connect(&onAlarm);
 #endif
-    GetSignalOnCreate().connect(&onCreate);
-    GetSignalOnDestroy().connect(&onDestroy);   //low priority signal func
-    GetSignalOnSingalCrash().connect(&onSingalCrash);
-    GetSignalOnExceptionCrash().connect(&onExceptionCrash);
-    GetSignalOnNetworkChange().connect(5, &onNetworkChange);    //define group 5
+  GetSignalOnCreate().connect(&onCreate);
+  GetSignalOnDestroy().connect(&onDestroy);   //low priority signal func
+  GetSignalOnSingalCrash().connect(&onSingalCrash);
+  GetSignalOnExceptionCrash().connect(&onExceptionCrash);
+  GetSignalOnNetworkChange().connect(5, &onNetworkChange);    //define group 5
 
-    
+
 #ifndef XLOGGER_TAG
 #error "not define XLOGGER_TAG"
 #endif
-    
-    GetSignalOnNetworkDataChange().connect(&OnNetworkDataChange);
+
+  GetSignalOnNetworkDataChange().connect(&OnNetworkDataChange);
 }
 
 BOOT_RUN_STARTUP(__initbind_baseprjevent);
 
 
-bool (*StartTask)(const Task& _task)
+bool (* StartTask)(const Task& _task)
 = [](const Task& _task) {
-    STN_RETURN_WEAK_CALL(StartTask(_task));
+  STN_RETURN_WEAK_CALL(StartTask(_task));
 };
 
-void (*StopTask)(uint32_t _taskid)
+void (* StopTask)(uint32_t _taskid)
 = [](uint32_t _taskid) {
-    STN_WEAK_CALL(StopTask(_taskid));
+  STN_WEAK_CALL(StopTask(_taskid));
 };
 
-bool (*HasTask)(uint32_t _taskid)
+bool (* HasTask)(uint32_t _taskid)
 = [](uint32_t _taskid) {
-	bool has_task = false;
-	STN_WEAK_CALL_RETURN(HasTask(_taskid), has_task);
-	return has_task;
+  bool has_task = false;
+  STN_WEAK_CALL_RETURN(HasTask(_taskid), has_task);
+  return has_task;
 };
 
-void (*RedoTasks)()
+void (* RedoTasks)()
 = []() {
-   STN_WEAK_CALL(RedoTasks());
+  STN_WEAK_CALL(RedoTasks());
 };
 
-void (*ClearTasks)()
+void (* ClearTasks)()
 = []() {
-   STN_WEAK_CALL(ClearTasks());
+  STN_WEAK_CALL(ClearTasks());
 };
 
-void (*Reset)()
+void (* Reset)()
 = []() {
-	xinfo2(TSF "stn reset");
-	NetCore::Singleton::Release();
-	NetCore::Singleton::Instance();
+  xinfo2(TSF "stn reset");
+  NetCore::Singleton::Release();
+  NetCore::Singleton::Instance();
 };
 
-void (*MakesureLonglinkConnected)()
+void (* MakesureLonglinkConnected)()
 = []() {
-    xinfo2(TSF "make sure longlink connect");
-   STN_WEAK_CALL(MakeSureLongLinkConnect());
+  xinfo2(TSF "make sure longlink connect");
+  STN_WEAK_CALL(MakeSureLongLinkConnect());
 };
 
-bool (*LongLinkIsConnected)()
+bool (* LongLinkIsConnected)()
 = []() {
-    bool connected = false;
-    STN_WEAK_CALL_RETURN(LongLinkIsConnected(), connected);
-    return connected;
+  bool connected = false;
+  STN_WEAK_CALL_RETURN(LongLinkIsConnected(), connected);
+  return connected;
 };
-    
-bool (*ProxyIsAvailable)(const mars::comm::ProxyInfo& _proxy_info, const std::string& _test_host, const std::vector<std::string>& _hardcode_ips)
-= [](const mars::comm::ProxyInfo& _proxy_info, const std::string& _test_host, const std::vector<std::string>& _hardcode_ips){
-    
-    return ProxyTest::Singleton::Instance()->ProxyIsAvailable(_proxy_info, _test_host, _hardcode_ips);
+
+bool (* ProxyIsAvailable)(const mars::comm::ProxyInfo& _proxy_info, const std::string& _test_host,
+                          const std::vector<std::string>& _hardcode_ips)
+= [](const mars::comm::ProxyInfo& _proxy_info, const std::string& _test_host,
+     const std::vector<std::string>& _hardcode_ips) {
+
+  return ProxyTest::Singleton::Instance()->ProxyIsAvailable(_proxy_info, _test_host, _hardcode_ips);
 };
 
 //void SetLonglinkSvrAddr(const std::string& host, const std::vector<uint16_t> ports)
@@ -216,68 +218,68 @@ bool (*ProxyIsAvailable)(const mars::comm::ProxyInfo& _proxy_info, const std::st
 //};
 
 
-void (*SetLonglinkSvrAddr)(const std::string& host, const std::vector<uint16_t> ports, const std::string& debugip)
+void (* SetLonglinkSvrAddr)(const std::string& host, const std::vector<uint16_t> ports, const std::string& debugip)
 = [](const std::string& host, const std::vector<uint16_t> ports, const std::string& debugip) {
-	std::vector<std::string> hosts;
-	if (!host.empty()) {
-		hosts.push_back(host);
-	}
-	NetSource::SetLongLink(hosts, ports, debugip);
+  std::vector<std::string> hosts;
+  if (!host.empty()) {
+    hosts.push_back(host);
+  }
+  NetSource::SetLongLink(hosts, ports, debugip);
 };
 
 //void SetShortlinkSvrAddr(const uint16_t port)
 //{
 //	NetSource::SetShortlink(port, "");
 //};
-    
-void (*SetShortlinkSvrAddr)(const uint16_t port, const std::string& debugip)
+
+void (* SetShortlinkSvrAddr)(const uint16_t port, const std::string& debugip)
 = [](const uint16_t port, const std::string& debugip) {
-	NetSource::SetShortlink(port, debugip);
+  NetSource::SetShortlink(port, debugip);
 };
 
-void (*SetDebugIP)(const std::string& host, const std::string& ip)
+void (* SetDebugIP)(const std::string& host, const std::string& ip)
 = [](const std::string& host, const std::string& ip) {
-	NetSource::SetDebugIP(host, ip);
+  NetSource::SetDebugIP(host, ip);
 };
-    
-void (*SetBackupIPs)(const std::string& host, const std::vector<std::string>& iplist)
+
+void (* SetBackupIPs)(const std::string& host, const std::vector<std::string>& iplist)
 = [](const std::string& host, const std::vector<std::string>& iplist) {
-	NetSource::SetBackupIPs(host, iplist);
+  NetSource::SetBackupIPs(host, iplist);
 };
 
-void (*SetSignallingStrategy)(long _period, long _keepTime)
+void (* SetSignallingStrategy)(long _period, long _keepTime)
 = [](long _period, long _keepTime) {
-    SignallingKeeper::SetStrategy((unsigned int)_period, (unsigned int)_keepTime);
+  SignallingKeeper::SetStrategy((unsigned int) _period, (unsigned int) _keepTime);
 };
 
-void (*KeepSignalling)()
+void (* KeepSignalling)()
 = []() {
 #ifdef USE_LONG_LINK
-    STN_WEAK_CALL(KeepSignal());
+  STN_WEAK_CALL(KeepSignal());
 #endif
 };
 
-void (*StopSignalling)()
+void (* StopSignalling)()
 = []() {
 #ifdef USE_LONG_LINK
-    STN_WEAK_CALL(StopSignal());
+  STN_WEAK_CALL(StopSignal());
 #endif
 };
 
-uint32_t (*getNoopTaskID)()
+uint32_t (* getNoopTaskID)()
 = []() {
-	return Task::kNoopTaskID;
+  return Task::kNoopTaskID;
 };
 
 
 // [+] Lambda syntax could apply a conversion between lambda and function pointer
 // https://stackoverflow.com/questions/18889028/a-positive-lambda-what-sorcery-is-this
-auto CreateLonglink_ext = +[](const LonglinkConfig& _config){
-    STN_WEAK_CALL(CreateLongLink(_config));
+auto CreateLonglink_ext = +[](const LonglinkConfig& _config) {
+  STN_WEAK_CALL(CreateLongLink(_config));
 };
-    
-auto DestroyLonglink_ext = +[](const std::string& name){
-    STN_WEAK_CALL(DestroyLongLink(name));
+
+auto DestroyLonglink_ext = +[](const std::string& name) {
+  STN_WEAK_CALL(DestroyLongLink(name));
 };
 //auto GetAllLonglink_ext = +[]()->std::vector<std::string>{
 //    std::vector<std::string> res;
@@ -285,20 +287,20 @@ auto DestroyLonglink_ext = +[](const std::string& name){
 //    return res;
 //};
 
-auto LongLinkIsConnected_ext = +[](const std::string& name)->bool{
-    bool res = false;
-    STN_WEAK_CALL_RETURN(LongLinkIsConnected_ext(name),res);
-    return res;
+auto LongLinkIsConnected_ext = +[](const std::string& name) -> bool {
+  bool res = false;
+  STN_WEAK_CALL_RETURN(LongLinkIsConnected_ext(name), res);
+  return res;
 };
 
-auto MarkMainLonglink_ext = +[](const std::string& name){
-    STN_WEAK_CALL(MarkMainLonglink_ext(name));
+auto MarkMainLonglink_ext = +[](const std::string& name) {
+  STN_WEAK_CALL(MarkMainLonglink_ext(name));
 };
-    
-auto MakesureLonglinkConnected_ext = +[](const std::string& name){
-    STN_WEAK_CALL(MakeSureLongLinkConnect_ext(name));
+
+auto MakesureLonglinkConnected_ext = +[](const std::string& name) {
+  STN_WEAK_CALL(MakeSureLongLinkConnect_ext(name));
 };
-    
+
 //auto KeepSignalling_ext = +[](const std::string& name){
 //    STN_WEAK_CALL(KeepSignalling_ext(name));
 //};
@@ -306,7 +308,7 @@ auto MakesureLonglinkConnected_ext = +[](const std::string& name){
 //auto StopSignalling_ext = +[](const std::string& name){
 //    STN_WEAK_CALL(StopSignalling_ext(name));
 //};
-    
+
 //auto RedoTasks_ext = +[](const std::string& name){
 //    STN_WEAK_CALL(RedoTasks_ext(name));
 //};
@@ -315,7 +317,7 @@ auto MakesureLonglinkConnected_ext = +[](const std::string& name){
 //    STN_WEAK_CALL(ClearTasks_ext(name));
 //};
 
-void network_export_symbols_0(){}
+void network_export_symbols_0() {}
 
 }
 }

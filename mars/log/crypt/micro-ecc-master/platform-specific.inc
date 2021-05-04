@@ -37,33 +37,34 @@ static int default_RNG(uint8_t *dest, unsigned size) {
 #include <unistd.h>
 
 #ifndef O_CLOEXEC
-    #define O_CLOEXEC 0
+#define O_CLOEXEC 0
 #endif
 
-static int default_RNG(uint8_t *dest, unsigned size) {
-    int fd = open("/dev/urandom", O_RDONLY | O_CLOEXEC);
+static int default_RNG(uint8_t* dest, unsigned size) {
+  int fd = open("/dev/urandom", O_RDONLY | O_CLOEXEC);
+  if (fd == -1) {
+    fd = open("/dev/random", O_RDONLY | O_CLOEXEC);
     if (fd == -1) {
-        fd = open("/dev/random", O_RDONLY | O_CLOEXEC);
-        if (fd == -1) {
-            return 0;
-        }
+      return 0;
     }
-    
-    char *ptr = (char *)dest;
-    size_t left = size;
-    while (left > 0) {
-        ssize_t bytes_read = read(fd, ptr, left);
-        if (bytes_read <= 0) { // read failed
-            close(fd);
-            return 0;
-        }
-        left -= bytes_read;
-        ptr += bytes_read;
+  }
+
+  char* ptr = (char*) dest;
+  size_t left = size;
+  while (left > 0) {
+    ssize_t bytes_read = read(fd, ptr, left);
+    if (bytes_read <= 0) { // read failed
+      close(fd);
+      return 0;
     }
-    
-    close(fd);
-    return 1;
+    left -= bytes_read;
+    ptr += bytes_read;
+  }
+
+  close(fd);
+  return 1;
 }
+
 #define default_RNG_defined 1
 
 #endif /* platform */

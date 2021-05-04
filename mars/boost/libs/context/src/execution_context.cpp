@@ -12,7 +12,7 @@
 # include BOOST_ABI_PREFIX
 #endif
 
-#if ! defined(BOOST_CONTEXT_NO_CXX11)
+#if !defined(BOOST_CONTEXT_NO_CXX11)
 # if (defined(BOOST_EXECUTION_CONTEXT) && (BOOST_EXECUTION_CONTEXT == 1))
 namespace mars_boost {} namespace boost = mars_boost; namespace mars_boost {
 namespace context {

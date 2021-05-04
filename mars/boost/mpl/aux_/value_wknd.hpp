@@ -20,7 +20,7 @@
 #include <boost/mpl/aux_/config/workaround.hpp>
 
 #if defined(BOOST_MPL_CFG_BCC_INTEGRAL_CONSTANTS) \
-    || defined(BOOST_MPL_CFG_MSVC_60_ETI_BUG)
+ || defined(BOOST_MPL_CFG_MSVC_60_ETI_BUG)
 
 #   include <boost/mpl/int.hpp>
 
@@ -70,11 +70,15 @@ template<> struct value_wknd<int>
 #endif
 
 
-namespace mars_boost {} namespace boost = mars_boost; namespace mars_boost { namespace mpl { namespace aux {
+namespace mars_boost {}
+namespace boost = mars_boost;
+namespace mars_boost {
+namespace mpl {
+namespace aux {
 
-template< typename T > struct value_type_wknd
-{
-    typedef typename T::value_type type;
+template<typename T>
+struct value_type_wknd {
+  typedef typename T::value_type type;
 };
 
 #if defined(BOOST_MPL_CFG_MSVC_ETI_BUG)
@@ -84,6 +88,8 @@ template<> struct value_type_wknd<int>
 };
 #endif
 
-}}}
+}
+}
+}
 
 #endif // BOOST_MPL_AUX_VALUE_WKND_HPP_INCLUDED

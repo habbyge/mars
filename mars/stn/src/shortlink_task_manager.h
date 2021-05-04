@@ -41,67 +41,88 @@ class WakeUpLock;
 #endif
 
 namespace mars {
-    namespace stn {
+namespace stn {
 
 class DynamicTimeout;
 
 class ShortLinkTaskManager {
-  public:
-    boost::function<int (ErrCmdType _err_type, int _err_code, int _fail_handle, const Task& _task, unsigned int _taskcosttime)> fun_callback_;
-    boost::function<void (int _line, ErrCmdType _err_type, int _err_code, const std::string& _ip, const std::string& _host, uint16_t _port)> fun_notify_network_err_;
-    boost::function<bool (const Task& _task, const void* _buffer, int _len)> fun_anti_avalanche_check_;
-    boost::function<void (int _status_code)> fun_shortlink_response_;
-    boost::function<void (ErrCmdType _err_type, int _err_code, int _fail_handle, uint32_t _src_taskid, std::string _user_id)> fun_notify_retry_all_tasks;
+public:
+  boost::function<int(ErrCmdType _err_type, int _err_code, int _fail_handle, const Task& _task,
+                      unsigned int _taskcosttime)> fun_callback_;
+  boost::function<void(int _line, ErrCmdType _err_type, int _err_code, const std::string& _ip, const std::string& _host,
+                       uint16_t _port)> fun_notify_network_err_;
+  boost::function<bool(const Task& _task, const void* _buffer, int _len)> fun_anti_avalanche_check_;
+  boost::function<void(int _status_code)> fun_shortlink_response_;
+  boost::function<void(ErrCmdType _err_type, int _err_code, int _fail_handle, uint32_t _src_taskid,
+                       std::string _user_id)> fun_notify_retry_all_tasks;
 
-    static boost::function<void (const std::string& _user_id, std::vector<std::string>& _host_list)> get_real_host_;
-    static boost::function<void (const int _error_type, const int _error_code, const int _use_ip_index)> task_connection_detail_;
+  static boost::function<void(const std::string& _user_id, std::vector<std::string>& _host_list)> get_real_host_;
+  static boost::function<void(const int _error_type, const int _error_code,
+                              const int _use_ip_index)> task_connection_detail_;
 
-  public:
-    ShortLinkTaskManager(mars::stn::NetSource& _netsource, DynamicTimeout& _dynamictimeout, MessageQueue::MessageQueue_t _messagequeueid);
-    virtual ~ShortLinkTaskManager();
+public:
+  ShortLinkTaskManager(mars::stn::NetSource& _netsource, DynamicTimeout& _dynamictimeout,
+                       MessageQueue::MessageQueue_t _messagequeueid);
 
-    bool StartTask(const Task& _task);
-    bool StopTask(uint32_t _taskid);
-    bool HasTask(uint32_t _taskid) const;
-    void ClearTasks();
-    void RedoTasks();
-    void RetryTasks(ErrCmdType _err_type, int _err_code, int _fail_handle, uint32_t _src_taskid);
+  virtual ~ShortLinkTaskManager();
 
-    unsigned int GetTasksContinuousFailCount();
+  bool StartTask(const Task& _task);
 
-    ConnectProfile GetConnectProfile(uint32_t _taskid) const;
-  private:
-    void __RunLoop();
-    void __RunOnTimeout();
-    void __RunOnStartTask();
+  bool StopTask(uint32_t _taskid);
 
-    void __OnResponse(ShortLinkInterface* _worker, ErrCmdType _err_type, int _status, AutoBuffer& _body, AutoBuffer& _extension, bool _cancel_retry, ConnectProfile& _conn_profile);
-    void __OnSend(ShortLinkInterface* _worker);
-    void __OnRecv(ShortLinkInterface* _worker, unsigned int _cached_size, unsigned int _total_size);
+  bool HasTask(uint32_t _taskid) const;
 
-    void __BatchErrorRespHandle(ErrCmdType _err_type, int _err_code, int _fail_handle, uint32_t _src_taskid, bool _callback_runing_task_only = true);
-    bool __SingleRespHandle(std::list<TaskProfile>::iterator _it, ErrCmdType _err_type, int _err_code, int _fail_handle, size_t _resp_length, const ConnectProfile& _connect_profile);
+  void ClearTasks();
 
-    std::list<TaskProfile>::iterator __LocateBySeq(intptr_t _running_id);
+  void RedoTasks();
 
-    void __DeleteShortLink(intptr_t& _running_id);
-    SOCKET __OnGetCacheSocket(const IPPortItem& _address);
+  void RetryTasks(ErrCmdType _err_type, int _err_code, int _fail_handle, uint32_t _src_taskid);
 
-  private:
-    MessageQueue::ScopeRegister     asyncreg_;
-    NetSource&                      net_source_;
-    
-    std::list<TaskProfile>          lst_cmd_;
-    
-    bool                            default_use_proxy_;
-    unsigned int                    tasks_continuous_fail_count_;
-    DynamicTimeout&                 dynamic_timeout_;
+  unsigned int GetTasksContinuousFailCount();
+
+  ConnectProfile GetConnectProfile(uint32_t _taskid) const;
+
+private:
+  void __RunLoop();
+
+  void __RunOnTimeout();
+
+  void __RunOnStartTask();
+
+  void __OnResponse(ShortLinkInterface* _worker, ErrCmdType _err_type, int _status, AutoBuffer& _body,
+                    AutoBuffer& _extension, bool _cancel_retry, ConnectProfile& _conn_profile);
+
+  void __OnSend(ShortLinkInterface* _worker);
+
+  void __OnRecv(ShortLinkInterface* _worker, unsigned int _cached_size, unsigned int _total_size);
+
+  void __BatchErrorRespHandle(ErrCmdType _err_type, int _err_code, int _fail_handle, uint32_t _src_taskid,
+                              bool _callback_runing_task_only = true);
+
+  bool __SingleRespHandle(std::list<TaskProfile>::iterator _it, ErrCmdType _err_type, int _err_code, int _fail_handle,
+                          size_t _resp_length, const ConnectProfile& _connect_profile);
+
+  std::list<TaskProfile>::iterator __LocateBySeq(intptr_t _running_id);
+
+  void __DeleteShortLink(intptr_t& _running_id);
+
+  SOCKET __OnGetCacheSocket(const IPPortItem& _address);
+
+private:
+  MessageQueue::ScopeRegister asyncreg_;
+  NetSource& net_source_;
+
+  std::list<TaskProfile> lst_cmd_;
+
+  bool default_use_proxy_;
+  unsigned int tasks_continuous_fail_count_;
+  DynamicTimeout& dynamic_timeout_;
 #ifdef ANDROID
-    WakeUpLock*                     wakeup_lock_;
+  WakeUpLock*                     wakeup_lock_;
 #endif
-    SocketPool socket_pool_;
+  SocketPool socket_pool_;
 };
-        
+
 }
 }
 

@@ -26,49 +26,56 @@
 #include "mars/comm/autobuffer.h"
 
 
-
 class LogCrypt {
 public:
-    LogCrypt(const char* _pubkey);
-    virtual ~LogCrypt() {}
-    
+  LogCrypt(const char* _pubkey);
+
+  virtual ~LogCrypt() {}
+
 private:
-    LogCrypt(const LogCrypt&);
-    LogCrypt& operator=(const LogCrypt&);
-    
-public:
-    static uint32_t GetHeaderLen();
-    static uint32_t GetTailerLen();
-    
-    static bool GetLogHour(const char* const _data, size_t _len, int& _begin_hour, int& _end_hour);
-    static void UpdateLogHour(char* _data);
-    
-    static uint32_t GetLogLen(const char* const _data, size_t _len);
-    static void UpdateLogLen(char* _data, uint32_t _add_len);
+  LogCrypt(const LogCrypt&);
+
+  LogCrypt& operator=(const LogCrypt&);
 
 public:
-    
-    void SetHeaderInfo(char* _data, bool _is_async, char _magic_start);
-    void SetTailerInfo(char* _data, char _magic_end);
+  static uint32_t GetHeaderLen();
 
-    void CryptSyncLog(const char* const _log_data,
-                      size_t _input_len,
-                      AutoBuffer& _out_buff,
-                      char _magic_start,
-                      char _magic_end);
-    void CryptAsyncLog(const char* const _log_data, size_t _input_len, AutoBuffer& _out_buff, size_t& _remain_nocrypt_len);
-    
-    bool Fix(char* _data, size_t _data_len, uint32_t& _raw_log_len);
-    bool IsCrypt();
-    
+  static uint32_t GetTailerLen();
+
+  static bool GetLogHour(const char* const _data, size_t _len, int& _begin_hour, int& _end_hour);
+
+  static void UpdateLogHour(char* _data);
+
+  static uint32_t GetLogLen(const char* const _data, size_t _len);
+
+  static void UpdateLogLen(char* _data, uint32_t _add_len);
+
+public:
+
+  void SetHeaderInfo(char* _data, bool _is_async, char _magic_start);
+
+  void SetTailerInfo(char* _data, char _magic_end);
+
+  void CryptSyncLog(const char* const _log_data,
+                    size_t _input_len,
+                    AutoBuffer& _out_buff,
+                    char _magic_start,
+                    char _magic_end);
+
+  void
+  CryptAsyncLog(const char* const _log_data, size_t _input_len, AutoBuffer& _out_buff, size_t& _remain_nocrypt_len);
+
+  bool Fix(char* _data, size_t _data_len, uint32_t& _raw_log_len);
+
+  bool IsCrypt();
+
 private:
-    uint16_t seq_;
-    uint32_t tea_key_[4];
-    char client_pubkey_[64];
-    bool is_crypt_;
+  uint16_t seq_;
+  uint32_t tea_key_[4];
+  char client_pubkey_[64];
+  bool is_crypt_;
 
 };
-
 
 
 #endif /* LOG_CRYPT_H_ */

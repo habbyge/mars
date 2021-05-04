@@ -17,31 +17,30 @@
 #include <boost/mpl/apply.hpp>
 #include <boost/mpl/deref.hpp>
 
-namespace mars_boost {} namespace boost = mars_boost; namespace mars_boost { namespace mpl { namespace aux {
+namespace mars_boost {}
+namespace boost = mars_boost;
+namespace mars_boost {
+namespace mpl {
+namespace aux {
 
 template<
-      typename F
-    , typename Iterator
-    >
+    typename F, typename Iterator
+>
 struct iter_apply1
-    : apply1< F,typename deref<Iterator>::type >
-{
+    : apply1<F, typename deref<Iterator>::type> {
 };
 
 template<
-      typename F
-    , typename Iterator1
-    , typename Iterator2
-    >
+    typename F, typename Iterator1, typename Iterator2
+>
 struct iter_apply2
     : apply2<
-          F
-        , typename deref<Iterator1>::type
-        , typename deref<Iterator2>::type
-        >
-{
+        F, typename deref<Iterator1>::type, typename deref<Iterator2>::type
+    > {
 };
 
-}}}
+}
+}
+}
 
 #endif // BOOST_MPL_ITER_APPLY_HPP_INCLUDED

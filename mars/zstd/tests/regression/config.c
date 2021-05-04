@@ -113,7 +113,7 @@ static config_t small_wlog = {
 
 static param_value_t const small_hlog_param_values[] = {
     {.param = ZSTD_c_hashLog, .value = 6},
-    {.param = ZSTD_c_strategy, .value = (int)ZSTD_btopt},
+    {.param = ZSTD_c_strategy, .value = (int) ZSTD_btopt},
 };
 
 static config_t small_hlog = {
@@ -124,7 +124,7 @@ static config_t small_hlog = {
 
 static param_value_t const small_clog_param_values[] = {
     {.param = ZSTD_c_chainLog, .value = 6},
-    {.param = ZSTD_c_strategy, .value = (int)ZSTD_btopt},
+    {.param = ZSTD_c_strategy, .value = (int) ZSTD_btopt},
 };
 
 static config_t small_clog = {
@@ -170,7 +170,7 @@ static param_value_t const explicit_params_param_values[] = {
     {.param = ZSTD_c_checksumFlag, .value = 1},
     {.param = ZSTD_c_contentSizeFlag, .value = 0},
     {.param = ZSTD_c_dictIDFlag, .value = 0},
-    {.param = ZSTD_c_strategy, .value = (int)ZSTD_greedy},
+    {.param = ZSTD_c_strategy, .value = (int) ZSTD_greedy},
     {.param = ZSTD_c_windowLog, .value = 18},
     {.param = ZSTD_c_hashLog, .value = 21},
     {.param = ZSTD_c_chainLog, .value = 21},
@@ -187,7 +187,9 @@ static config_t const* g_configs[] = {
 
 #define FAST_LEVEL(x) &level_fast##x, &level_fast##x##_dict,
 #define LEVEL(x) &level_##x, &level_##x##_dict,
+
 #include "levels.h"
+
 #undef LEVEL
 #undef FAST_LEVEL
 
@@ -209,70 +211,68 @@ static config_t const* g_configs[] = {
 config_t const* const* configs = g_configs;
 
 int config_skip_data(config_t const* config, data_t const* data) {
-    return config->use_dictionary && !data_has_dict(data);
+  return config->use_dictionary && !data_has_dict(data);
 }
 
-int config_get_level(config_t const* config)
-{
-    param_values_t const params = config->param_values;
-    size_t i;
-    for (i = 0; i < params.size; ++i) {
-        if (params.data[i].param == ZSTD_c_compressionLevel)
-            return (int)params.data[i].value;
-    }
-    return CONFIG_NO_LEVEL;
+int config_get_level(config_t const* config) {
+  param_values_t const params = config->param_values;
+  size_t i;
+  for (i = 0; i < params.size; ++i) {
+    if (params.data[i].param == ZSTD_c_compressionLevel)
+      return (int) params.data[i].value;
+  }
+  return CONFIG_NO_LEVEL;
 }
 
 ZSTD_parameters config_get_zstd_params(
     config_t const* config,
     uint64_t srcSize,
-    size_t dictSize)
-{
-    ZSTD_parameters zparams = {};
-    param_values_t const params = config->param_values;
-    int level = config_get_level(config);
-    if (level == CONFIG_NO_LEVEL)
-        level = 3;
-    zparams = ZSTD_getParams(
-        level,
-        config->no_pledged_src_size ? ZSTD_CONTENTSIZE_UNKNOWN : srcSize,
-        dictSize);
-    for (size_t i = 0; i < params.size; ++i) {
-        unsigned const value = params.data[i].value;
-        switch (params.data[i].param) {
-            case ZSTD_c_contentSizeFlag:
-                zparams.fParams.contentSizeFlag = value;
-                break;
-            case ZSTD_c_checksumFlag:
-                zparams.fParams.checksumFlag = value;
-                break;
-            case ZSTD_c_dictIDFlag:
-                zparams.fParams.noDictIDFlag = !value;
-                break;
-            case ZSTD_c_windowLog:
-                zparams.cParams.windowLog = value;
-                break;
-            case ZSTD_c_chainLog:
-                zparams.cParams.chainLog = value;
-                break;
-            case ZSTD_c_hashLog:
-                zparams.cParams.hashLog = value;
-                break;
-            case ZSTD_c_searchLog:
-                zparams.cParams.searchLog = value;
-                break;
-            case ZSTD_c_minMatch:
-                zparams.cParams.minMatch = value;
-                break;
-            case ZSTD_c_targetLength:
-                zparams.cParams.targetLength = value;
-                break;
-            case ZSTD_c_strategy:
-                zparams.cParams.strategy = (ZSTD_strategy)value;
-                break;
-            default:
-                break;
-        }
+    size_t dictSize) {
+  ZSTD_parameters zparams = {};
+  param_values_t const params = config->param_values;
+  int level = config_get_level(config);
+  if (level == CONFIG_NO_LEVEL)
+    level = 3;
+  zparams = ZSTD_getParams(
+      level,
+      config->no_pledged_src_size ? ZSTD_CONTENTSIZE_UNKNOWN : srcSize,
+      dictSize);
+  for (size_t i = 0; i < params.size; ++i) {
+    unsigned const value = params.data[i].value;
+    switch (params.data[i].param) {
+      case ZSTD_c_contentSizeFlag:
+        zparams.fParams.contentSizeFlag = value;
+        break;
+      case ZSTD_c_checksumFlag:
+        zparams.fParams.checksumFlag = value;
+        break;
+      case ZSTD_c_dictIDFlag:
+        zparams.fParams.noDictIDFlag = !value;
+        break;
+      case ZSTD_c_windowLog:
+        zparams.cParams.windowLog = value;
+        break;
+      case ZSTD_c_chainLog:
+        zparams.cParams.chainLog = value;
+        break;
+      case ZSTD_c_hashLog:
+        zparams.cParams.hashLog = value;
+        break;
+      case ZSTD_c_searchLog:
+        zparams.cParams.searchLog = value;
+        break;
+      case ZSTD_c_minMatch:
+        zparams.cParams.minMatch = value;
+        break;
+      case ZSTD_c_targetLength:
+        zparams.cParams.targetLength = value;
+        break;
+      case ZSTD_c_strategy:
+        zparams.cParams.strategy = (ZSTD_strategy) value;
+        break;
+      default:
+        break;
     }
-    return zparams;
+  }
+  return zparams;
 }

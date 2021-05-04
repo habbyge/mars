@@ -24,17 +24,18 @@
 
 namespace design_patterns {
 
-class TestService: public design_patterns::ServiceBase {
+class TestService : public design_patterns::ServiceBase {
 public:
-	TestService(TServicesMap& _services):ServiceBase(ServiceName(), _services)
-	{
+  TestService(TServicesMap& _services) : ServiceBase(ServiceName(), _services) {
 
-	}
-	virtual ~TestService();
+  }
+
+  virtual ~TestService();
 
 
-	DEFINE_SERVICE();
-	int test(int a, int b) {return a+b;}
+  DEFINE_SERVICE();
+
+  int test(int a, int b) { return a + b; }
 };
 
 } /* namespace design_patterns */

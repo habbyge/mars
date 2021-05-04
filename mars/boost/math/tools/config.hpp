@@ -19,18 +19,23 @@
 #include <boost/config/no_tr1/cmath.hpp>
 #include <climits>
 #include <cfloat>
+
 #if (defined(macintosh) || defined(__APPLE__) || defined(__APPLE_CC__))
+
 #  include <math.h>
+
 #endif
 #ifndef BOOST_NO_LIMITS_COMPILE_TIME_CONSTANTS
+
 #  include <limits>
+
 #endif
 
 #include <boost/math/tools/user.hpp>
 
 #if (defined(__CYGWIN__) || defined(__FreeBSD__) || defined(__NetBSD__) \
-   || (defined(__hppa) && !defined(__OpenBSD__)) || (defined(__NO_LONG_DOUBLE_MATH) && (DBL_MANT_DIG != LDBL_MANT_DIG))) \
-   && !defined(BOOST_MATH_NO_LONG_DOUBLE_MATH_FUNCTIONS)
+ || (defined(__hppa) && !defined(__OpenBSD__)) || (defined(__NO_LONG_DOUBLE_MATH) && (DBL_MANT_DIG != LDBL_MANT_DIG))) \
+ && !defined(BOOST_MATH_NO_LONG_DOUBLE_MATH_FUNCTIONS)
 #  define BOOST_MATH_NO_LONG_DOUBLE_MATH_FUNCTIONS
 #endif
 #if BOOST_WORKAROUND(__BORLANDC__, BOOST_TESTED_AT(0x582))
@@ -95,7 +100,7 @@
 #endif
 
 #if defined(BOOST_MSVC) && !defined(_WIN32_WCE)
-   // Better safe than sorry, our tests don't support hardware exceptions:
+// Better safe than sorry, our tests don't support hardware exceptions:
 #  define BOOST_MATH_CONTROL_FP _control87(MCW_EM,MCW_EM)
 #endif
 
@@ -120,9 +125,9 @@
 #endif
 
 #if defined(__CYGWIN__) || defined(__HP_aCC) || defined(BOOST_INTEL) \
-  || defined(BOOST_NO_NATIVE_LONG_DOUBLE_FP_CLASSIFY) \
-  || (defined(__GNUC__) && !defined(BOOST_MATH_USE_C99))\
-  || defined(BOOST_MATH_NO_LONG_DOUBLE_MATH_FUNCTIONS)
+ || defined(BOOST_NO_NATIVE_LONG_DOUBLE_FP_CLASSIFY) \
+ || (defined(__GNUC__) && !defined(BOOST_MATH_USE_C99))\
+ || defined(BOOST_MATH_NO_LONG_DOUBLE_MATH_FUNCTIONS)
 #  define BOOST_MATH_NO_NATIVE_LONG_DOUBLE_FP_CLASSIFY
 #endif
 
@@ -230,7 +235,9 @@
 #  define BOOST_MATH_NOEXCEPT(T) noexcept(std::is_floating_point<T>::value)
 #  define BOOST_MATH_IS_FLOAT(T) (std::is_floating_point<T>::value)
 #else
+
 #include <boost/type_traits/is_floating_point.hpp>
+
 #  define BOOST_MATH_NOEXCEPT(T) noexcept(mars_boost::is_floating_point<T>::value)
 #  define BOOST_MATH_IS_FLOAT(T) (mars_boost::is_floating_point<T>::value)
 #endif
@@ -245,16 +252,16 @@
 //
 #ifndef BOOST_MATH_MAX_POLY_ORDER
 #  define BOOST_MATH_MAX_POLY_ORDER 20
-#endif 
+#endif
 //
 // Set the method used to evaluate polynomials and rationals:
 //
 #ifndef BOOST_MATH_POLY_METHOD
 #  define BOOST_MATH_POLY_METHOD 2
-#endif 
+#endif
 #ifndef BOOST_MATH_RATIONAL_METHOD
 #  define BOOST_MATH_RATIONAL_METHOD 1
-#endif 
+#endif
 //
 // decide whether to store constants as integers or reals:
 //
@@ -269,7 +276,7 @@
 //
 #ifndef BOOST_MATH_USE_FLOAT128
 #ifdef __has_include
-#if ! __has_include("quadmath.h")
+#if !__has_include("quadmath.h")
 #define BOOST_MATH_DISABLE_FLOAT128
 #endif
 #elif !defined(BOOST_ARCH_X86)
@@ -280,7 +287,7 @@
 // And then the actual configuration:
 //
 #if defined(_GLIBCXX_USE_FLOAT128) && defined(BOOST_GCC) && !defined(__STRICT_ANSI__) \
-   && !defined(BOOST_MATH_DISABLE_FLOAT128) || defined(BOOST_MATH_USE_FLOAT128)
+ && !defined(BOOST_MATH_DISABLE_FLOAT128) || defined(BOOST_MATH_USE_FLOAT128)
 //
 // Only enable this when the compiler really is GCC as clang and probably 
 // intel too don't support __float128 yet :-(
@@ -344,44 +351,43 @@
 
 #define BOOST_MATH_STD_USING BOOST_MATH_STD_USING_CORE
 
-namespace mars_boost {} namespace boost = mars_boost; namespace mars_boost{ namespace math{
-namespace tools
-{
+namespace mars_boost {}
+namespace boost = mars_boost;
+namespace mars_boost {
+namespace math {
+namespace tools {
 
-template <class T>
-inline T max BOOST_PREVENT_MACRO_SUBSTITUTION(T a, T b, T c) BOOST_MATH_NOEXCEPT(T)
-{
-   return (std::max)((std::max)(a, b), c);
+template<class T>
+inline T max BOOST_PREVENT_MACRO_SUBSTITUTION(T a, T b, T c) BOOST_MATH_NOEXCEPT(T) {
+  return (std::max)((std::max)(a, b), c);
 }
 
-template <class T>
-inline T max BOOST_PREVENT_MACRO_SUBSTITUTION(T a, T b, T c, T d) BOOST_MATH_NOEXCEPT(T)
-{
-   return (std::max)((std::max)(a, b), (std::max)(c, d));
+template<class T>
+inline T max BOOST_PREVENT_MACRO_SUBSTITUTION(T a, T b, T c, T d) BOOST_MATH_NOEXCEPT(T) {
+  return (std::max)((std::max)(a, b), (std::max)(c, d));
 }
 
 } // namespace tools
 
-template <class T>
-void suppress_unused_variable_warning(const T&) BOOST_MATH_NOEXCEPT(T)
-{
+template<class T>
+void suppress_unused_variable_warning(const T&) BOOST_MATH_NOEXCEPT(T) {
 }
 
-namespace detail{
+namespace detail {
 
-template <class T>
-struct is_integer_for_rounding
-{
-   static const bool value = mars_boost::is_integral<T>::value
-#ifndef BOOST_NO_LIMITS_COMPILE_TIME_CONSTANTS
-      || (std::numeric_limits<T>::is_specialized && std::numeric_limits<T>::is_integer)
+template<class T>
+struct is_integer_for_rounding {
+  static const bool value = mars_boost::is_integral<T>::value
+                            #ifndef BOOST_NO_LIMITS_COMPILE_TIME_CONSTANTS
+                            || (std::numeric_limits<T>::is_specialized && std::numeric_limits<T>::is_integer)
 #endif
-      ;
+  ;
 };
 
 }
 
-}} // namespace mars_boost namespace math
+}
+} // namespace mars_boost namespace math
 
 #ifdef __GLIBC_PREREQ
 #  if __GLIBC_PREREQ(2,14)
@@ -397,7 +403,7 @@ struct is_integer_for_rounding
 // Much more information in this message thread: https://groups.google.com/forum/#!topic/boost-list/ZT99wtIFlb4
 //
 
-   #include <boost/detail/fenv.hpp>
+#include <boost/detail/fenv.hpp>
 
 #  ifdef FE_ALL_EXCEPT
 

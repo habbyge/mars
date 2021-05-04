@@ -21,22 +21,25 @@
 #include <boost/mpl/aux_/lambda_support.hpp>
 #include <boost/mpl/aux_/msvc_eti_base.hpp>
 
-namespace mars_boost {} namespace boost = mars_boost; namespace mars_boost { namespace mpl {
+namespace mars_boost {}
+namespace boost = mars_boost;
+namespace mars_boost {
+namespace mpl {
 
 template<
-      typename BOOST_MPL_AUX_NA_PARAM(Sequence)
-    >
+    typename BOOST_MPL_AUX_NA_PARAM(Sequence)
+>
 struct size
     : aux::msvc_eti_base<
-        typename size_impl< typename sequence_tag<Sequence>::type >
-            ::template apply< Sequence >::type
-      >::type
-{
-    BOOST_MPL_AUX_LAMBDA_SUPPORT(1, size, (Sequence))
+        typename size_impl<typename sequence_tag<Sequence>::type>
+        ::template apply<Sequence>::type
+    >::type {
+  BOOST_MPL_AUX_LAMBDA_SUPPORT(1, size, (Sequence))
 };
 
 BOOST_MPL_AUX_NA_SPEC(1, size)
 
-}}
+}
+}
 
 #endif // BOOST_MPL_SIZE_HPP_INCLUDED

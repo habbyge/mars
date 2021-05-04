@@ -22,12 +22,12 @@ namespace pzstd {
  *
  *   auto guard = makeScopeGuard([&] { cleanup(); });
  */
-template <typename Function>
+template<typename Function>
 class ScopeGuard {
   Function function;
   bool dismissed;
 
- public:
+public:
   explicit ScopeGuard(Function&& function)
       : function(std::move(function)), dismissed(false) {}
 
@@ -43,7 +43,7 @@ class ScopeGuard {
 };
 
 /// Creates a scope guard from `function`.
-template <typename Function>
+template<typename Function>
 ScopeGuard<Function> makeScopeGuard(Function&& function) {
   return ScopeGuard<Function>(std::forward<Function>(function));
 }

@@ -18,8 +18,8 @@
 #include <boost/mpl/aux_/config/workaround.hpp>
 
 #if defined(BOOST_MPL_CFG_NO_FULL_LAMBDA_SUPPORT) \
-    || BOOST_WORKAROUND(__DMC__, BOOST_TESTED_AT(0x840))
-    
+ || BOOST_WORKAROUND(__DMC__, BOOST_TESTED_AT(0x840))
+
 #   define BOOST_MPL_AUX_ARG_TYPEDEF(T, name) typedef T name;
 
 #else

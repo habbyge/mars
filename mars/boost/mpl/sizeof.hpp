@@ -18,15 +18,17 @@
 #include <boost/mpl/aux_/na_spec.hpp>
 #include <boost/mpl/aux_/lambda_support.hpp>
 
-namespace mars_boost {} namespace boost = mars_boost; namespace mars_boost { namespace mpl {
+namespace mars_boost {}
+namespace boost = mars_boost;
+namespace mars_boost {
+namespace mpl {
 
 template<
-      typename BOOST_MPL_AUX_NA_PARAM(T)
-    >
+    typename BOOST_MPL_AUX_NA_PARAM(T)
+>
 struct sizeof_
-    : mpl::size_t< sizeof(T) >
-{
-    BOOST_MPL_AUX_LAMBDA_SUPPORT(1,sizeof_,(T))
+    : mpl::size_t<sizeof(T)> {
+  BOOST_MPL_AUX_LAMBDA_SUPPORT(1, sizeof_, (T))
 };
 
 BOOST_MPL_AUX_NA_SPEC_NO_ETI(1, sizeof_)

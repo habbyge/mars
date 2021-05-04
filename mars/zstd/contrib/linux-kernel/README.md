@@ -1,16 +1,16 @@
 # Linux Kernel Patch
 
-There are four pieces, the `xxhash` kernel module, the `zstd_compress` and `zstd_decompress` kernel modules, the BtrFS patch, and the SquashFS patch.
-The patches are based off of the linux kernel master branch.
+There are four pieces, the `xxhash` kernel module, the `zstd_compress` and `zstd_decompress` kernel modules, the BtrFS
+patch, and the SquashFS patch. The patches are based off of the linux kernel master branch.
 
 ## xxHash kernel module
 
 * The patch is located in `xxhash.diff`.
 * The header is in `include/linux/xxhash.h`.
 * The source is in `lib/xxhash.c`.
-* `test/XXHashUserLandTest.cpp` contains tests for the patch in userland by mocking the kernel headers.
-  I tested the tests by commenting a line of of each branch in `xxhash.c` one line at a time, and made sure the tests failed.
-  It can be run with the following commands:
+* `test/XXHashUserLandTest.cpp` contains tests for the patch in userland by mocking the kernel headers. I tested the
+  tests by commenting a line of of each branch in `xxhash.c` one line at a time, and made sure the tests failed. It can
+  be run with the following commands:
   ```
   cd test && make googletest && make XXHashUserLandTest && ./XXHashUserLandTest
   ```
@@ -22,10 +22,10 @@ The patches are based off of the linux kernel master branch.
 * The header is in `include/linux/zstd.h`.
 * It is split up into `zstd_compress` and `zstd_decompress`, which can be loaded independently.
 * Source files are in `lib/zstd/`.
-* `lib/Kconfig` and `lib/Makefile` need to be modified by applying `lib/Kconfig.diff` and `lib/Makefile.diff` respectively.
-  These changes are also included in the `zstd.diff`.
-* `test/UserlandTest.cpp` contains tests for the patch in userland by mocking the kernel headers.
-  It can be run with the following commands:
+* `lib/Kconfig` and `lib/Makefile` need to be modified by applying `lib/Kconfig.diff` and `lib/Makefile.diff`
+  respectively. These changes are also included in the `zstd.diff`.
+* `test/UserlandTest.cpp` contains tests for the patch in userland by mocking the kernel headers. It can be run with the
+  following commands:
   ```
   cd test && make googletest && make UserlandTest && ./UserlandTest
   ```
@@ -34,23 +34,18 @@ The patches are based off of the linux kernel master branch.
 
 * The patch is located in `btrfs.diff`.
 * Additionally `fs/btrfs/zstd.c` is provided as a source for convenience.
-* The patch seems to be working, it doesn't crash the kernel, and compresses at speeds and ratios that are expected.
-  It could still use some more testing for fringe features, like printing options.
+* The patch seems to be working, it doesn't crash the kernel, and compresses at speeds and ratios that are expected. It
+  could still use some more testing for fringe features, like printing options.
 
 ### Benchmarks
 
-Benchmarks run on a Ubuntu 14.04 with 2 cores and 4 GiB of RAM.
-The VM is running on a Macbook Pro with a 3.1 GHz Intel Core i7 processor,
-16 GB of ram, and a SSD.
-The kernel running was built from the master branch with the patch.
+Benchmarks run on a Ubuntu 14.04 with 2 cores and 4 GiB of RAM. The VM is running on a Macbook Pro with a 3.1 GHz Intel
+Core i7 processor, 16 GB of ram, and a SSD. The kernel running was built from the master branch with the patch.
 
-The compression benchmark is copying 10 copies of the
-unzipped [silesia corpus](http://mattmahoney.net/dc/silesia.html) into a BtrFS
-filesystem mounted with `-o compress-force={none, lzo, zlib, zstd}`.
-The decompression benchmark is timing how long it takes to `tar` all 10 copies
-into `/dev/null`.
-The compression ratio is measured by comparing the output of `df` and `du`.
-See `btrfs-benchmark.sh` for details.
+The compression benchmark is copying 10 copies of the unzipped [silesia corpus](http://mattmahoney.net/dc/silesia.html)
+into a BtrFS filesystem mounted with `-o compress-force={none, lzo, zlib, zstd}`. The decompression benchmark is timing
+how long it takes to `tar` all 10 copies into `/dev/null`. The compression ratio is measured by comparing the output
+of `df` and `du`. See `btrfs-benchmark.sh` for details.
 
 | Algorithm | Compression ratio | Compression speed | Decompression speed |
 |-----------|-------------------|-------------------|---------------------|
@@ -64,7 +59,6 @@ See `btrfs-benchmark.sh` for details.
 | zstd 12   | 2.93              | 21 MB/s           | 408 MB/s            |
 | zstd 15   | 3.01              | 11 MB/s           | 354 MB/s            |
 
-
 ## SquashFS
 
 * The patch is located in `squashfs.diff`
@@ -73,19 +67,14 @@ See `btrfs-benchmark.sh` for details.
 
 ### Benchmarks
 
-Benchmarks run on a Ubuntu 14.04 with 2 cores and 4 GiB of RAM.
-The VM is running on a Macbook Pro with a 3.1 GHz Intel Core i7 processor,
-16 GB of ram, and a SSD.
-The kernel running was built from the master branch with the patch.
+Benchmarks run on a Ubuntu 14.04 with 2 cores and 4 GiB of RAM. The VM is running on a Macbook Pro with a 3.1 GHz Intel
+Core i7 processor, 16 GB of ram, and a SSD. The kernel running was built from the master branch with the patch.
 
-The compression benchmark is the file tree from the SquashFS archive found in the
-Ubuntu 16.10 desktop image (ubuntu-16.10-desktop-amd64.iso).
-The compression benchmark uses mksquashfs with the default block size (128 KB)
+The compression benchmark is the file tree from the SquashFS archive found in the Ubuntu 16.10 desktop image (
+ubuntu-16.10-desktop-amd64.iso). The compression benchmark uses mksquashfs with the default block size (128 KB)
 and various compression algorithms/compression levels.
-`xz` and `zstd` are also benchmarked with 256 KB blocks.
-The decompression benchmark is timing how long it takes to `tar` the file tree
-into `/dev/null`.
-See `squashfs-benchmark.sh` for details.
+`xz` and `zstd` are also benchmarked with 256 KB blocks. The decompression benchmark is timing how long it takes
+to `tar` the file tree into `/dev/null`. See `squashfs-benchmark.sh` for details.
 
 | Algorithm      | Compression ratio | Compression speed | Decompression speed |
 |----------------|-------------------|-------------------|---------------------|

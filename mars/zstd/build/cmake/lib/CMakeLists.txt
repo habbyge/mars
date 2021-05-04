@@ -13,9 +13,9 @@ set(CMAKE_INCLUDE_CURRENT_DIR TRUE)
 option(ZSTD_BUILD_STATIC "BUILD STATIC LIBRARIES" ON)
 option(ZSTD_BUILD_SHARED "BUILD SHARED LIBRARIES" ON)
 
-if(NOT ZSTD_BUILD_SHARED AND NOT ZSTD_BUILD_STATIC)
+if (NOT ZSTD_BUILD_SHARED AND NOT ZSTD_BUILD_STATIC)
     message(SEND_ERROR "You need to build at least one flavor of libzstd")
-endif()
+endif ()
 
 # Define library directory, where sources and header files are located
 include_directories(${LIBRARY_DIR} ${LIBRARY_DIR}/common)
@@ -84,7 +84,7 @@ if (ZSTD_BUILD_SHARED)
         if (UNIX)
             target_link_libraries(libzstd_shared ${THREADS_LIBS})
         endif ()
-    endif()
+    endif ()
 endif ()
 if (ZSTD_BUILD_STATIC)
     add_library(libzstd_static STATIC ${Sources} ${Headers})
@@ -146,18 +146,18 @@ endif ()
 
 # install target
 install(FILES
-    ${LIBRARY_DIR}/zstd.h
-    ${LIBRARY_DIR}/deprecated/zbuff.h
-    ${LIBRARY_DIR}/dictBuilder/zdict.h
-    ${LIBRARY_DIR}/dictBuilder/cover.h
-    ${LIBRARY_DIR}/common/zstd_errors.h
-    DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}")
+        ${LIBRARY_DIR}/zstd.h
+        ${LIBRARY_DIR}/deprecated/zbuff.h
+        ${LIBRARY_DIR}/dictBuilder/zdict.h
+        ${LIBRARY_DIR}/dictBuilder/cover.h
+        ${LIBRARY_DIR}/common/zstd_errors.h
+        DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}")
 
 if (ZSTD_BUILD_SHARED)
     install(TARGETS libzstd_shared RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
-                                   LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
-                                   ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}")
-endif()
+            LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
+            ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}")
+endif ()
 if (ZSTD_BUILD_STATIC)
     install(TARGETS libzstd_static ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}")
 endif ()

@@ -15,9 +15,11 @@
 // $Revision$
 
 #if !defined(BOOST_MPL_PREPROCESSING_MODE)
+
 #   include <boost/mpl/next_prior.hpp>
 #   include <boost/mpl/apply.hpp>
 #   include <boost/mpl/aux_/config/ctps.hpp>
+
 #   if defined(BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION)
 #       include <boost/mpl/if.hpp>
 #       include <boost/type_traits/is_same.hpp>
@@ -27,9 +29,10 @@
 #include <boost/mpl/aux_/config/use_preprocessed.hpp>
 
 #if !defined(BOOST_MPL_CFG_NO_PREPROCESSED_HEADERS) \
-    && !defined(BOOST_MPL_PREPROCESSING_MODE)
+ && !defined(BOOST_MPL_PREPROCESSING_MODE)
 
 #   define BOOST_MPL_PREPROCESSED_HEADER iter_fold_impl.hpp
+
 #   include <boost/mpl/aux_/include_preprocessed.hpp>
 
 #else

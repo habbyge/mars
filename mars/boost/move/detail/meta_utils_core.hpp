@@ -18,100 +18,101 @@
 #  include <boost/config.hpp>
 #endif
 #
+
 #if defined(BOOST_HAS_PRAGMA_ONCE)
 #  pragma once
 #endif
 
 //Small meta-typetraits to support move
 
-namespace mars_boost {} namespace boost = mars_boost; namespace mars_boost {
+namespace mars_boost {}
+namespace boost = mars_boost;
+namespace mars_boost {
 namespace move_detail {
 
 //////////////////////////////////////
 //             if_c
 //////////////////////////////////////
 template<bool C, typename T1, typename T2>
-struct if_c
-{
-   typedef T1 type;
+struct if_c {
+  typedef T1 type;
 };
 
 template<typename T1, typename T2>
-struct if_c<false,T1,T2>
-{
-   typedef T2 type;
+struct if_c<false, T1, T2> {
+  typedef T2 type;
 };
 
 //////////////////////////////////////
 //             if_
 //////////////////////////////////////
 template<typename T1, typename T2, typename T3>
-struct if_ : if_c<0 != T1::value, T2, T3>
-{};
+struct if_ : if_c<0 != T1::value, T2, T3> {
+};
 
 //////////////////////////////////////
 //          enable_if_c
 //////////////////////////////////////
-template <bool B, class T = void>
-struct enable_if_c
-{
-   typedef T type;
+template<bool B, class T = void>
+struct enable_if_c {
+  typedef T type;
 };
 
-template <class T>
-struct enable_if_c<false, T> {};
+template<class T>
+struct enable_if_c<false, T> {
+};
 
 //////////////////////////////////////
 //           enable_if
 //////////////////////////////////////
-template <class Cond, class T = void>
-struct enable_if : enable_if_c<Cond::value, T> {};
+template<class Cond, class T = void>
+struct enable_if : enable_if_c<Cond::value, T> {
+};
 
 //////////////////////////////////////
 //          disable_if_c
 //////////////////////////////////////
-template <bool B, class T = void>
+template<bool B, class T = void>
 struct disable_if_c
-   : enable_if_c<!B, T>
-{};
+    : enable_if_c<!B, T> {
+};
 
 //////////////////////////////////////
 //          disable_if
 //////////////////////////////////////
-template <class Cond, class T = void>
-struct disable_if : enable_if_c<!Cond::value, T> {};
+template<class Cond, class T = void>
+struct disable_if : enable_if_c<!Cond::value, T> {
+};
 
 //////////////////////////////////////
 //          integral_constant
 //////////////////////////////////////
 template<class T, T v>
-struct integral_constant
-{
-   static const T value = v;
-   typedef T value_type;
-   typedef integral_constant<T, v> type;
+struct integral_constant {
+  static const T value = v;
+  typedef T value_type;
+  typedef integral_constant<T, v> type;
 
-     operator T() const { return value; }
-   T operator()() const { return value; }
+  operator T() const { return value; }
+
+  T operator()() const { return value; }
 };
 
-typedef integral_constant<bool, true >  true_type;
-typedef integral_constant<bool, false > false_type;
+typedef integral_constant<bool, true> true_type;
+typedef integral_constant<bool, false> false_type;
 
 
 //////////////////////////////////////
 //             is_same
 //////////////////////////////////////
 template<class T, class U>
-struct is_same
-{
-   static const bool value = false;
+struct is_same {
+  static const bool value = false;
 };
- 
+
 template<class T>
-struct is_same<T, T>
-{
-   static const bool value = true;
+struct is_same<T, T> {
+  static const bool value = true;
 };
 
 }  //namespace move_detail {

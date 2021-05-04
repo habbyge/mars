@@ -26,32 +26,32 @@
 using namespace mars::sdt;
 
 BaseChecker::BaseChecker() {
-    xverbose_function();
+  xverbose_function();
 }
 
 BaseChecker::~BaseChecker() {
-    xverbose_function();
-    CancelDoCheck();
+  xverbose_function();
+  CancelDoCheck();
 }
 
 int BaseChecker::StartDoCheck(CheckRequestProfile& _check_request) {
-    xinfo_function();
-    // timeout and finish net checker.
-    if (_check_request.total_timeout <= 0) {
-        xinfo2(TSF"req.total_timeout_=%_, check finish!", _check_request.total_timeout);
-        _check_request.check_status = kCheckFinish;
-        return 0;
-    }
-    __DoCheck(_check_request);
-    return 1;
+  xinfo_function();
+  // timeout and finish net checker.
+  if (_check_request.total_timeout <= 0) {
+    xinfo2(TSF"req.total_timeout_=%_, check finish!", _check_request.total_timeout);
+    _check_request.check_status = kCheckFinish;
+    return 0;
+  }
+  __DoCheck(_check_request);
+  return 1;
 }
 
 int BaseChecker::CancelDoCheck() {
-    xinfo_function();
-    is_canceled_ = true;
-    return 1;
+  xinfo_function();
+  is_canceled_ = true;
+  return 1;
 }
 
 void BaseChecker::__DoCheck(CheckRequestProfile& _check_request) {
-    xverbose_function();
+  xverbose_function();
 }

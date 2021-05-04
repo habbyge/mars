@@ -27,7 +27,8 @@ namespace stn {
 
 void SetClientVersion(uint32_t _client_version);
 
-}}
+}
+}
 
 
 #endif /* STNPROTOCOL_INTERFACE_STNPROTO_LOGIC_H_ */

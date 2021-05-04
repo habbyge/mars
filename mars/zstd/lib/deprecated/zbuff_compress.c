@@ -14,6 +14,7 @@
 *  Dependencies
 ***************************************/
 #define ZBUFF_STATIC_LINKING_ONLY
+
 #include "zbuff.h"
 
 
@@ -50,19 +51,16 @@
 *  output : ZSTD_compressBound(ZSTD_BLOCKSIZE_MAX) + ZSTD_blockHeaderSize + ZBUFF_endFrameSize : ensures it's always possible to write/flush/end a full block at best speed.
 * ***********************************************************/
 
-ZBUFF_CCtx* ZBUFF_createCCtx(void)
-{
-    return ZSTD_createCStream();
+ZBUFF_CCtx* ZBUFF_createCCtx(void) {
+  return ZSTD_createCStream();
 }
 
-ZBUFF_CCtx* ZBUFF_createCCtx_advanced(ZSTD_customMem customMem)
-{
-    return ZSTD_createCStream_advanced(customMem);
+ZBUFF_CCtx* ZBUFF_createCCtx_advanced(ZSTD_customMem customMem) {
+  return ZSTD_createCStream_advanced(customMem);
 }
 
-size_t ZBUFF_freeCCtx(ZBUFF_CCtx* zbc)
-{
-    return ZSTD_freeCStream(zbc);
+size_t ZBUFF_freeCCtx(ZBUFF_CCtx* zbc) {
+  return ZSTD_freeCStream(zbc);
 }
 
 
@@ -70,21 +68,18 @@ size_t ZBUFF_freeCCtx(ZBUFF_CCtx* zbc)
 
 size_t ZBUFF_compressInit_advanced(ZBUFF_CCtx* zbc,
                                    const void* dict, size_t dictSize,
-                                   ZSTD_parameters params, unsigned long long pledgedSrcSize)
-{
-    if (pledgedSrcSize==0) pledgedSrcSize = ZSTD_CONTENTSIZE_UNKNOWN;  /* preserve "0 == unknown" behavior */
-    return ZSTD_initCStream_advanced(zbc, dict, dictSize, params, pledgedSrcSize);
+                                   ZSTD_parameters params, unsigned long long pledgedSrcSize) {
+  if (pledgedSrcSize == 0) pledgedSrcSize = ZSTD_CONTENTSIZE_UNKNOWN;  /* preserve "0 == unknown" behavior */
+  return ZSTD_initCStream_advanced(zbc, dict, dictSize, params, pledgedSrcSize);
 }
 
 
-size_t ZBUFF_compressInitDictionary(ZBUFF_CCtx* zbc, const void* dict, size_t dictSize, int compressionLevel)
-{
-    return ZSTD_initCStream_usingDict(zbc, dict, dictSize, compressionLevel);
+size_t ZBUFF_compressInitDictionary(ZBUFF_CCtx* zbc, const void* dict, size_t dictSize, int compressionLevel) {
+  return ZSTD_initCStream_usingDict(zbc, dict, dictSize, compressionLevel);
 }
 
-size_t ZBUFF_compressInit(ZBUFF_CCtx* zbc, int compressionLevel)
-{
-    return ZSTD_initCStream(zbc, compressionLevel);
+size_t ZBUFF_compressInit(ZBUFF_CCtx* zbc, int compressionLevel) {
+  return ZSTD_initCStream(zbc, compressionLevel);
 }
 
 /* ======   Compression   ====== */
@@ -92,56 +87,52 @@ size_t ZBUFF_compressInit(ZBUFF_CCtx* zbc, int compressionLevel)
 
 size_t ZBUFF_compressContinue(ZBUFF_CCtx* zbc,
                               void* dst, size_t* dstCapacityPtr,
-                        const void* src, size_t* srcSizePtr)
-{
-    size_t result;
-    ZSTD_outBuffer outBuff;
-    ZSTD_inBuffer inBuff;
-    outBuff.dst = dst;
-    outBuff.pos = 0;
-    outBuff.size = *dstCapacityPtr;
-    inBuff.src = src;
-    inBuff.pos = 0;
-    inBuff.size = *srcSizePtr;
-    result = ZSTD_compressStream(zbc, &outBuff, &inBuff);
-    *dstCapacityPtr = outBuff.pos;
-    *srcSizePtr = inBuff.pos;
-    return result;
+                              const void* src, size_t* srcSizePtr) {
+  size_t result;
+  ZSTD_outBuffer outBuff;
+  ZSTD_inBuffer inBuff;
+  outBuff.dst = dst;
+  outBuff.pos = 0;
+  outBuff.size = *dstCapacityPtr;
+  inBuff.src = src;
+  inBuff.pos = 0;
+  inBuff.size = *srcSizePtr;
+  result = ZSTD_compressStream(zbc, &outBuff, &inBuff);
+  *dstCapacityPtr = outBuff.pos;
+  *srcSizePtr = inBuff.pos;
+  return result;
 }
-
 
 
 /* ======   Finalize   ====== */
 
-size_t ZBUFF_compressFlush(ZBUFF_CCtx* zbc, void* dst, size_t* dstCapacityPtr)
-{
-    size_t result;
-    ZSTD_outBuffer outBuff;
-    outBuff.dst = dst;
-    outBuff.pos = 0;
-    outBuff.size = *dstCapacityPtr;
-    result = ZSTD_flushStream(zbc, &outBuff);
-    *dstCapacityPtr = outBuff.pos;
-    return result;
+size_t ZBUFF_compressFlush(ZBUFF_CCtx* zbc, void* dst, size_t* dstCapacityPtr) {
+  size_t result;
+  ZSTD_outBuffer outBuff;
+  outBuff.dst = dst;
+  outBuff.pos = 0;
+  outBuff.size = *dstCapacityPtr;
+  result = ZSTD_flushStream(zbc, &outBuff);
+  *dstCapacityPtr = outBuff.pos;
+  return result;
 }
 
 
-size_t ZBUFF_compressEnd(ZBUFF_CCtx* zbc, void* dst, size_t* dstCapacityPtr)
-{
-    size_t result;
-    ZSTD_outBuffer outBuff;
-    outBuff.dst = dst;
-    outBuff.pos = 0;
-    outBuff.size = *dstCapacityPtr;
-    result = ZSTD_endStream(zbc, &outBuff);
-    *dstCapacityPtr = outBuff.pos;
-    return result;
+size_t ZBUFF_compressEnd(ZBUFF_CCtx* zbc, void* dst, size_t* dstCapacityPtr) {
+  size_t result;
+  ZSTD_outBuffer outBuff;
+  outBuff.dst = dst;
+  outBuff.pos = 0;
+  outBuff.size = *dstCapacityPtr;
+  result = ZSTD_endStream(zbc, &outBuff);
+  *dstCapacityPtr = outBuff.pos;
+  return result;
 }
-
 
 
 /* *************************************
 *  Tool functions
 ***************************************/
-size_t ZBUFF_recommendedCInSize(void)  { return ZSTD_CStreamInSize(); }
+size_t ZBUFF_recommendedCInSize(void) { return ZSTD_CStreamInSize(); }
+
 size_t ZBUFF_recommendedCOutSize(void) { return ZSTD_CStreamOutSize(); }

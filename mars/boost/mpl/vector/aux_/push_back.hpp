@@ -22,19 +22,22 @@
 #   include <boost/mpl/vector/aux_/item.hpp>
 #   include <boost/mpl/vector/aux_/tag.hpp>
 
-namespace mars_boost {} namespace boost = mars_boost; namespace mars_boost { namespace mpl {
+namespace mars_boost {}
+namespace boost = mars_boost;
+namespace mars_boost {
+namespace mpl {
 
 template<>
-struct push_back_impl< aux::vector_tag >
-{
-    template< typename Vector, typename T > struct apply
-    {
-        typedef v_item<T,Vector,0> type;
-    };
+struct push_back_impl<aux::vector_tag> {
+  template<typename Vector, typename T>
+  struct apply {
+    typedef v_item<T, Vector, 0> type;
+  };
 };
 
-}}
+}
+}
 
-#endif 
+#endif
 
 #endif // BOOST_MPL_VECTOR_AUX_PUSH_BACK_HPP_INCLUDED

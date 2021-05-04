@@ -29,6 +29,4 @@ bool OpenMmapFile(const char* _filepath, unsigned int _size, boost::iostreams::m
 void CloseMmapFile(boost::iostreams::mapped_file& _mmmap_file);
 
 
-
-
 #endif /* MMAP_UTIL_H_ */

@@ -40,64 +40,64 @@ static const uint64_t kMaxVol = (2 * 1024);
 
 using namespace mars::stn;
 
-FlowLimit::FlowLimit(bool _isactive)
-    : funnel_speed_(_isactive ? kActiveSpeed : kInactiveSpeed)
-    , cur_funnel_vol_(0)
-    , time_lastflow_computer_(::gettickcount())
-{}
+FlowLimit::FlowLimit(bool _isactive) : funnel_speed_(_isactive ? kActiveSpeed : kInactiveSpeed),
+                                       cur_funnel_vol_(0),
+                                       time_lastflow_computer_(::gettickcount()) {}
 
-FlowLimit::~FlowLimit()
-{}
+FlowLimit::~FlowLimit() {}
 
 bool FlowLimit::Check(const mars::stn::Task& _task, const void* _buffer, int _len) {
-    xverbose_function();
+  xverbose_function();
 
-    if (!_task.limit_flow) {
-        return true;
-    }
-
-    __FlashCurVol();
-
-    if (cur_funnel_vol_ + _len > kMaxVol) {
-        xerror2(TSF"Task Info: ptr=%_, cmdid=%_, need_authed=%_, cgi:%_, channel_select=%_, limit_flow=%_, cur_funnel_vol_(%_)+_len(%_)=%_,MAX_VOL:%_ ",
-                &_task, _task.cmdid, _task.need_authed, _task.cgi, _task.channel_select, _task.limit_flow, cur_funnel_vol_, _len, cur_funnel_vol_ + _len, kMaxVol);
-
-        return false;
-    }
-
-    cur_funnel_vol_ += _len;
+  if (!_task.limit_flow) {
     return true;
+  }
+
+  __FlashCurVol();
+
+  if (cur_funnel_vol_ + _len > kMaxVol) {
+    xerror2(
+        TSF"Task Info: ptr=%_, cmdid=%_, need_authed=%_, cgi:%_, channel_select=%_, limit_flow=%_, cur_funnel_vol_(%_)+_len(%_)=%_,MAX_VOL:%_ ",
+        &_task, _task.cmdid, _task.need_authed, _task.cgi, _task.channel_select, _task.limit_flow, cur_funnel_vol_,
+        _len, cur_funnel_vol_ + _len, kMaxVol);
+
+    return false;
+  }
+
+  cur_funnel_vol_ += _len;
+  return true;
 }
 
 void FlowLimit::Active(bool _isactive) {
-    __FlashCurVol();
+  __FlashCurVol();
 
-    if (!_isactive) {
-        xdebug2(TSF"iCurFunnelVol=%0, INACTIVE_MIN_VOL=%1", cur_funnel_vol_, kInactiveMinvol);
+  if (!_isactive) {
+    xdebug2(TSF"iCurFunnelVol=%0, INACTIVE_MIN_VOL=%1", cur_funnel_vol_, kInactiveMinvol);
 
-        if (cur_funnel_vol_ > kInactiveMinvol)
-            cur_funnel_vol_ = kInactiveMinvol;
+    if (cur_funnel_vol_ > kInactiveMinvol) {
+      cur_funnel_vol_ = kInactiveMinvol;
     }
+  }
 
-    funnel_speed_ = _isactive ? kActiveSpeed : kInactiveSpeed;
-    xdebug2(TSF"Active:%0, iFunnelSpeed=%1", _isactive, funnel_speed_);
+  funnel_speed_ = _isactive ? kActiveSpeed : kInactiveSpeed;
+  xdebug2(TSF"Active:%0, iFunnelSpeed=%1", _isactive, funnel_speed_);
 }
 
 void FlowLimit::__FlashCurVol() {
-    uint64_t timeCur = ::gettickcount();
-	xassert2(timeCur >= time_lastflow_computer_, TSF"%_, %_", timeCur, time_lastflow_computer_);
-    uint64_t interval = (timeCur - time_lastflow_computer_) / 1000;
-    
-    if (0 == interval) return;
+  uint64_t timeCur = ::gettickcount();
+  xassert2(timeCur >= time_lastflow_computer_, TSF"%_, %_", timeCur, time_lastflow_computer_);
+  uint64_t interval = (timeCur - time_lastflow_computer_) / 1000;
 
-    xdebug2(TSF"iCurFunnelVol=%0, iFunnelSpeed=%1, interval=%2", cur_funnel_vol_, funnel_speed_, interval);
-    uint64_t funnel_vol = interval * funnel_speed_;
-    if (cur_funnel_vol_ > funnel_vol) {
-        cur_funnel_vol_ -= funnel_vol;
-    } else {
-        cur_funnel_vol_ = 0;
-    }
-    xdebug2(TSF"iCurFunnelVol=%0", cur_funnel_vol_);
+  if (0 == interval) return;
 
-    time_lastflow_computer_ = timeCur;
+  xdebug2(TSF"iCurFunnelVol=%0, iFunnelSpeed=%1, interval=%2", cur_funnel_vol_, funnel_speed_, interval);
+  uint64_t funnel_vol = interval * funnel_speed_;
+  if (cur_funnel_vol_ > funnel_vol) {
+    cur_funnel_vol_ -= funnel_vol;
+  } else {
+    cur_funnel_vol_ = 0;
+  }
+  xdebug2(TSF"iCurFunnelVol=%0", cur_funnel_vol_);
+
+  time_lastflow_computer_ = timeCur;
 }

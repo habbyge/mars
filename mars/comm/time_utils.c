@@ -93,23 +93,23 @@ uint64_t gettickcount() {
 #include <mach/mach_time.h>
 
 uint64_t gettickcount() {
-    static mach_timebase_info_data_t timebase_info = {0};
-    
-    // Convert to nanoseconds - if this is the first time we've run, get the timebase.
-    if (timebase_info.denom == 0 )
-    {
-        (void) mach_timebase_info(&timebase_info);
-    }
-    
-    // Convert the mach time to milliseconds
-    uint64_t mach_time = mach_absolute_time();
-    uint64_t millis = (mach_time * timebase_info.numer) / (timebase_info.denom * 1000000);
-    return millis;
+  static mach_timebase_info_data_t timebase_info = {0};
+
+  // Convert to nanoseconds - if this is the first time we've run, get the timebase.
+  if (timebase_info.denom == 0) {
+    (void) mach_timebase_info(&timebase_info);
+  }
+
+  // Convert the mach time to milliseconds
+  uint64_t mach_time = mach_absolute_time();
+  uint64_t millis = (mach_time * timebase_info.numer) / (timebase_info.denom * 1000000);
+  return millis;
 }
+
 #endif
 
 uint64_t clock_app_monotonic() {
-    return gettickcount();
+  return gettickcount();
 }
 
 #elif defined Q_OS_BLACKBERRY
@@ -169,14 +169,14 @@ uint64_t clock_app_monotonic() {
 #endif
 
 int64_t gettickspan(uint64_t _old_tick) {
-    uint64_t cur_tick = gettickcount();
-    if (_old_tick > cur_tick) return 0;
+  uint64_t cur_tick = gettickcount();
+  if (_old_tick > cur_tick) return 0;
 
-    return cur_tick - _old_tick;
+  return cur_tick - _old_tick;
 }
 
 uint64_t timeMs() {
-   struct timeval tv;
-   gettimeofday(&tv,NULL);
-   return (uint64_t)tv.tv_sec * 1000 + (uint64_t)tv.tv_usec / 1000;
+  struct timeval tv;
+  gettimeofday(&tv, NULL);
+  return (uint64_t) tv.tv_sec * 1000 + (uint64_t) tv.tv_usec / 1000;
 }

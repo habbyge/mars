@@ -33,16 +33,19 @@ extern "C" {
  * Method:    getLoadLibraries
  * Signature: ()jobject
  */
-JNIEXPORT jobject JNICALL Java_com_tencent_mars_sdt_SdtLogic_getLoadLibraries
-  (JNIEnv *_env, jclass clz) {
+JNIEXPORT jobject
+JNICALL Java_com_tencent_mars_sdt_SdtLogic_getLoadLibraries
+    (JNIEnv* _env, jclass clz) {
 
-	return mars::baseevent::getLoadLibraries(_env);
+  return mars::baseevent::getLoadLibraries(_env);
 }
 
-JNIEXPORT void JNICALL Java_com_tencent_mars_sdt_SdtLogic_setHttpNetcheckCGI
-  (JNIEnv *_env, jclass clz, jstring cgi) {
+JNIEXPORT void JNICALL
+Java_com_tencent_mars_sdt_SdtLogic_setHttpNetcheckCGI
+(JNIEnv * _env , jclass clz, jstring
+cgi ) {
 
-	SetHttpNetcheckCGI(ScopedJstring(_env, cgi).GetChar());
+SetHttpNetcheckCGI (ScopedJstring(_env, cgi) . GetChar()) ;
 }
 
 }

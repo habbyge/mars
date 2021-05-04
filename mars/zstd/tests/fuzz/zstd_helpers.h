@@ -27,11 +27,11 @@ extern "C" {
 extern const int kMinClevel;
 extern const int kMaxClevel;
 
-void FUZZ_setRandomParameters(ZSTD_CCtx *cctx, size_t srcSize, FUZZ_dataProducer_t *producer);
+void FUZZ_setRandomParameters(ZSTD_CCtx* cctx, size_t srcSize, FUZZ_dataProducer_t* producer);
 
-ZSTD_compressionParameters FUZZ_randomCParams(size_t srcSize, FUZZ_dataProducer_t *producer);
-ZSTD_frameParameters FUZZ_randomFParams(FUZZ_dataProducer_t *producer);
-ZSTD_parameters FUZZ_randomParams(size_t srcSize, FUZZ_dataProducer_t *producer);
+ZSTD_compressionParameters FUZZ_randomCParams(size_t srcSize, FUZZ_dataProducer_t* producer);
+ZSTD_frameParameters FUZZ_randomFParams(FUZZ_dataProducer_t* producer);
+ZSTD_parameters FUZZ_randomParams(size_t srcSize, FUZZ_dataProducer_t* producer);
 
 typedef struct {
   void* buff;
@@ -42,7 +42,7 @@ typedef struct {
  * NOTE: Don't use this to train production dictionaries, it is only optimized
  * for speed, and doesn't care about dictionary quality.
  */
-FUZZ_dict_t FUZZ_train(void const* src, size_t srcSize, FUZZ_dataProducer_t *producer);
+FUZZ_dict_t FUZZ_train(void const* src, size_t srcSize, FUZZ_dataProducer_t* producer);
 
 #ifdef __cplusplus
 }

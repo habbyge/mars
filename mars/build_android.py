@@ -1,13 +1,12 @@
 #!/usr/bin/env python
-import os
-import sys
 import glob
-import time
-import shutil
+import os
 import platform
+import shutil
+import sys
+import time
 
 from mars_utils import *
-
 
 SCRIPT_PATH = os.path.split(os.path.realpath(__file__))[0]
 

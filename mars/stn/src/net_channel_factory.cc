@@ -30,36 +30,38 @@ namespace stn {
 
 namespace ShortLinkChannelFactory {
 
-    
-ShortLinkInterface* (*Create)(const mq::MessageQueue_t& _messagequeueid, NetSource& _netsource, const Task& _task, bool _use_proxy)
-= [](const mq::MessageQueue_t& _messagequeueid, NetSource& _netsource, const Task& _task, bool _use_proxy) -> ShortLinkInterface* {
-	xdebug2(TSF"use weak func Create");
-	return new ShortLink(_messagequeueid, _netsource, _task, _use_proxy);
+
+ShortLinkInterface*
+(* Create)(const mq::MessageQueue_t& _messagequeueid, NetSource& _netsource, const Task& _task, bool _use_proxy)
+= [](const mq::MessageQueue_t& _messagequeueid, NetSource& _netsource, const Task& _task,
+     bool _use_proxy) -> ShortLinkInterface* {
+  xdebug2(TSF"use weak func Create");
+  return new ShortLink(_messagequeueid, _netsource, _task, _use_proxy);
 };
-    
-void (*Destory)(ShortLinkInterface* _short_link_channel)
+
+void (* Destory)(ShortLinkInterface* _short_link_channel)
 = [](ShortLinkInterface* _short_link_channel) {
-    delete _short_link_channel;
-    _short_link_channel = NULL;
+  delete _short_link_channel;
+  _short_link_channel = NULL;
 };
-    
+
 }
 
 namespace LongLinkChannelFactory {
 
-LongLink* (*Create)(const mq::MessageQueue_t& _messagequeueid, NetSource& _netsource, const LonglinkConfig& _config)
+LongLink* (* Create)(const mq::MessageQueue_t& _messagequeueid, NetSource& _netsource, const LonglinkConfig& _config)
 = [](const mq::MessageQueue_t& _messagequeueid, NetSource& _netsource, const LonglinkConfig& _config) {
-	LongLink* longlink = new LongLink(_messagequeueid, _netsource, _config, gDefaultLongLinkEncoder);
-	if(_config.dns_func != nullptr) {
-		longlink->SetDnsFunc(_config.dns_func);
-	}
-	return longlink;
+  LongLink* longlink = new LongLink(_messagequeueid, _netsource, _config, gDefaultLongLinkEncoder);
+  if (_config.dns_func != nullptr) {
+    longlink->SetDnsFunc(_config.dns_func);
+  }
+  return longlink;
 };
 
-void (*Destory)(LongLink* _long_link_channel)
+void (* Destory)(LongLink* _long_link_channel)
 = [](LongLink* _long_link_channel) {
-	delete _long_link_channel;
-	_long_link_channel = NULL;
+  delete _long_link_channel;
+  _long_link_channel = NULL;
 };
 
 }

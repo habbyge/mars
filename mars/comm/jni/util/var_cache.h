@@ -30,73 +30,81 @@ struct method_struct;
 struct field_struct;
 
 struct JniMethodInfo {
-    JniMethodInfo(const std::string& _classname, const std::string& _methodname, const std::string& _methodsig)
-        : classname(_classname), methodname(_methodname), methodsig(_methodsig) {}
+  JniMethodInfo(const std::string& _classname, const std::string& _methodname, const std::string& _methodsig)
+      : classname(_classname), methodname(_methodname), methodsig(_methodsig) {}
 
-    bool operator <(const JniMethodInfo& _info) const {
-        if (classname < _info.classname) {
-            return true;
-        }
-
-        if (classname == _info.classname && methodname < _info.methodname) {
-            return true;
-        }
-
-        if (classname == _info.classname
-                && methodname == _info.methodname
-                && methodsig < _info.methodsig) {
-            return true;
-        }
-
-        return false;
+  bool operator<(const JniMethodInfo& _info) const {
+    if (classname < _info.classname) {
+      return true;
     }
 
-    std::string classname;
-    std::string methodname;
-    std::string methodsig;
+    if (classname == _info.classname && methodname < _info.methodname) {
+      return true;
+    }
+
+    if (classname == _info.classname
+        && methodname == _info.methodname
+        && methodsig < _info.methodsig) {
+      return true;
+    }
+
+    return false;
+  }
+
+  std::string classname;
+  std::string methodname;
+  std::string methodsig;
 };
 
 class VarCache {
-  public:
-    static VarCache* Singleton();
-    static void Release();
-    ~VarCache();
+public:
+  static VarCache* Singleton();
 
-    JavaVM* GetJvm();
-    void SetJvm(JavaVM* vm);
+  static void Release();
 
-    jclass GetClass(JNIEnv*, const char* const);
-    void CacheClass(const char* const, jclass);
+  ~VarCache();
 
-    jmethodID GetStaticMethodId(JNIEnv*, const char* const, const char* const, const char* const);
-    jmethodID GetStaticMethodId(JNIEnv*, jclass, const char* const, const char* const);
+  JavaVM* GetJvm();
 
-    jmethodID GetMethodId(JNIEnv*, const char* const, const char* const, const char* const);
-    jmethodID GetMethodId(JNIEnv*, jclass, const char* const, const char* const);
+  void SetJvm(JavaVM* vm);
 
-    jfieldID GetStaticFieldId(JNIEnv*, const char* const, const char* const, const char* const);
-    jfieldID GetStaticFieldId(JNIEnv*, jclass, const char* const, const char* const);
+  jclass GetClass(JNIEnv*, const char* const);
 
-    jfieldID GetFieldId(JNIEnv*, const char* const, const char* const, const char* const);
-    jfieldID GetFieldId(JNIEnv*, jclass, const char* const, const char* const);
+  void CacheClass(const char* const, jclass);
 
-  private:
-    VarCache();
+  jmethodID GetStaticMethodId(JNIEnv*, const char* const, const char* const, const char* const);
 
-  private:
-    static VarCache* instance_;
+  jmethodID GetStaticMethodId(JNIEnv*, jclass, const char* const, const char* const);
 
-    JavaVM* vm_;
+  jmethodID GetMethodId(JNIEnv*, const char* const, const char* const, const char* const);
 
-    std::map<std::string, jclass> class_map_;
-    std::map<jclass, std::list<method_struct> > static_method_map_;
-    std::map<jclass, std::list<method_struct> > method_map_;
-    std::map<jclass, std::list<field_struct> > field_map_;
+  jmethodID GetMethodId(JNIEnv*, jclass, const char* const, const char* const);
 
-    SpinLock class_map_lock_;
-    SpinLock static_method_map_lock_;
-    SpinLock method_map_lock_;
-    SpinLock field_map_lock_;
+  jfieldID GetStaticFieldId(JNIEnv*, const char* const, const char* const, const char* const);
+
+  jfieldID GetStaticFieldId(JNIEnv*, jclass, const char* const, const char* const);
+
+  jfieldID GetFieldId(JNIEnv*, const char* const, const char* const, const char* const);
+
+  jfieldID GetFieldId(JNIEnv*, jclass, const char* const, const char* const);
+
+private:
+  VarCache();
+
+private:
+  static VarCache* instance_;
+
+  JavaVM* vm_;
+
+  std::map<std::string, jclass> class_map_;
+  std::map<jclass, std::list<method_struct>> static_method_map_;
+  std::map<jclass, std::list<method_struct>> method_map_;
+  std::map<jclass, std::list<field_struct>> field_map_;
+
+  SpinLock class_map_lock_;
+  SpinLock static_method_map_lock_;
+  SpinLock method_map_lock_;
+  SpinLock field_map_lock_;
 };
 
 #ifdef __GNUC__
@@ -106,6 +114,7 @@ class VarCache {
 #endif
 
 bool LoadClass(JNIEnv* env);
+
 bool AddClass(const char* const classPath);
 
 #define DEFINE_FIND_CLASS(classname, classpath) \
@@ -114,9 +123,11 @@ bool AddClass(const char* const classPath);
 
 
 bool LoadStaticMethod(JNIEnv* env);
+
 bool AddStaticMethod(const char* const _classname, const char* const _methodname, const char* const _methodsig);
 
 bool LoadMethod(JNIEnv* env);
+
 bool AddMethod(const char* const _classname, const char* const _methodname, const char* const _methodsig);
 
 #define DEFINE_FIND_STATIC_METHOD(methodid, classname, methodname, methodsig) \

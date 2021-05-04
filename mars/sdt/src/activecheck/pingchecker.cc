@@ -30,141 +30,145 @@
 using namespace mars::sdt;
 
 PingChecker::PingChecker() {
-    xverbose_function();
+  xverbose_function();
 }
 
 PingChecker::~PingChecker() {
-    xverbose_function();
+  xverbose_function();
 }
 
 int PingChecker::StartDoCheck(CheckRequestProfile& _check_request) {
 #if defined(ANDROID) || defined(__APPLE__)
-    xinfo_function();
-    return BaseChecker::StartDoCheck(_check_request);
+  xinfo_function();
+  return BaseChecker::StartDoCheck(_check_request);
 #else
-    xinfo2(TSF"neither android nor ios");
-    return -1;
+  xinfo2(TSF"neither android nor ios");
+  return -1;
 #endif
 }
 
 void PingChecker::__DoCheck(CheckRequestProfile& _check_request) {
 
 #if defined(ANDROID) || defined(__APPLE__)
-    xinfo_function();
+  xinfo_function();
 
-    // longlink ip ping
-    for (CheckIPPorts_Iterator iter = _check_request.longlink_items.begin(); iter != _check_request.longlink_items.end(); ++iter) {
-		for (std::vector<CheckIPPort>::iterator ipport = iter->second.begin(); ipport != iter->second.end(); ++ipport) {
-            
-            if (is_canceled_) {
-                xinfo2(TSF"PingChecker is canceled.");
-                return;
-            }
-            
-			CheckResultProfile profile;
-			std::string host = (*ipport).ip.empty() ? DEFAULT_PING_HOST : (*ipport).ip;
-			profile.ip = host;
-			profile.netcheck_type = kPingCheck;
-			profile.network_type = ::getNetInfo();
+  // longlink ip ping
+  for (CheckIPPorts_Iterator iter = _check_request.longlink_items.begin();
+       iter != _check_request.longlink_items.end(); ++iter) {
+    for (std::vector<CheckIPPort>::iterator ipport = iter->second.begin(); ipport != iter->second.end(); ++ipport) {
 
-			uint64_t start_time = gettickcount();
-			PingQuery ping_query;
-			int ret = ping_query.RunPingQuery(0, 0, (UNUSE_TIMEOUT == _check_request.total_timeout ? 0 : _check_request.total_timeout / 1000), host.c_str());
-			uint64_t cost_time = gettickcount() - start_time;
+      if (is_canceled_) {
+        xinfo2(TSF"PingChecker is canceled.");
+        return;
+      }
 
-			profile.error_code = ret;
-			profile.checkcount = DEFAULT_PING_COUNT;
+      CheckResultProfile profile;
+      std::string host = (*ipport).ip.empty() ? DEFAULT_PING_HOST : (*ipport).ip;
+      profile.ip = host;
+      profile.netcheck_type = kPingCheck;
+      profile.network_type = ::getNetInfo();
 
-			struct PingStatus ping_status;  // = {0};  //can not define pingStatus in if(0==ret),because we need pingStatus.ip
-			char loss_rate[16] = {0};
-			char avgrtt[16] = {0};
+      uint64_t start_time = gettickcount();
+      PingQuery ping_query;
+      int ret = ping_query.RunPingQuery(0, 0, (UNUSE_TIMEOUT == _check_request.total_timeout ? 0 :
+                                               _check_request.total_timeout / 1000), host.c_str());
+      uint64_t cost_time = gettickcount() - start_time;
 
-			if (0 == ret) {
-				ping_query.GetPingStatus(ping_status);
-				const float EPSINON = 0.00001;
+      profile.error_code = ret;
+      profile.checkcount = DEFAULT_PING_COUNT;
 
-				if ((ping_status.loss_rate - 1.0) >= -EPSINON && (ping_status.loss_rate - 1.0) <= EPSINON) {
-					xinfo2(TSF"ping check, host: %_ failed.", host);
-				} else {
-					xinfo2(TSF"ping check, host: %_ success.", host);
-				}
+      struct PingStatus ping_status;  // = {0};  //can not define pingStatus in if(0==ret),because we need pingStatus.ip
+      char loss_rate[16] = {0};
+      char avgrtt[16] = {0};
 
-				snprintf(loss_rate, 16, "%f", ping_status.loss_rate);
-				snprintf(avgrtt, 16, "%f", ping_status.avgrtt);
+      if (0 == ret) {
+        ping_query.GetPingStatus(ping_status);
+        const float EPSINON = 0.00001;
 
-				profile.loss_rate = loss_rate;
-				profile.rtt_str = avgrtt;
-			}
+        if ((ping_status.loss_rate - 1.0) >= -EPSINON && (ping_status.loss_rate - 1.0) <= EPSINON) {
+          xinfo2(TSF"ping check, host: %_ failed.", host);
+        } else {
+          xinfo2(TSF"ping check, host: %_ success.", host);
+        }
 
-			_check_request.checkresult_profiles.push_back(profile);
-			_check_request.check_status = (profile.error_code == 0) ? kCheckContinue : kCheckFinish;
+        snprintf(loss_rate, 16, "%f", ping_status.loss_rate);
+        snprintf(avgrtt, 16, "%f", ping_status.avgrtt);
 
-			if (_check_request.total_timeout != UNUSE_TIMEOUT) {
-				_check_request.total_timeout -= cost_time;
-				if (_check_request.total_timeout <= 0) {
-					xinfo2(TSF"ping check, host: %_, timeout.", host);
-					break;
-				}
-			}
-		}
+        profile.loss_rate = loss_rate;
+        profile.rtt_str = avgrtt;
+      }
+
+      _check_request.checkresult_profiles.push_back(profile);
+      _check_request.check_status = (profile.error_code == 0) ? kCheckContinue : kCheckFinish;
+
+      if (_check_request.total_timeout != UNUSE_TIMEOUT) {
+        _check_request.total_timeout -= cost_time;
+        if (_check_request.total_timeout <= 0) {
+          xinfo2(TSF"ping check, host: %_, timeout.", host);
+          break;
+        }
+      }
     }
+  }
 
-    // shortlink ip ping
-    for (CheckIPPorts_Iterator iter = _check_request.shortlink_items.begin(); iter != _check_request.shortlink_items.end(); ++iter) {
-		for (std::vector<CheckIPPort>::iterator ipport = iter->second.begin(); ipport != iter->second.end(); ++ipport) {
-            
-            if (is_canceled_) {
-                xinfo2(TSF"PingChecker is canceled.");
-                return;
-            }
-            
-			CheckResultProfile profile;
-			std::string host = (*ipport).ip.empty() ? DEFAULT_PING_HOST : (*ipport).ip;
-			profile.ip = host;
-			profile.netcheck_type = kPingCheck;
+  // shortlink ip ping
+  for (CheckIPPorts_Iterator iter = _check_request.shortlink_items.begin();
+       iter != _check_request.shortlink_items.end(); ++iter) {
+    for (std::vector<CheckIPPort>::iterator ipport = iter->second.begin(); ipport != iter->second.end(); ++ipport) {
 
-			uint64_t start_time = gettickcount();
-			PingQuery ping_query;
-			int ret = ping_query.RunPingQuery(0, 0, (UNUSE_TIMEOUT == _check_request.total_timeout ? 0 : _check_request.total_timeout / 1000), host.c_str());
-			uint64_t cost_time = gettickcount() - start_time;
+      if (is_canceled_) {
+        xinfo2(TSF"PingChecker is canceled.");
+        return;
+      }
 
-			profile.error_code = ret;
-			profile.checkcount = DEFAULT_PING_COUNT;
+      CheckResultProfile profile;
+      std::string host = (*ipport).ip.empty() ? DEFAULT_PING_HOST : (*ipport).ip;
+      profile.ip = host;
+      profile.netcheck_type = kPingCheck;
 
-			struct PingStatus ping_status;  // = {0};  //can not define pingStatus in if(0==ret),because we need pingStatus.ip
-			char loss_rate[16] = {0};
-			char avgrtt[16] = {0};
+      uint64_t start_time = gettickcount();
+      PingQuery ping_query;
+      int ret = ping_query.RunPingQuery(0, 0, (UNUSE_TIMEOUT == _check_request.total_timeout ? 0 :
+                                               _check_request.total_timeout / 1000), host.c_str());
+      uint64_t cost_time = gettickcount() - start_time;
 
-			if (0 == ret) {
-				ping_query.GetPingStatus(ping_status);
-				const float EPSINON = 0.00001;
+      profile.error_code = ret;
+      profile.checkcount = DEFAULT_PING_COUNT;
 
-				if ((ping_status.loss_rate - 1.0) >= -EPSINON && (ping_status.loss_rate - 1.0) <= EPSINON) {
-					xinfo2(TSF"ping check, host: %_ failed.", host);
-				} else {
-					xinfo2(TSF"ping check, host: %_ success.", host);
-				}
+      struct PingStatus ping_status;  // = {0};  //can not define pingStatus in if(0==ret),because we need pingStatus.ip
+      char loss_rate[16] = {0};
+      char avgrtt[16] = {0};
 
-				snprintf(loss_rate, 16, "%f", ping_status.loss_rate);
-				snprintf(avgrtt, 16, "%f", ping_status.avgrtt);
+      if (0 == ret) {
+        ping_query.GetPingStatus(ping_status);
+        const float EPSINON = 0.00001;
 
-				profile.loss_rate = loss_rate;
-				profile.rtt_str = avgrtt;
-			}
+        if ((ping_status.loss_rate - 1.0) >= -EPSINON && (ping_status.loss_rate - 1.0) <= EPSINON) {
+          xinfo2(TSF"ping check, host: %_ failed.", host);
+        } else {
+          xinfo2(TSF"ping check, host: %_ success.", host);
+        }
 
-			_check_request.checkresult_profiles.push_back(profile);
-			_check_request.check_status = (profile.error_code == 0) ? kCheckContinue : kCheckFinish;
+        snprintf(loss_rate, 16, "%f", ping_status.loss_rate);
+        snprintf(avgrtt, 16, "%f", ping_status.avgrtt);
 
-			if (_check_request.total_timeout != UNUSE_TIMEOUT) {
-				_check_request.total_timeout -= cost_time;
-				if (_check_request.total_timeout <= 0) {
-					xinfo2(TSF"ping check, host: %_, timeout.", host);
-					break;
-				}
-			}
+        profile.loss_rate = loss_rate;
+        profile.rtt_str = avgrtt;
+      }
 
-		}
-	}
+      _check_request.checkresult_profiles.push_back(profile);
+      _check_request.check_status = (profile.error_code == 0) ? kCheckContinue : kCheckFinish;
+
+      if (_check_request.total_timeout != UNUSE_TIMEOUT) {
+        _check_request.total_timeout -= cost_time;
+        if (_check_request.total_timeout <= 0) {
+          xinfo2(TSF"ping check, host: %_, timeout.", host);
+          break;
+        }
+      }
+
+    }
+  }
 
 #endif
 }

@@ -21,19 +21,20 @@
 #define __PublicComponent__testspy__
 
 
-
 class Test_Spy_Sample {
-  public:
-    Test_Spy_Sample();
-    ~Test_Spy_Sample();
+public:
+  Test_Spy_Sample();
 
-    void TestFun0();
-    void TestFun2()  {__TestFun1(1);}
+  ~Test_Spy_Sample();
 
-  private:
-    int __TestFun1(int i);
+  void TestFun0();
 
-  private:
+  void TestFun2() { __TestFun1(1); }
+
+private:
+  int __TestFun1(int i);
+
+private:
 //    int m_t;
 };
 

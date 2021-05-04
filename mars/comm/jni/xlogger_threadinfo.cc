@@ -23,20 +23,20 @@
 
 extern "C"
 {
-EXPORT_FUNC intmax_t xlogger_pid()
-{
-    static intmax_t pid = getpid();
-    return pid;
+EXPORT_FUNC intmax_t
+xlogger_pid() {
+  static intmax_t pid = getpid();
+  return pid;
 }
 
-EXPORT_FUNC intmax_t xlogger_tid()
-{
-    return gettid();
+EXPORT_FUNC intmax_t
+xlogger_tid() {
+  return gettid();
 }
 
-EXPORT_FUNC intmax_t xlogger_maintid()
-{
-    static intmax_t pid = getpid();
-    return pid;
+EXPORT_FUNC intmax_t
+xlogger_maintid() {
+  static intmax_t pid = getpid();
+  return pid;
 }
 }

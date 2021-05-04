@@ -11,7 +11,8 @@
 
 namespace design_patterns {
 
-SERVICE_REGISTER(TestCoreService2, TestCoreService::ServiceName(), EPublic, EFirstGet);
+SERVICE_REGISTER(TestCoreService2, TestCoreService::ServiceName(), EPublic, EFirstGet
+);
 IMPLEMENT_CORE_SERVICE(TestCoreService2);
 
 TestCoreService2::~TestCoreService2() {

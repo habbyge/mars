@@ -28,8 +28,11 @@
 extern "C" {
 #endif
 
-__inline int __boot_run_atstartup(void (*func)(void)) { func(); return 0;}
-__inline int __boot_run_atexit(void (*func)(void)) { return atexit(func);}
+__inline int __boot_run_atstartup(void (* func)(void)) {
+  func();
+  return 0;
+}
+__inline int __boot_run_atexit(void (* func)(void)) { return atexit(func); }
 
 #ifdef __cplusplus
 }

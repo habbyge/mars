@@ -38,64 +38,65 @@
 
 
 LogZlibBuffer::LogZlibBuffer(void* _pbuffer, size_t _len, bool _isCompress, const char* _pubkey)
-    :LogBaseBuffer(_pbuffer, _len, _isCompress, _pubkey) {
+    : LogBaseBuffer(_pbuffer, _len, _isCompress, _pubkey) {
 
-    if (is_compress_) {
-        memset(&cstream_, 0, sizeof(cstream_));
-    }
+  if (is_compress_) {
+    memset(&cstream_, 0, sizeof(cstream_));
+  }
 }
 
 LogZlibBuffer::~LogZlibBuffer() {
-    if (is_compress_ && Z_NULL != cstream_.state) {
-        deflateEnd(&cstream_);
-    }
+  if (is_compress_ && Z_NULL != cstream_.state) {
+    deflateEnd(&cstream_);
+  }
 }
 
 void LogZlibBuffer::Flush(AutoBuffer& _buff) {
-    if (is_compress_ && Z_NULL != cstream_.state) {
-        deflateEnd(&cstream_);
-    }
+  if (is_compress_ && Z_NULL != cstream_.state) {
+    deflateEnd(&cstream_);
+  }
 
-    LogBaseBuffer::Flush(_buff);
+  LogBaseBuffer::Flush(_buff);
 }
 
-size_t LogZlibBuffer::Compress(const void* src, size_t inLen, void* dst, size_t outLen){
-    cstream_.avail_in = (uInt)inLen;
-    cstream_.next_in = (Bytef*)src;
+size_t LogZlibBuffer::Compress(const void* src, size_t inLen, void* dst, size_t outLen) {
+  cstream_.avail_in = (uInt) inLen;
+  cstream_.next_in = (Bytef*) src;
 
-    cstream_.next_out = (Bytef*)dst;
-    cstream_.avail_out = (uInt)outLen;
+  cstream_.next_out = (Bytef*) dst;
+  cstream_.avail_out = (uInt) outLen;
 
-    if (Z_OK != deflate(&cstream_, Z_SYNC_FLUSH)) {
-        return -1;
-    }
-    
-    return outLen - cstream_.avail_out;
+  if (Z_OK != deflate(&cstream_, Z_SYNC_FLUSH)) {
+    return -1;
+  }
+
+  return outLen - cstream_.avail_out;
 }
 
 bool LogZlibBuffer::__Reset() {
-    if (!LogBaseBuffer::__Reset()) {
-        return false;
-    }
-    
-    if (is_compress_) {
-        cstream_.zalloc = Z_NULL;
-        cstream_.zfree = Z_NULL;
-        cstream_.opaque = Z_NULL;
+  if (!LogBaseBuffer::__Reset()) {
+    return false;
+  }
 
-        if (Z_OK != deflateInit2(&cstream_, Z_BEST_COMPRESSION, Z_DEFLATED, -MAX_WBITS, MAX_MEM_LEVEL, Z_DEFAULT_STRATEGY)) {
-            return false;
-        }
-    }
+  if (is_compress_) {
+    cstream_.zalloc = Z_NULL;
+    cstream_.zfree = Z_NULL;
+    cstream_.opaque = Z_NULL;
 
-    return true;
+    if (Z_OK !=
+        deflateInit2(&cstream_, Z_BEST_COMPRESSION, Z_DEFLATED, -MAX_WBITS, MAX_MEM_LEVEL, Z_DEFAULT_STRATEGY)) {
+      return false;
+    }
+  }
+
+  return true;
 }
 
 char LogZlibBuffer::__GetMagicSyncStart() {
-    return is_crypt_ ? LogMagicNum::kMagicSyncZlibStart : LogMagicNum::kMagicSyncNoCryptZlibStart;
+  return is_crypt_ ? LogMagicNum::kMagicSyncZlibStart : LogMagicNum::kMagicSyncNoCryptZlibStart;
 }
 
 char LogZlibBuffer::__GetMagicAsyncStart() {
-    return is_crypt_ ? LogMagicNum::kMagicAsyncZlibStart: LogMagicNum::kMagicAsyncNoCryptZlibStart;
+  return is_crypt_ ? LogMagicNum::kMagicAsyncZlibStart : LogMagicNum::kMagicAsyncNoCryptZlibStart;
 }
 

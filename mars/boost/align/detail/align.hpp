@@ -14,24 +14,25 @@ http://boost.org/LICENSE_1_0.txt
 #include <boost/align/detail/is_alignment.hpp>
 #include <cstddef>
 
-namespace mars_boost {} namespace boost = mars_boost; namespace mars_boost {
+namespace mars_boost {}
+namespace boost = mars_boost;
+namespace mars_boost {
 namespace alignment {
 
 inline void* align(std::size_t alignment, std::size_t size,
-    void*& ptr, std::size_t& space)
-{
-    BOOST_ASSERT(detail::is_alignment(alignment));
-    std::size_t n = detail::address(ptr) & (alignment - 1);
-    if (n != 0) {
-        n = alignment - n;
-    }
-    void* p = 0;
-    if (n <= space && size <= space - n) {
-        p = static_cast<char*>(ptr) + n;
-        ptr = p;
-        space -= n;
-    }
-    return p;
+                   void*& ptr, std::size_t& space) {
+  BOOST_ASSERT(detail::is_alignment(alignment));
+  std::size_t n = detail::address(ptr) & (alignment - 1);
+  if (n != 0) {
+    n = alignment - n;
+  }
+  void* p = 0;
+  if (n <= space && size <= space - n) {
+    p = static_cast<char*>(ptr) + n;
+    ptr = p;
+    space -= n;
+  }
+  return p;
 }
 
 } /* .alignment */

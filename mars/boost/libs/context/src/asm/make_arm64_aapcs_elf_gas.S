@@ -44,27 +44,27 @@
 .global make_fcontext
 .type   make_fcontext, %function
 make_fcontext:
-    # shift address in x0 (allocated stack) to lower 16 byte boundary
+# shift address in x0 (allocated stack) to lower 16 byte boundary
     and x0, x0, ~0xF
 
-    # reserve space for context-data on context-stack
+# reserve space for context-data on context-stack
     sub  x0, x0, #0x70
 
-    # third arg of make_fcontext() == address of context-function
-    # store address as a PC to jump in
+# third arg of make_fcontext() == address of context-function
+# store address as a PC to jump in
     str  x2, [x0, #0x60]
 
-    # save address of finish as return-address for context-function
-    # will be entered after context-function returns (LR register)
+# save address of finish as return-address for context-function
+# will be entered after context-function returns (LR register)
     adr  x1, finish
     str  x1, [x0, #0x58]
 
     ret  x30 // return pointer to context-data (x0)
 
 finish:
-    # exit code is zero
+# exit code is zero
     mov  x0, #0
-    # exit application
+# exit application
     bl  _exit
 
 .size   make_fcontext,.-make_fcontext

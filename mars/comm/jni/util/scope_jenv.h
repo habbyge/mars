@@ -24,18 +24,20 @@
 #include <jni.h>
 
 class ScopeJEnv {
-  public:
-    ScopeJEnv(JavaVM* jvm, jint _capacity = 16);
-    ~ScopeJEnv();
+public:
+  ScopeJEnv(JavaVM* jvm, jint _capacity = 16);
 
-    JNIEnv* GetEnv();
-    int Status();
+  ~ScopeJEnv();
 
-  private:
-    JavaVM* vm_;
-    JNIEnv* env_;
-    bool we_attach_;
-    int status_;
+  JNIEnv* GetEnv();
+
+  int Status();
+
+private:
+  JavaVM* vm_;
+  JNIEnv* env_;
+  bool we_attach_;
+  int status_;
 };
 
 

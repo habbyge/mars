@@ -34,11 +34,11 @@
 #include "mars/comm/coroutine/coro_async.h"
 
 #ifdef ANDROID
-	int g_NetInfo = 0;    // global cache netinfo for android
-	WifiInfo g_wifi_info;
-	SIMInfo g_sim_info;
-	APNInfo g_apn_info;
-	Mutex g_net_mutex;
+int g_NetInfo = 0;    // global cache netinfo for android
+WifiInfo g_wifi_info;
+SIMInfo g_sim_info;
+APNInfo g_apn_info;
+Mutex g_net_mutex;
 #endif
 
 DEFINE_FIND_CLASS(KPlatformCommC2Java, "com/tencent/mars/comm/PlatformComm$C2Java")
@@ -74,359 +74,370 @@ bool stopAlarm(int64_t  id) {
 }
 #endif
 
-DEFINE_FIND_STATIC_METHOD(KPlatformCommC2Java_getProxyInfo, KPlatformCommC2Java, "getProxyInfo", "(Ljava/lang/StringBuffer;)I")
+DEFINE_FIND_STATIC_METHOD(KPlatformCommC2Java_getProxyInfo, KPlatformCommC2Java, "getProxyInfo",
+                          "(Ljava/lang/StringBuffer;)I")
+
 bool getProxyInfo(int& port, std::string& strProxy, const std::string& _host) {
-    xverbose_function();
+  xverbose_function();
 
-    if (coroutine::isCoroutine())
-        return coroutine::MessageInvoke(boost::bind(&getProxyInfo, boost::ref(port), boost::ref(strProxy), _host));
-    
-    VarCache* cacheInstance = VarCache::Singleton();
-    ScopeJEnv scopeJEnv(cacheInstance->GetJvm());
-    JNIEnv* env = scopeJEnv.GetEnv();
+  if (coroutine::isCoroutine())
+    return coroutine::MessageInvoke(boost::bind(&getProxyInfo, boost::ref(port), boost::ref(strProxy), _host));
 
-    // obtain the class StringBuffer
-    jclass stringbufferClz = cacheInstance->GetClass(env, "java/lang/StringBuffer");
+  VarCache* cacheInstance = VarCache::Singleton();
+  ScopeJEnv scopeJEnv(cacheInstance->GetJvm());
+  JNIEnv* env = scopeJEnv.GetEnv();
 
-    // obtain the method id of construct method
-    jmethodID constructMid = cacheInstance->GetMethodId(env, stringbufferClz, "<init>", "()V");
+  // obtain the class StringBuffer
+  jclass stringbufferClz = cacheInstance->GetClass(env, "java/lang/StringBuffer");
 
-    // construct  the object of StringBuffer
-    jobject stringbufferObj = env->NewObject(stringbufferClz, constructMid);
+  // obtain the method id of construct method
+  jmethodID constructMid = cacheInstance->GetMethodId(env, stringbufferClz, "<init>", "()V");
 
-    jint ret = 0;
-    ret = JNU_CallStaticMethodByMethodInfo(env, KPlatformCommC2Java_getProxyInfo, stringbufferObj).i;
+  // construct  the object of StringBuffer
+  jobject stringbufferObj = env->NewObject(stringbufferClz, constructMid);
 
-    if (ret <= 0) {
-        xinfo2(TSF"getProxyInfo port == 0, no proxy");
-        env->DeleteLocalRef(stringbufferObj);
-        port = 0;
-        strProxy = "";
-        return false;
-    }
+  jint ret = 0;
+  ret = JNU_CallStaticMethodByMethodInfo(env, KPlatformCommC2Java_getProxyInfo, stringbufferObj).i;
 
-    port = ret;
-
-    jstring retString = NULL;
-    retString = (jstring)JNU_CallMethodByName(env, stringbufferObj, "toString", "()Ljava/lang/String;").l;
-
-    if (retString != NULL) {
-        strProxy.assign(ScopedJstring(env, retString).GetChar());
-
-        if (strProxy == "null") strProxy.clear();
-
-        env->DeleteLocalRef(retString);
-    } else {
-        strProxy = "";
-    }
-
-    // free the local reference
+  if (ret <= 0) {
+    xinfo2(TSF"getProxyInfo port == 0, no proxy");
     env->DeleteLocalRef(stringbufferObj);
-    xverbose2(TSF"strProxy= %0, port= %1", strProxy.c_str(), port);
-    return !strProxy.empty();
+    port = 0;
+    strProxy = "";
+    return false;
+  }
+
+  port = ret;
+
+  jstring retString = NULL;
+  retString = (jstring) JNU_CallMethodByName(env, stringbufferObj, "toString", "()Ljava/lang/String;").l;
+
+  if (retString != NULL) {
+    strProxy.assign(ScopedJstring(env, retString).GetChar());
+
+    if (strProxy == "null") strProxy.clear();
+
+    env->DeleteLocalRef(retString);
+  } else {
+    strProxy = "";
+  }
+
+  // free the local reference
+  env->DeleteLocalRef(stringbufferObj);
+  xverbose2(TSF"strProxy= %0, port= %1", strProxy.c_str(), port);
+  return !strProxy.empty();
 }
 
 DEFINE_FIND_STATIC_METHOD(KPlatformCommC2Java_getNetInfo, KPlatformCommC2Java, "getNetInfo", "()I")
+
 int getNetInfo() {
-	xverbose_function();
+  xverbose_function();
 
-    // if (g_NetInfo != 0 && g_NetInfo != kNoNet)
-    //     return g_NetInfo;
-    
-    // if (coroutine::isCoroutine())
-    //     return coroutine::MessageInvoke(&getNetInfo);
+  // if (g_NetInfo != 0 && g_NetInfo != kNoNet)
+  //     return g_NetInfo;
 
-    VarCache* cacheInstance = VarCache::Singleton();
-    ScopeJEnv scopeJEnv(cacheInstance->GetJvm());
-    JNIEnv* env = scopeJEnv.GetEnv();
+  // if (coroutine::isCoroutine())
+  //     return coroutine::MessageInvoke(&getNetInfo);
 
-    jint netType = JNU_CallStaticMethodByMethodInfo(env, KPlatformCommC2Java_getNetInfo).i;
-    g_NetInfo = netType;
+  VarCache* cacheInstance = VarCache::Singleton();
+  ScopeJEnv scopeJEnv(cacheInstance->GetJvm());
+  JNIEnv* env = scopeJEnv.GetEnv();
 
-    xverbose2(TSF"netInfo= %0", netType);
-    return (int)netType;
+  jint netType = JNU_CallStaticMethodByMethodInfo(env, KPlatformCommC2Java_getNetInfo).i;
+  g_NetInfo = netType;
+
+  xverbose2(TSF"netInfo= %0", netType);
+  return (int) netType;
 }
 
 DEFINE_FIND_STATIC_METHOD(KPlatformCommC2Java_getStatisticsNetType, KPlatformCommC2Java, "getStatisticsNetType", "()I")
-int getNetTypeForStatistics(){
-    xverbose_function();
 
-    VarCache* cacheInstance = VarCache::Singleton();
-    ScopeJEnv scopeJEnv(cacheInstance->GetJvm());
-    JNIEnv* env = scopeJEnv.GetEnv();
+int getNetTypeForStatistics() {
+  xverbose_function();
 
-    return (int)JNU_CallStaticMethodByMethodInfo(env, KPlatformCommC2Java_getStatisticsNetType).i;
+  VarCache* cacheInstance = VarCache::Singleton();
+  ScopeJEnv scopeJEnv(cacheInstance->GetJvm());
+  JNIEnv* env = scopeJEnv.GetEnv();
+
+  return (int) JNU_CallStaticMethodByMethodInfo(env, KPlatformCommC2Java_getStatisticsNetType).i;
 }
 
-DEFINE_FIND_STATIC_METHOD(KPlatformCommC2Java_getCurRadioAccessNetworkInfo, KPlatformCommC2Java, "getCurRadioAccessNetworkInfo", "()I")
+DEFINE_FIND_STATIC_METHOD(KPlatformCommC2Java_getCurRadioAccessNetworkInfo, KPlatformCommC2Java,
+                          "getCurRadioAccessNetworkInfo", "()I")
+
 bool getCurRadioAccessNetworkInfo(RadioAccessNetworkInfo& _raninfo) {
-    xverbose_function();
+  xverbose_function();
 
-    if (coroutine::isCoroutine())
-        return coroutine::MessageInvoke(boost::bind(&getCurRadioAccessNetworkInfo, boost::ref(_raninfo)));
-    
-    VarCache* cacheInstance = VarCache::Singleton();
-    ScopeJEnv scopeJEnv(cacheInstance->GetJvm());
-    JNIEnv* env = scopeJEnv.GetEnv();
+  if (coroutine::isCoroutine())
+    return coroutine::MessageInvoke(boost::bind(&getCurRadioAccessNetworkInfo, boost::ref(_raninfo)));
 
-    jint netType = JNU_CallStaticMethodByMethodInfo(env, KPlatformCommC2Java_getCurRadioAccessNetworkInfo).i;
+  VarCache* cacheInstance = VarCache::Singleton();
+  ScopeJEnv scopeJEnv(cacheInstance->GetJvm());
+  JNIEnv* env = scopeJEnv.GetEnv();
 
-    xverbose2(TSF"netInfo= %0", netType);
+  jint netType = JNU_CallStaticMethodByMethodInfo(env, KPlatformCommC2Java_getCurRadioAccessNetworkInfo).i;
 
-    switch ((int)netType) {
+  xverbose2(TSF"netInfo= %0", netType);
+
+  switch ((int) netType) {
     case 0:
-        break;
+      break;
 
     case 1:
-        _raninfo.radio_access_network = GPRS;
-        break;
+      _raninfo.radio_access_network = GPRS;
+      break;
 
     case 2:
-        _raninfo.radio_access_network = Edge;
-        break;
+      _raninfo.radio_access_network = Edge;
+      break;
 
     case 3:
-        _raninfo.radio_access_network = UMTS;
-        break;
+      _raninfo.radio_access_network = UMTS;
+      break;
 
     case 4:
-        _raninfo.radio_access_network = CDMA;
-        break;
+      _raninfo.radio_access_network = CDMA;
+      break;
 
     case 5:
-        _raninfo.radio_access_network = CDMAEVDORev0;
-        break;
+      _raninfo.radio_access_network = CDMAEVDORev0;
+      break;
 
     case 6:
-        _raninfo.radio_access_network = CDMAEVDORevA;
-        break;
+      _raninfo.radio_access_network = CDMAEVDORevA;
+      break;
 
     case 7:
-        _raninfo.radio_access_network = CDMA1x;
-        break;
+      _raninfo.radio_access_network = CDMA1x;
+      break;
 
     case 8:
-        _raninfo.radio_access_network = HSDPA;
-        break;
+      _raninfo.radio_access_network = HSDPA;
+      break;
 
     case 9:
-        _raninfo.radio_access_network = HSUPA;
-        break;
+      _raninfo.radio_access_network = HSUPA;
+      break;
 
     case 10:
-        _raninfo.radio_access_network = HSPA;
-        break;
+      _raninfo.radio_access_network = HSPA;
+      break;
 
     case 11:
-        _raninfo.radio_access_network = IDEN;
-        break;
+      _raninfo.radio_access_network = IDEN;
+      break;
 
     case 12:
-        _raninfo.radio_access_network = CDMAEVDORevB;
-        break;
+      _raninfo.radio_access_network = CDMAEVDORevB;
+      break;
 
     case 13:
-        _raninfo.radio_access_network = LTE;
-        break;
+      _raninfo.radio_access_network = LTE;
+      break;
 
     case 14:
-        _raninfo.radio_access_network = eHRPD;
-        break;
+      _raninfo.radio_access_network = eHRPD;
+      break;
 
     case 15:
-        _raninfo.radio_access_network = HSPAP;
-        break;
+      _raninfo.radio_access_network = HSPAP;
+      break;
 
     default:
-        break;
-    }
+      break;
+  }
 
-    return !_raninfo.radio_access_network.empty();
+  return !_raninfo.radio_access_network.empty();
 }
-
 
 
 DEFINE_FIND_STATIC_METHOD(KPlatformCommC2Java_getCurWifiInfo, KPlatformCommC2Java,
                           "getCurWifiInfo", "()Lcom/tencent/mars/comm/PlatformComm$WifiInfo;")
+
 bool getCurWifiInfo(WifiInfo& wifiInfo, bool _force_refresh) {
-    xverbose_function();
+  xverbose_function();
 
-    if (!_force_refresh && !g_wifi_info.ssid.empty()) {
-    	wifiInfo = g_wifi_info;
-    	return true;
-    }
-
-    if (coroutine::isCoroutine())
-        return coroutine::MessageInvoke(boost::bind(&getCurWifiInfo, boost::ref(wifiInfo), _force_refresh));
-                                        
-    VarCache* cacheInstance = VarCache::Singleton();
-    ScopeJEnv scopeJEnv(cacheInstance->GetJvm());
-    JNIEnv* env = scopeJEnv.GetEnv();
-
-    ScopedLock lock(g_net_mutex);
-
-    jobject retObj = JNU_CallStaticMethodByMethodInfo(env, KPlatformCommC2Java_getCurWifiInfo).l;
-
-    if (NULL == retObj) {
-        xwarn2(TSF"getCurWifiInfo error return null");
-        return false;
-    }
-
-
-    jstring ssidJstr = (jstring)JNU_GetField(env, retObj, "ssid", "Ljava/lang/String;").l;
-    jstring bssidJstr = (jstring)JNU_GetField(env, retObj,  "bssid", "Ljava/lang/String;").l;
-
-    if (NULL == ssidJstr || NULL == bssidJstr) {
-        return false;
-    }
-
-    g_wifi_info.ssid = ScopedJstring(env, ssidJstr).GetChar();
-    g_wifi_info.bssid = ScopedJstring(env, bssidJstr).GetChar();
+  if (!_force_refresh && !g_wifi_info.ssid.empty()) {
     wifiInfo = g_wifi_info;
-    env->DeleteLocalRef(ssidJstr);
-    env->DeleteLocalRef(bssidJstr);
-    env->DeleteLocalRef(retObj);
-
     return true;
+  }
+
+  if (coroutine::isCoroutine())
+    return coroutine::MessageInvoke(boost::bind(&getCurWifiInfo, boost::ref(wifiInfo), _force_refresh));
+
+  VarCache* cacheInstance = VarCache::Singleton();
+  ScopeJEnv scopeJEnv(cacheInstance->GetJvm());
+  JNIEnv* env = scopeJEnv.GetEnv();
+
+  ScopedLock lock(g_net_mutex);
+
+  jobject retObj = JNU_CallStaticMethodByMethodInfo(env, KPlatformCommC2Java_getCurWifiInfo).l;
+
+  if (NULL == retObj) {
+    xwarn2(TSF"getCurWifiInfo error return null");
+    return false;
+  }
+
+
+  jstring ssidJstr = (jstring) JNU_GetField(env, retObj, "ssid", "Ljava/lang/String;").l;
+  jstring bssidJstr = (jstring) JNU_GetField(env, retObj, "bssid", "Ljava/lang/String;").l;
+
+  if (NULL == ssidJstr || NULL == bssidJstr) {
+    return false;
+  }
+
+  g_wifi_info.ssid = ScopedJstring(env, ssidJstr).GetChar();
+  g_wifi_info.bssid = ScopedJstring(env, bssidJstr).GetChar();
+  wifiInfo = g_wifi_info;
+  env->DeleteLocalRef(ssidJstr);
+  env->DeleteLocalRef(bssidJstr);
+  env->DeleteLocalRef(retObj);
+
+  return true;
 }
 
 DEFINE_FIND_STATIC_METHOD(KPlatformCommC2Java_getCurSIMInfo, KPlatformCommC2Java, "getCurSIMInfo",
                           "()Lcom/tencent/mars/comm/PlatformComm$SIMInfo;")
+
 bool getCurSIMInfo(SIMInfo& simInfo) {
-    xverbose_function();
+  xverbose_function();
 
-    if (!g_sim_info.isp_code.empty()) {
-    	simInfo = g_sim_info;
-    	return true;
-    }
-    
-    if (coroutine::isCoroutine())
-        return coroutine::MessageInvoke(boost::bind(&getCurSIMInfo, boost::ref(simInfo)));
-
-    VarCache* cacheInstance = VarCache::Singleton();
-    ScopeJEnv scopeJEnv(cacheInstance->GetJvm());
-    JNIEnv* env = scopeJEnv.GetEnv();
-
-    ScopedLock lock(g_net_mutex);
-    jobject retObj = JNU_CallStaticMethodByMethodInfo(env, KPlatformCommC2Java_getCurSIMInfo).l;
-
-    if (NULL == retObj) {
-        xwarn2(TSF"getCurSIMInfo error return null");
-        return false;
-    }
-
-
-    jstring ispCodeJstr = (jstring)JNU_GetField(env, retObj, "ispCode", "Ljava/lang/String;").l;
-    jstring ispNameJstr = (jstring)JNU_GetField(env, retObj, "ispName", "Ljava/lang/String;").l;
-
-    env->DeleteLocalRef(retObj);
-
-    if (NULL == ispCodeJstr) {
-        return false;
-    }
-
-    xgroup2_define(group);
-    ScopedJstring icJstr(env, ispCodeJstr);
-    xdebug2(TSF"ispCode:%0, ", icJstr.GetChar()) >> group;
-
-    g_sim_info.isp_code = icJstr.GetChar();
-    env->DeleteLocalRef(ispCodeJstr);
-
-    if (NULL == ispNameJstr) { return true;    }  // isp name may NULL or empty
-
-    ScopedJstring inJstr(env, ispNameJstr);
-    xdebug2(TSF"ispName:%0", inJstr.GetChar()) >> group;
-
-    g_sim_info.isp_name = inJstr.GetChar();
-    env->DeleteLocalRef(ispNameJstr);
-
+  if (!g_sim_info.isp_code.empty()) {
     simInfo = g_sim_info;
-
     return true;
+  }
+
+  if (coroutine::isCoroutine())
+    return coroutine::MessageInvoke(boost::bind(&getCurSIMInfo, boost::ref(simInfo)));
+
+  VarCache* cacheInstance = VarCache::Singleton();
+  ScopeJEnv scopeJEnv(cacheInstance->GetJvm());
+  JNIEnv* env = scopeJEnv.GetEnv();
+
+  ScopedLock lock(g_net_mutex);
+  jobject retObj = JNU_CallStaticMethodByMethodInfo(env, KPlatformCommC2Java_getCurSIMInfo).l;
+
+  if (NULL == retObj) {
+    xwarn2(TSF"getCurSIMInfo error return null");
+    return false;
+  }
+
+
+  jstring ispCodeJstr = (jstring) JNU_GetField(env, retObj, "ispCode", "Ljava/lang/String;").l;
+  jstring ispNameJstr = (jstring) JNU_GetField(env, retObj, "ispName", "Ljava/lang/String;").l;
+
+  env->DeleteLocalRef(retObj);
+
+  if (NULL == ispCodeJstr) {
+    return false;
+  }
+
+  xgroup2_define(group);
+  ScopedJstring icJstr(env, ispCodeJstr);
+  xdebug2(TSF"ispCode:%0, ", icJstr.GetChar()) >> group;
+
+  g_sim_info.isp_code = icJstr.GetChar();
+  env->DeleteLocalRef(ispCodeJstr);
+
+  if (NULL == ispNameJstr) { return true; }  // isp name may NULL or empty
+
+  ScopedJstring inJstr(env, ispNameJstr);
+  xdebug2(TSF"ispName:%0", inJstr.GetChar()) >> group;
+
+  g_sim_info.isp_name = inJstr.GetChar();
+  env->DeleteLocalRef(ispNameJstr);
+
+  simInfo = g_sim_info;
+
+  return true;
 }
 
-DEFINE_FIND_STATIC_METHOD(KPlatformCommC2Java_getAPNInfo, KPlatformCommC2Java, "getAPNInfo", "()Lcom/tencent/mars/comm/PlatformComm$APNInfo;")
+DEFINE_FIND_STATIC_METHOD(KPlatformCommC2Java_getAPNInfo, KPlatformCommC2Java, "getAPNInfo",
+                          "()Lcom/tencent/mars/comm/PlatformComm$APNInfo;")
+
 bool getAPNInfo(APNInfo& info) {
-    xverbose_function();
+  xverbose_function();
 
-    if (g_apn_info.nettype >= kNoNet) {
-    	info = g_apn_info;
-    	return true;
-    }
-
-    if (coroutine::isCoroutine())
-        return coroutine::MessageInvoke(boost::bind(&getAPNInfo, boost::ref(info)));
-                                        
-    VarCache* cacheInstance = VarCache::Singleton();
-    ScopeJEnv scopeJEnv(cacheInstance->GetJvm());
-    JNIEnv* env = scopeJEnv.GetEnv();
-
-    ScopedLock lock(g_net_mutex);
-
-    jobject retObj = JNU_CallStaticMethodByName(env, cacheInstance->GetClass(env, KPlatformCommC2Java), "getAPNInfo", "()Lcom/tencent/mars/comm/PlatformComm$APNInfo;").l;
-
-    if (NULL == retObj) {
-        xinfo2(TSF"getAPNInfo error return null");
-        return false;
-    }
-
-
-    g_apn_info.nettype = (int)JNU_GetField(env, retObj, "netType", "I").i;
-    g_apn_info.sub_nettype = (int)JNU_GetField(env, retObj, "subNetType", "I").i;
-
-    jstring extraStr = (jstring)JNU_GetField(env, retObj, "extraInfo", "Ljava/lang/String;").l;
-
-    env->DeleteLocalRef(retObj);
-
-    if (extraStr != NULL) {
-        ScopedJstring extraJstr(env, extraStr);
-
-        if (extraJstr.GetChar() != NULL) {
-        	g_apn_info.extra_info = extraJstr.GetChar();
-        }
-
-        env->DeleteLocalRef(extraStr);
-    }
-
+  if (g_apn_info.nettype >= kNoNet) {
     info = g_apn_info;
     return true;
+  }
+
+  if (coroutine::isCoroutine())
+    return coroutine::MessageInvoke(boost::bind(&getAPNInfo, boost::ref(info)));
+
+  VarCache* cacheInstance = VarCache::Singleton();
+  ScopeJEnv scopeJEnv(cacheInstance->GetJvm());
+  JNIEnv* env = scopeJEnv.GetEnv();
+
+  ScopedLock lock(g_net_mutex);
+
+  jobject retObj = JNU_CallStaticMethodByName(env, cacheInstance->GetClass(env, KPlatformCommC2Java), "getAPNInfo",
+                                              "()Lcom/tencent/mars/comm/PlatformComm$APNInfo;").l;
+
+  if (NULL == retObj) {
+    xinfo2(TSF"getAPNInfo error return null");
+    return false;
+  }
+
+
+  g_apn_info.nettype = (int) JNU_GetField(env, retObj, "netType", "I").i;
+  g_apn_info.sub_nettype = (int) JNU_GetField(env, retObj, "subNetType", "I").i;
+
+  jstring extraStr = (jstring) JNU_GetField(env, retObj, "extraInfo", "Ljava/lang/String;").l;
+
+  env->DeleteLocalRef(retObj);
+
+  if (extraStr != NULL) {
+    ScopedJstring extraJstr(env, extraStr);
+
+    if (extraJstr.GetChar() != NULL) {
+      g_apn_info.extra_info = extraJstr.GetChar();
+    }
+
+    env->DeleteLocalRef(extraStr);
+  }
+
+  info = g_apn_info;
+  return true;
 }
 
 DEFINE_FIND_STATIC_METHOD(KPlatformCommC2Java_getSignal, KPlatformCommC2Java, "getSignal", "(Z)J")
 
 unsigned int getSignal(bool isWifi) {
-    xverbose_function();
+  xverbose_function();
 
-    if (coroutine::isCoroutine())
-        return coroutine::MessageInvoke(boost::bind(&getSignal, isWifi));
-                                        
-    VarCache* cacheInstance = VarCache::Singleton();
-    ScopeJEnv scopeJEnv(cacheInstance->GetJvm());
+  if (coroutine::isCoroutine())
+    return coroutine::MessageInvoke(boost::bind(&getSignal, isWifi));
 
-    jlong signal = JNU_CallStaticMethodByMethodInfo(scopeJEnv.GetEnv(), KPlatformCommC2Java_getSignal, isWifi).j;
+  VarCache* cacheInstance = VarCache::Singleton();
+  ScopeJEnv scopeJEnv(cacheInstance->GetJvm());
 
-    xverbose2(TSF"Signal Strength= %0, wifi:%1", signal, isWifi);
-    return (unsigned int)signal;
+  jlong signal = JNU_CallStaticMethodByMethodInfo(scopeJEnv.GetEnv(), KPlatformCommC2Java_getSignal, isWifi).j;
+
+  xverbose2(TSF"Signal Strength= %0, wifi:%1", signal, isWifi);
+  return (unsigned int) signal;
 }
 
 DEFINE_FIND_STATIC_METHOD(KPlatformCommC2Java_isNetworkConnected, KPlatformCommC2Java, "isNetworkConnected", "()Z")
+
 bool isNetworkConnected() {
-    xverbose_function();
+  xverbose_function();
 
-    if (coroutine::isCoroutine())
-        return coroutine::MessageInvoke(&isNetworkConnected);
-                                        
-    VarCache* cacheInstance = VarCache::Singleton();
-    ScopeJEnv scopeJEnv(cacheInstance->GetJvm());
+  if (coroutine::isCoroutine())
+    return coroutine::MessageInvoke(&isNetworkConnected);
 
-    jboolean ret = JNU_CallStaticMethodByMethodInfo(scopeJEnv.GetEnv(), KPlatformCommC2Java_isNetworkConnected).z;
-    xverbose2(TSF"ret= %0", (bool)ret);
-    return (bool)ret;
+  VarCache* cacheInstance = VarCache::Singleton();
+  ScopeJEnv scopeJEnv(cacheInstance->GetJvm());
+
+  jboolean ret = JNU_CallStaticMethodByMethodInfo(scopeJEnv.GetEnv(), KPlatformCommC2Java_isNetworkConnected).z;
+  xverbose2(TSF"ret= %0", (bool) ret);
+  return (bool) ret;
 }
 
 
 bool getifaddrs_ipv4_hotspot(std::string& _ifname, std::string& _ip) {
-    return false;
+  return false;
 }
 
 #ifdef ANDROID

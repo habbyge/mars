@@ -36,15 +36,15 @@
 #   define BOOST_MPL_PP_REPEAT_9(f,p) f(0,0,p) f(0,1,p) f(0,2,p) f(0,3,p) f(0,4,p) f(0,5,p) f(0,6,p) f(0,7,p) f(0,8,p)
 #   define BOOST_MPL_PP_REPEAT_10(f,p) f(0,0,p) f(0,1,p) f(0,2,p) f(0,3,p) f(0,4,p) f(0,5,p) f(0,6,p) f(0,7,p) f(0,8,p) f(0,9,p)
 
-#else 
+#else
 
 #   include <boost/preprocessor/repeat.hpp>
 
-#   define BOOST_MPL_PP_REPEAT(n,f,param) \
+#   define BOOST_MPL_PP_REPEAT(n, f, param) \
     BOOST_PP_REPEAT(n,f,param) \
     /**/
 
-#endif 
+#endif
 
 #define BOOST_MPL_PP_REPEAT_IDENTITY_FUNC(unused1, unused2, x) x
 

@@ -19,34 +19,40 @@
 
 
 #ifndef _SOCKSTBREAKER_
-#define _SOCKSTBREAKER_ 
+#define _SOCKSTBREAKER_
 
 #include "comm/thread/lock.h"
 
 class SocketBreaker {
-  public:
-    SocketBreaker();
-    ~SocketBreaker();
+public:
+  SocketBreaker();
 
-    bool IsCreateSuc() const;
-    bool ReCreate();
-    void Close();
+  ~SocketBreaker();
 
-    bool Break();
-    bool Clear();
+  bool IsCreateSuc() const;
 
-    bool IsBreak() const;
-    int  BreakerFD() const;
+  bool ReCreate();
 
-  private:
-    SocketBreaker(const SocketBreaker&);
-    SocketBreaker& operator=(const SocketBreaker&);
+  void Close();
 
-  private:
-    int   pipes_[2];
-    bool  create_success_;
-    bool  broken_;
-    Mutex mutex_;
+  bool Break();
+
+  bool Clear();
+
+  bool IsBreak() const;
+
+  int BreakerFD() const;
+
+private:
+  SocketBreaker(const SocketBreaker&);
+
+  SocketBreaker& operator=(const SocketBreaker&);
+
+private:
+  int pipes_[2];
+  bool create_success_;
+  bool broken_;
+  Mutex mutex_;
 };
 
 #endif

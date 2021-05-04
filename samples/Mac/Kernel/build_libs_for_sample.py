@@ -1,10 +1,8 @@
 #!/usr/bin/env python
 
-import sys
 import os
-import glob
 import shutil
-
+import sys
 
 MARS_OPEN_LIBRARIES_PATH = os.path.join(os.path.split(os.path.realpath(__file__))[0], "../../../mars/libraries")
 sys.path.append(MARS_OPEN_LIBRARIES_PATH)

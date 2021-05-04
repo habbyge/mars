@@ -29,34 +29,37 @@ namespace design_patterns {
 
 struct ServiceRegister;
 
-class CoreServiceBase: public ServiceBase {
-  protected:
-    CoreServiceBase(const char* _servicename);
-    virtual ~CoreServiceBase();
+class CoreServiceBase : public ServiceBase {
+protected:
+  CoreServiceBase(const char* _servicename);
 
-  public:
-    template<typename T>
-    T* Service() {
-        if (m_publicservices.end() != m_publicservices.find(T::ServiceName()))
-            return (T*)m_publicservices[T::ServiceName()];
+  virtual ~CoreServiceBase();
 
-        __FirstGetCreater(T::ServiceName());
+public:
+  template<typename T>
+  T* Service() {
+    if (m_publicservices.end() != m_publicservices.find(T::ServiceName()))
+      return (T*) m_publicservices[T::ServiceName()];
 
-        if (m_publicservices.end() != m_publicservices.find(T::ServiceName()))
-            return (T*)m_publicservices[T::ServiceName()];
+    __FirstGetCreater(T::ServiceName());
 
-        return NULL;
-    }
+    if (m_publicservices.end() != m_publicservices.find(T::ServiceName()))
+      return (T*) m_publicservices[T::ServiceName()];
 
-  private:
-    void __StartupCreater();
-    void __FirstGetCreater(const std::string& _servicename);
-    void __Creater(std::vector<ServiceRegister>& _vec);
+    return NULL;
+  }
 
-  private:
-    TServicesMap m_services;
-    TServicesMap m_publicservices;
-    std::vector<ServiceBase*> m_releasevec;
+private:
+  void __StartupCreater();
+
+  void __FirstGetCreater(const std::string& _servicename);
+
+  void __Creater(std::vector<ServiceRegister>& _vec);
+
+private:
+  TServicesMap m_services;
+  TServicesMap m_publicservices;
+  std::vector<ServiceBase*> m_releasevec;
 };
 
 }

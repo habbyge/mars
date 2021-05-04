@@ -24,11 +24,11 @@
 #include "comm/socket/socket_address.h"
 
 namespace mars {
-    namespace comm {
+namespace comm {
 
 void getdnssvraddrs(std::vector<socket_address>& _dnssvraddrs);
 
-    }
+}
 }
 
 #endif /* getdnssvraddress_hpp */

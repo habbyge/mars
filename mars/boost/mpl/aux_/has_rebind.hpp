@@ -32,12 +32,18 @@
 #   include <boost/mpl/aux_/config/static_constant.hpp>
 #   include <boost/type_traits/is_class.hpp>
 #else
+
 #   include <boost/mpl/aux_/type_wrapper.hpp>
 #   include <boost/mpl/aux_/yes_no.hpp>
 #   include <boost/mpl/aux_/config/static_constant.hpp>
+
 #endif
 
-namespace mars_boost {} namespace boost = mars_boost; namespace mars_boost { namespace mpl { namespace aux {
+namespace mars_boost {}
+namespace boost = mars_boost;
+namespace mars_boost {
+namespace mpl {
+namespace aux {
 
 #if BOOST_WORKAROUND(__EDG_VERSION__, <= 244) && !defined(BOOST_INTEL_CXX_VERSION)
 
@@ -59,18 +65,23 @@ struct has_rebind
 
 #else // the rest
 
-template< typename T > struct has_rebind_tag {};
+template<typename T>
+struct has_rebind_tag {
+};
+
 no_tag operator|(has_rebind_tag<int>, void const volatile*);
 
 #   if !BOOST_WORKAROUND(__BORLANDC__, BOOST_TESTED_AT(0x610))
-template< typename T >
-struct has_rebind
-{
-    static has_rebind_tag<T>* get();
-    BOOST_STATIC_CONSTANT(bool, value = 
-          sizeof(has_rebind_tag<int>() | get()) == sizeof(yes_tag)
-        );
+
+template<typename T>
+struct has_rebind {
+  static has_rebind_tag<T>* get();
+
+  BOOST_STATIC_CONSTANT(bool, value =
+                                  sizeof(has_rebind_tag<int>() | get()) == sizeof(yes_tag)
+  );
 };
+
 #   else // __BORLANDC__
 template< typename T >
 struct has_rebind_impl
@@ -94,6 +105,8 @@ struct has_rebind
 
 #endif
 
-}}}
+}
+}
+}
 
 #endif // BOOST_MPL_AUX_HAS_REBIND_HPP_INCLUDED

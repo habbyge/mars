@@ -20,17 +20,18 @@
 
 BOOST_MPL_AUX_ADL_BARRIER_NAMESPACE_OPEN
 
-template< bool C_ > struct bool_
-{
-    BOOST_STATIC_CONSTANT(bool, value = C_);
-    typedef integral_c_tag tag;
-    typedef bool_ type;
-    typedef bool value_type;
-    BOOST_CONSTEXPR operator bool() const { return this->value; }
+template<bool C_>
+struct bool_ {
+  BOOST_STATIC_CONSTANT(bool, value = C_);
+  typedef integral_c_tag tag;
+  typedef bool_ type;
+  typedef bool value_type;
+
+  BOOST_CONSTEXPR operator bool() const { return this->value; }
 };
 
 #if !defined(BOOST_NO_INCLASS_MEMBER_INITIALIZATION)
-template< bool C_ >
+template<bool C_>
 bool const bool_<C_>::value;
 #endif
 

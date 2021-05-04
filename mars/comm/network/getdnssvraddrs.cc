@@ -20,7 +20,7 @@
 #include "comm/network/getdnssvraddrs.h"
 
 namespace mars {
-    namespace comm {
+namespace comm {
 #ifdef ANDROID
 #include <sys/system_properties.h>
 
@@ -34,28 +34,30 @@ void getdnssvraddrs(std::vector<socket_address>& dnsServers) {
 }
 
 #elif defined __APPLE__
+
 #include <TargetConditionals.h>
 #include <resolv.h>
+
 #define RESOLV_CONFIG_PATH ("/etc/resolv.conf")
 
 #define NAME_SVR ("nameserver")
 #define NAME_SVR_LEN (10)
 
 void getdnssvraddrs(std::vector<socket_address>& _dnssvraddrs) {
-    struct __res_state stat = {0};
-    res_ninit(&stat);
-    union res_sockaddr_union addrs[MAXNS] = {0};
-    int count = res_getservers(const_cast<res_state>(&stat), addrs, MAXNS);
-    for (int i = 0; i < count; ++i) {
-        if (AF_INET == addrs[i].sin.sin_family) {
-            _dnssvraddrs.push_back(socket_address(addrs[i].sin));
-        } else if (AF_INET6 == addrs[i].sin.sin_family) {
-            _dnssvraddrs.push_back(socket_address(addrs[i].sin6));
-        }
-            
+  struct __res_state stat = {0};
+  res_ninit(&stat);
+  union res_sockaddr_union addrs[MAXNS] = {0};
+  int count = res_getservers(const_cast<res_state>(&stat), addrs, MAXNS);
+  for (int i = 0; i < count; ++i) {
+    if (AF_INET == addrs[i].sin.sin_family) {
+      _dnssvraddrs.push_back(socket_address(addrs[i].sin));
+    } else if (AF_INET6 == addrs[i].sin.sin_family) {
+      _dnssvraddrs.push_back(socket_address(addrs[i].sin6));
     }
-    
-    res_ndestroy(&stat);
+
+  }
+
+  res_ndestroy(&stat);
 }
 
 #elif defined WP8
@@ -79,7 +81,7 @@ void getdnssvraddrs(std::vector<socket_address>& _dnssvraddrs) {
     IP_ADDR_STRING* pIPAddr = fi.DnsServerList.Next;
     
     while (pIPAddr != NULL) {
-		_dnssvraddrs.push_back(socket_address(pIPAddr->IpAddress.String, 53) );
+    _dnssvraddrs.push_back(socket_address(pIPAddr->IpAddress.String, 53) );
         pIPAddr = pIPAddr->Next;
     }
     
@@ -89,5 +91,5 @@ void getdnssvraddrs(std::vector<socket_address>& _dnssvraddrs) {
 void getdnssvraddrs(std::vector<socket_address>& _dnssvraddrs) {
 }
 #endif
-    }
+}
 }

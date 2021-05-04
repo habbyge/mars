@@ -21,10 +21,12 @@
 #include "comm/xlogger/xlogger.h"
 
 
-namespace mars_boost {} namespace boost = mars_boost; namespace mars_boost {
+namespace mars_boost {}
+namespace boost = mars_boost;
+namespace mars_boost {
 
-    void throw_exception( std::exception const & e ) {
-        xfatal2(TSF"boost exception:%_", e.what());
+void throw_exception(std::exception const& e) {
+  xfatal2(TSF"boost exception:%_", e.what());
 
-    }
+}
 }

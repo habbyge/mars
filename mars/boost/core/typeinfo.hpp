@@ -22,66 +22,58 @@
 #include <boost/current_function.hpp>
 #include <functional>
 
-namespace mars_boost {} namespace boost = mars_boost; namespace mars_boost
-{
+namespace mars_boost {}
+namespace boost = mars_boost;
+namespace mars_boost {
 
-namespace core
-{
+namespace core {
 
-class typeinfo
-{
+class typeinfo {
 private:
 
-    typeinfo( typeinfo const& );
-    typeinfo& operator=( typeinfo const& );
+  typeinfo(typeinfo const&);
 
-    char const * name_;
+  typeinfo& operator=(typeinfo const&);
+
+  char const* name_;
 
 public:
 
-    explicit typeinfo( char const * name ): name_( name )
-    {
-    }
+  explicit typeinfo(char const* name) : name_(name) {
+  }
 
-    bool operator==( typeinfo const& rhs ) const
-    {
-        return this == &rhs;
-    }
+  bool operator==(typeinfo const& rhs) const {
+    return this == &rhs;
+  }
 
-    bool operator!=( typeinfo const& rhs ) const
-    {
-        return this != &rhs;
-    }
+  bool operator!=(typeinfo const& rhs) const {
+    return this != &rhs;
+  }
 
-    bool before( typeinfo const& rhs ) const
-    {
-        return std::less< typeinfo const* >()( this, &rhs );
-    }
+  bool before(typeinfo const& rhs) const {
+    return std::less<typeinfo const*>()(this, &rhs);
+  }
 
-    char const* name() const
-    {
-        return name_;
-    }
+  char const* name() const {
+    return name_;
+  }
 };
 
-inline char const * demangled_name( core::typeinfo const & ti )
-{
-    return ti.name();
+inline char const* demangled_name(core::typeinfo const& ti) {
+  return ti.name();
 }
 
 } // namespace core
 
-namespace detail
-{
+namespace detail {
 
-template<class T> struct core_typeid_
-{
-    static mars_boost::core::typeinfo ti_;
+template<class T>
+struct core_typeid_ {
+  static mars_boost::core::typeinfo ti_;
 
-    static char const * name()
-    {
-        return BOOST_CURRENT_FUNCTION;
-    }
+  static char const* name() {
+    return BOOST_CURRENT_FUNCTION;
+  }
 };
 
 #if defined(__SUNPRO_CC)
@@ -89,23 +81,23 @@ template<class T> struct core_typeid_
 // constructor arguments. But an assignment works just fine. 
 template<class T> mars_boost::core::typeinfo core_typeid_< T >::ti_ = core_typeid_< T >::name();
 #else
-template<class T> mars_boost::core::typeinfo core_typeid_< T >::ti_(core_typeid_< T >::name());
+template<class T> mars_boost::core::typeinfo core_typeid_<T>::ti_(core_typeid_<T>::name());
 #endif
 
-template<class T> struct core_typeid_< T & >: core_typeid_< T >
-{
+template<class T>
+struct core_typeid_<T&> : core_typeid_<T> {
 };
 
-template<class T> struct core_typeid_< T const >: core_typeid_< T >
-{
+template<class T>
+struct core_typeid_<T const> : core_typeid_<T> {
 };
 
-template<class T> struct core_typeid_< T volatile >: core_typeid_< T >
-{
+template<class T>
+struct core_typeid_<T volatile> : core_typeid_<T> {
 };
 
-template<class T> struct core_typeid_< T const volatile >: core_typeid_< T >
-{
+template<class T>
+struct core_typeid_<T const volatile> : core_typeid_<T> {
 };
 
 } // namespace detail

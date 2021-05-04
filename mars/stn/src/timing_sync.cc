@@ -43,81 +43,69 @@ static const int kAlarmType = 105;
 #endif
 
 
-static int GetAlarmTime(bool _is_actived)
-{
-    int time = 0;
-    //todo
-    if (_is_actived && !::GetAccountInfo().is_logoned)
-    {
-        time = UNLOGIN_SYNC_INTERVAL;
-    }
-    else
-	{
-        time = _is_actived? ACTIVE_SYNC_INTERVAL : INACTIVE_SYNC_INTERVAL;
-    }
+static int GetAlarmTime(bool _is_actived) {
+  int time = 0;
+  //todo
+  if (_is_actived && !::GetAccountInfo().is_logoned) {
+    time = UNLOGIN_SYNC_INTERVAL;
+  } else {
+    time = _is_actived ? ACTIVE_SYNC_INTERVAL : INACTIVE_SYNC_INTERVAL;
+  }
 
-    if (kNoNet == getNetInfo())
-    {
-        time *= NONET_SALT_RATE;
-    }
+  if (kNoNet == getNetInfo()) {
+    time *= NONET_SALT_RATE;
+  }
 
-    return time;
+  return time;
 }
 
-TimingSync::TimingSync(ActiveLogic& _active_logic)
-:alarm_(boost::bind(&TimingSync::__OnAlarm, this), false)
-, active_logic_(_active_logic)
-{
-    timing_sync_active_connection_ = _active_logic.SignalActive.connect(boost::bind(&TimingSync::OnActiveChanged, this, _1));
+TimingSync::TimingSync(ActiveLogic& _active_logic) : alarm_(boost::bind(&TimingSync::__OnAlarm, this), false),
+                                                     active_logic_(_active_logic) {
+
+  timing_sync_active_connection_ = _active_logic.SignalActive.connect(
+      boost::bind(&TimingSync::OnActiveChanged, this, _1));
+
 #ifdef __ANDROID__
-    alarm_.SetType(kAlarmType);
+  alarm_.SetType(kAlarmType);
 #endif
-    alarm_.Start(GetAlarmTime(active_logic_.IsActive()));
+  alarm_.Start(GetAlarmTime(active_logic_.IsActive()));
 }
 
-TimingSync::~TimingSync()
-{
+TimingSync::~TimingSync() {
+  alarm_.Cancel();
+}
+
+void TimingSync::OnActiveChanged(bool _is_actived) {
+  xdebug_function();
+  if (alarm_.IsWaiting()) {
     alarm_.Cancel();
+    alarm_.Start(GetAlarmTime(_is_actived));
+  }
 }
 
-void TimingSync::OnActiveChanged(bool _is_actived)
-{
-    xdebug_function();
-    if (alarm_.IsWaiting())
-    {
-        alarm_.Cancel();
-        alarm_.Start(GetAlarmTime(_is_actived));
-    }
-}
-
-void TimingSync::OnNetworkChange()
-{
-    if (alarm_.IsWaiting())
-    {
-         alarm_.Cancel();
-         alarm_.Start(GetAlarmTime(active_logic_.IsActive()));
-    }
-}
-
-void TimingSync::OnLongLinkStatuChanged(LongLink::TLongLinkStatus _status, const std::string& _channel_id)
-{
-    xverbose_function();
-    if (_status == LongLink::kConnected)
-        alarm_.Cancel();
-    else if (_status == LongLink::kDisConnected)
-        alarm_.Start(GetAlarmTime(active_logic_.IsActive()));
-}
-
-void TimingSync::__OnAlarm()
-{
-    xdebug_function();
-
-    if (kNoNet !=::getNetInfo())
-    {
-        xinfo2(TSF"timing sync onRequestDoSync netinfo:%_", ::getNetInfo());
-        ::RequestSync();
-    }
-
+void TimingSync::OnNetworkChange() {
+  if (alarm_.IsWaiting()) {
+    alarm_.Cancel();
     alarm_.Start(GetAlarmTime(active_logic_.IsActive()));
+  }
+}
+
+void TimingSync::OnLongLinkStatuChanged(LongLink::TLongLinkStatus _status, const std::string& _channel_id) {
+  xverbose_function();
+  if (_status == LongLink::kConnected)
+    alarm_.Cancel();
+  else if (_status == LongLink::kDisConnected)
+    alarm_.Start(GetAlarmTime(active_logic_.IsActive()));
+}
+
+void TimingSync::__OnAlarm() {
+  xdebug_function();
+
+  if (kNoNet != ::getNetInfo()) {
+    xinfo2(TSF"timing sync onRequestDoSync netinfo:%_", ::getNetInfo());
+    ::RequestSync();
+  }
+
+  alarm_.Start(GetAlarmTime(active_logic_.IsActive()));
 }
 

@@ -16,8 +16,11 @@
 #include "utils/ResourcePool.h"
 #include "utils/ThreadPool.h"
 #include "utils/WorkQueue.h"
+
 #define ZSTD_STATIC_LINKING_ONLY
+
 #include "zstd.h"
+
 #undef ZSTD_STATIC_LINKING_ONLY
 
 #include <cstddef>
@@ -35,7 +38,7 @@ namespace pzstd {
 int pzstdMain(const Options& options);
 
 class SharedState {
- public:
+public:
   SharedState(const Options& options) : log(options.verbosity) {
     if (!options.decompress) {
       auto parameters = options.determineParameters();
@@ -53,7 +56,7 @@ class SharedState {
             }
             return zcs;
           },
-          [](ZSTD_CStream *zcs) {
+          [](ZSTD_CStream* zcs) {
             ZSTD_freeCStream(zcs);
           }});
     } else {
@@ -70,7 +73,7 @@ class SharedState {
             }
             return zds;
           },
-          [](ZSTD_DStream *zds) {
+          [](ZSTD_DStream* zds) {
             ZSTD_freeDStream(zds);
           }});
     }

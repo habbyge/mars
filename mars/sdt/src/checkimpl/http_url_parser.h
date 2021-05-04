@@ -30,131 +30,133 @@
 
 namespace mars {
 namespace sdt {
-	class HttpUrlParser {
-	public:
-		explicit HttpUrlParser(const char* url, size_t length)
-		: port_(80) {
-			url_.assign(url, length);
-			strutil::Trim(url_);
-			Parse();
-		}
+class HttpUrlParser {
+public:
+  explicit HttpUrlParser(const char* url, size_t length)
+      : port_(80) {
+    url_.assign(url, length);
+    strutil::Trim(url_);
+    Parse();
+  }
 
-		explicit HttpUrlParser(const char* url)
-		: port_(80) {
-			url_ = url;
-			strutil::Trim(url_);
-			Parse();
-		}
+  explicit HttpUrlParser(const char* url)
+      : port_(80) {
+    url_ = url;
+    strutil::Trim(url_);
+    Parse();
+  }
 
-		explicit HttpUrlParser(const std::string& url)
-		: port_(80), url_(url) {
-			strutil::Trim(url_);
-			Parse();
-		}
+  explicit HttpUrlParser(const std::string& url)
+      : port_(80), url_(url) {
+    strutil::Trim(url_);
+    Parse();
+  }
 
-		const char* Host() {
-			return host_.c_str();
-		}
+  const char* Host() {
+    return host_.c_str();
+  }
 
-		uint16_t Port() {
-			return port_;
-		}
+  uint16_t Port() {
+    return port_;
+  }
 
-		const char* Path() {
-			return path_.c_str();
-		}
+  const char* Path() {
+    return path_.c_str();
+  }
 
-	private:
-		bool Parse() {
-			if (url_.empty()) {
-				xwarn2(TSF"url_ is empty.");
-				return false;
-			}
+private:
+  bool Parse() {
+    if (url_.empty()) {
+      xwarn2(TSF"url_ is empty.");
+      return false;
+    }
 
-			const std::string kHttpSchema("http://");
+    const std::string kHttpSchema("http://");
 
-			size_t schema_start = 0;
+    size_t schema_start = 0;
 
-			if (0 == ci_find_substr(url_, kHttpSchema, 0))
-				schema_start = kHttpSchema.length();
+    if (0 == ci_find_substr(url_, kHttpSchema, 0))
+      schema_start = kHttpSchema.length();
 
-			// only support http
-			if (0 == schema_start || schema_start >= url_.length()) {
-				xwarn2(TSF"schema_start=%_, url_=%_", schema_start, url_);
-				return false;
-			}
-			size_t schema_end = ci_find_substr(url_, std::string("/"), schema_start + 1); // tmpurl.find("/", schema_start+1);
+    // only support http
+    if (0 == schema_start || schema_start >= url_.length()) {
+      xwarn2(TSF"schema_start=%_, url_=%_", schema_start, url_);
+      return false;
+    }
+    size_t schema_end = ci_find_substr(url_, std::string("/"), schema_start + 1); // tmpurl.find("/", schema_start+1);
 
-			if (std::string::npos == schema_end)
-				schema_end = url_.length();
+    if (std::string::npos == schema_end)
+      schema_end = url_.length();
 
-			std::string hoststr = url_.substr(schema_start, schema_end - schema_start);
-			strutil::Trim(hoststr);
+    std::string hoststr = url_.substr(schema_start, schema_end - schema_start);
+    strutil::Trim(hoststr);
 
-			// user name
-			size_t host_start = 0;
-			size_t userpwd_start = ci_find_substr(hoststr, std::string("@"), 0);  // hoststr.find("@");
+    // user name
+    size_t host_start = 0;
+    size_t userpwd_start = ci_find_substr(hoststr, std::string("@"), 0);  // hoststr.find("@");
 
-			if (userpwd_start != std::string::npos) {
-				host_start = userpwd_start + 1;
-			}
+    if (userpwd_start != std::string::npos) {
+      host_start = userpwd_start + 1;
+    }
 
-			// port
-			size_t portstart = ci_find_substr(hoststr, std::string(":"), host_start);  // hoststr.find(":", host_start);
+    // port
+    size_t portstart = ci_find_substr(hoststr, std::string(":"), host_start);  // hoststr.find(":", host_start);
 
-			if (std::string::npos == portstart) {
-				host_ = hoststr.substr(host_start);
-				port_ = 80;
-			} else if (hoststr.length() - 1 == portstart) {
-				host_ = hoststr.substr(host_start, portstart - host_start);
-				port_ = 80;
-			} else {
-				host_ = hoststr.substr(host_start, portstart - host_start);
-				port_ = (uint16_t)atoi(hoststr.substr(portstart + 1).c_str());
-			}
+    if (std::string::npos == portstart) {
+      host_ = hoststr.substr(host_start);
+      port_ = 80;
+    } else if (hoststr.length() - 1 == portstart) {
+      host_ = hoststr.substr(host_start, portstart - host_start);
+      port_ = 80;
+    } else {
+      host_ = hoststr.substr(host_start, portstart - host_start);
+      port_ = (uint16_t) atoi(hoststr.substr(portstart + 1).c_str());
+    }
 
-			if (0 == port_)
-				port_ = 80;
+    if (0 == port_)
+      port_ = 80;
 
-			strutil::Trim(host_);
+    strutil::Trim(host_);
 
-			// path
-			path_ = url_.substr(schema_end);
+    // path
+    path_ = url_.substr(schema_end);
 
-			if (path_.empty())
-				path_ = "/";
+    if (path_.empty())
+      path_ = "/";
 
-			return !host_.empty();
-		}
+    return !host_.empty();
+  }
 
-	private:
-		// templated version of my_equal so it could work with both char and wchar_t
-		template<typename charT>
-		struct my_equal {
-			my_equal(const std::locale& loc) : loc_(loc) {}
-			bool operator()(charT ch1, charT ch2) {
-				return std::toupper(ch1, loc_) == std::toupper(ch2, loc_);
-			}
-		private:
-			const std::locale& loc_;
-		};
+private:
+  // templated version of my_equal so it could work with both char and wchar_t
+  template<typename charT>
+  struct my_equal {
+    my_equal(const std::locale& loc) : loc_(loc) {}
 
-		// find substring (case insensitive)
-		template<typename T>
-		size_t ci_find_substr(const T& str1, const T& str2, size_t pos, const std::locale& loc = std::locale()) {
-			typename T::const_iterator it = std::search(str1.begin() + pos, str1.end(),
-														str2.begin(), str2.end(), my_equal<typename T::value_type>(loc));
+    bool operator()(charT ch1, charT ch2) {
+      return std::toupper(ch1, loc_) == std::toupper(ch2, loc_);
+    }
 
-			if (it != str1.end()) return it - str1.begin();
-			else return std::string::npos;  // not found
-		}
+  private:
+    const std::locale& loc_;
+  };
 
-	private:
-		uint16_t port_;
-		std::string url_;
-		std::string host_;
-		std::string path_;
-	};
+  // find substring (case insensitive)
+  template<typename T>
+  size_t ci_find_substr(const T& str1, const T& str2, size_t pos, const std::locale& loc = std::locale()) {
+    typename T::const_iterator it = std::search(str1.begin() + pos, str1.end(),
+                                                str2.begin(), str2.end(), my_equal<typename T::value_type>(loc));
+
+    if (it != str1.end()) return it - str1.begin();
+    else return std::string::npos;  // not found
+  }
+
+private:
+  uint16_t port_;
+  std::string url_;
+  std::string host_;
+  std::string path_;
+};
 
 } // namespace sdt
 } //namespace mars

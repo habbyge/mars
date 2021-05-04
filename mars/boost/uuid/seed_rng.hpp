@@ -48,10 +48,12 @@
 #   include <boost/detail/winapi/timers.hpp>
 #   include <boost/detail/winapi/process.hpp>
 #   include <boost/detail/winapi/thread.hpp>
-#else 
+#else
+
 #   include <sys/time.h>  // for gettimeofday
 #   include <sys/types.h> // for pid_t
 #   include <unistd.h>    // for getpid()
+
 #endif
 
 #ifdef BOOST_NO_STDC_NAMESPACE
@@ -70,245 +72,233 @@ namespace std {
 #endif
 
 // forward declare random number generators
-namespace mars_boost {} namespace boost = mars_boost; namespace mars_boost { namespace random {
+namespace mars_boost {}
+namespace boost = mars_boost;
+namespace mars_boost {
+namespace random {
 class random_device;
-}} //namespace mars_boost::random
+}
+} //namespace mars_boost::random
 
-namespace mars_boost {} namespace boost = mars_boost; namespace mars_boost {
+namespace mars_boost {}
+namespace boost = mars_boost;
+namespace mars_boost {
 namespace uuids {
 namespace detail {
 
 // should this be part of Boost.Random?
-class seed_rng: private mars_boost::noncopyable
-{
+class seed_rng : private mars_boost::noncopyable {
 public:
-    typedef unsigned int result_type;
-    BOOST_STATIC_CONSTANT(bool, has_fixed_range = false);
+  typedef unsigned int result_type;
+  BOOST_STATIC_CONSTANT(bool, has_fixed_range = false);
 
 public:
-    // note: rd_ intentionally left uninitialized
-    seed_rng() BOOST_NOEXCEPT
-        : rd_index_(5)
-        , random_(NULL)
-    {
+  // note: rd_ intentionally left uninitialized
+  seed_rng() BOOST_NOEXCEPT
+      : rd_index_(5), random_(NULL) {
 #if defined(BOOST_WINDOWS)
-        if (!mars_boost::detail::winapi::CryptAcquireContextA(
-                    &random_,
-                    NULL,
-                    NULL,
-                    mars_boost::detail::winapi::PROV_RSA_FULL_,
-                    mars_boost::detail::winapi::CRYPT_VERIFYCONTEXT_ | mars_boost::detail::winapi::CRYPT_SILENT_))
-        {
-            random_ = NULL;
-        }
+    if (!mars_boost::detail::winapi::CryptAcquireContextA(
+                &random_,
+                NULL,
+                NULL,
+                mars_boost::detail::winapi::PROV_RSA_FULL_,
+                mars_boost::detail::winapi::CRYPT_VERIFYCONTEXT_ | mars_boost::detail::winapi::CRYPT_SILENT_))
+    {
+        random_ = NULL;
+    }
 #else
-        random_ = std::fopen( "/dev/urandom", "rb" );
+    random_ = std::fopen("/dev/urandom", "rb");
 #endif
 
-        std::memset(rd_, 0, sizeof(rd_));
-    }
-    
-    ~seed_rng() BOOST_NOEXCEPT
-    {
-        if (random_) {
+    std::memset(rd_, 0, sizeof(rd_));
+  }
+
+  ~seed_rng() BOOST_NOEXCEPT {
+    if (random_) {
 #if defined(BOOST_WINDOWS)
-            mars_boost::detail::winapi::CryptReleaseContext(random_, 0);
+      mars_boost::detail::winapi::CryptReleaseContext(random_, 0);
 #else
-            std::fclose(random_);
+      std::fclose(random_);
 #endif
-        }
+    }
+  }
+
+  result_type min BOOST_PREVENT_MACRO_SUBSTITUTION() const BOOST_NOEXCEPT {
+    return (std::numeric_limits<result_type>::min)();
+  }
+
+  result_type max BOOST_PREVENT_MACRO_SUBSTITUTION() const BOOST_NOEXCEPT {
+    return (std::numeric_limits<result_type>::max)();
+  }
+
+  result_type operator()() {
+    if (rd_index_ >= 5) {
+      //get new digest
+      sha1_random_digest_();
+
+      rd_index_ = 0;
     }
 
-    result_type min BOOST_PREVENT_MACRO_SUBSTITUTION () const BOOST_NOEXCEPT
-    {
-        return (std::numeric_limits<result_type>::min)();
-    }
-    result_type max BOOST_PREVENT_MACRO_SUBSTITUTION () const BOOST_NOEXCEPT
-    {
-        return (std::numeric_limits<result_type>::max)();
-    }
-
-    result_type operator()()
-    {
-        if (rd_index_ >= 5) {
-            //get new digest
-            sha1_random_digest_();
-
-            rd_index_ = 0;
-        }
-
-        return rd_[rd_index_++];
-    }
+    return rd_[rd_index_++];
+  }
 
 private:
-    BOOST_STATIC_CONSTANT(std::size_t, internal_state_size = 5);
-    inline void ignore_size(size_t) {}
+  BOOST_STATIC_CONSTANT(std::size_t, internal_state_size = 5);
 
-    static unsigned int * sha1_random_digest_state_()
-    {
-        static unsigned int state[ internal_state_size ];
-        return state;
+  inline void ignore_size(size_t) {}
+
+  static unsigned int* sha1_random_digest_state_() {
+    static unsigned int state[internal_state_size];
+    return state;
+  }
+
+  void sha1_random_digest_() {
+    mars_boost::uuids::detail::sha1 sha;
+
+
+    if (random_) {
+      // intentionally left uninitialized
+      unsigned char state[20];
+#if defined(BOOST_WINDOWS)
+      mars_boost::detail::winapi::CryptGenRandom(random_, sizeof(state), state);
+#else
+      ignore_size(std::fread(state, 1, sizeof(state), random_));
+#endif
+      sha.process_bytes(state, sizeof(state));
     }
 
-    void sha1_random_digest_()
     {
-        mars_boost::uuids::detail::sha1 sha;
-
-
-        if (random_)
-        {
-            // intentionally left uninitialized
-            unsigned char state[ 20 ];
+      // Getting enropy from some system specific sources
 #if defined(BOOST_WINDOWS)
-            mars_boost::detail::winapi::CryptGenRandom(random_, sizeof(state), state);
+      mars_boost::detail::winapi::DWORD_ procid = mars_boost::detail::winapi::GetCurrentProcessId();
+      sha.process_bytes( (unsigned char const*)&procid, sizeof( procid ) );
+
+      mars_boost::detail::winapi::DWORD_ threadid = mars_boost::detail::winapi::GetCurrentThreadId();
+      sha.process_bytes( (unsigned char const*)&threadid, sizeof( threadid ) );
+
+      mars_boost::detail::winapi::LARGE_INTEGER_ ts;
+      ts.QuadPart = 0;
+      mars_boost::detail::winapi::QueryPerformanceCounter( &ts );
+      sha.process_bytes( (unsigned char const*)&ts, sizeof( ts ) );
+
+      std::time_t tm = std::time( 0 );
+      sha.process_bytes( (unsigned char const*)&tm, sizeof( tm ) );
 #else
-            ignore_size(std::fread( state, 1, sizeof(state), random_ ));
+      pid_t pid = getpid();
+      sha.process_bytes((unsigned char const*) &pid, sizeof(pid));
+
+      timeval ts;
+      gettimeofday(&ts, NULL); // We do not use `clock_gettime` to avoid linkage with -lrt
+      sha.process_bytes((unsigned char const*) &ts, sizeof(ts));
 #endif
-            sha.process_bytes( state, sizeof( state ) );
-        }
-
-        {
-            // Getting enropy from some system specific sources
-#if defined(BOOST_WINDOWS)
-            mars_boost::detail::winapi::DWORD_ procid = mars_boost::detail::winapi::GetCurrentProcessId();
-            sha.process_bytes( (unsigned char const*)&procid, sizeof( procid ) );
-
-            mars_boost::detail::winapi::DWORD_ threadid = mars_boost::detail::winapi::GetCurrentThreadId();
-            sha.process_bytes( (unsigned char const*)&threadid, sizeof( threadid ) );
-
-            mars_boost::detail::winapi::LARGE_INTEGER_ ts;
-            ts.QuadPart = 0;
-            mars_boost::detail::winapi::QueryPerformanceCounter( &ts );
-            sha.process_bytes( (unsigned char const*)&ts, sizeof( ts ) );
-
-            std::time_t tm = std::time( 0 );
-            sha.process_bytes( (unsigned char const*)&tm, sizeof( tm ) );
-#else
-            pid_t pid = getpid();
-            sha.process_bytes( (unsigned char const*)&pid, sizeof( pid ) );
-
-            timeval ts;
-            gettimeofday(&ts, NULL); // We do not use `clock_gettime` to avoid linkage with -lrt
-            sha.process_bytes( (unsigned char const*)&ts, sizeof( ts ) );
-#endif
-        }
-
-
-        unsigned int * ps = sha1_random_digest_state_();
-        sha.process_bytes( ps, internal_state_size * sizeof( unsigned int ) );
-        sha.process_bytes( (unsigned char const*)&ps, sizeof( ps ) );
-
-        {
-            std::clock_t ck = std::clock();
-            sha.process_bytes( (unsigned char const*)&ck, sizeof( ck ) );
-        }
-
-        {
-            unsigned int rn[] =
-                { static_cast<unsigned int>(std::rand())
-                , static_cast<unsigned int>(std::rand())
-                , static_cast<unsigned int>(std::rand())
-                };
-            sha.process_bytes( (unsigned char const*)rn, sizeof( rn ) );
-        }
-
-        {
-            unsigned int * p = new unsigned int;
-            sha.process_bytes( (unsigned char const*)&p, sizeof( p ) );
-            delete p;
-
-            const seed_rng* this_ptr = this;
-            sha.process_bytes( (unsigned char const*)&this_ptr, sizeof( this_ptr ) );
-            sha.process_bytes( (unsigned char const*)&std::rand, sizeof( void(*)() ) );
-        }
-
-        sha.process_bytes( (unsigned char const*)rd_, sizeof( rd_ ) );
-
-        unsigned int digest[ 5 ];
-        sha.get_digest( digest );
-
-        for( int i = 0; i < 5; ++i )
-        {
-            // harmless data race
-            ps[ i ] ^= digest[ i ];
-            rd_[ i ] ^= digest[ i ];
-        }
     }
+
+
+    unsigned int* ps = sha1_random_digest_state_();
+    sha.process_bytes(ps, internal_state_size * sizeof(unsigned int));
+    sha.process_bytes((unsigned char const*) &ps, sizeof(ps));
+
+    {
+      std::clock_t ck = std::clock();
+      sha.process_bytes((unsigned char const*) &ck, sizeof(ck));
+    }
+
+    {
+      unsigned int rn[] =
+          {static_cast<unsigned int>(std::rand()), static_cast<unsigned int>(std::rand()),
+           static_cast<unsigned int>(std::rand())
+          };
+      sha.process_bytes((unsigned char const*) rn, sizeof(rn));
+    }
+
+    {
+      unsigned int* p = new unsigned int;
+      sha.process_bytes((unsigned char const*) &p, sizeof(p));
+      delete p;
+
+      const seed_rng* this_ptr = this;
+      sha.process_bytes((unsigned char const*) &this_ptr, sizeof(this_ptr));
+      sha.process_bytes((unsigned char const*) &std::rand, sizeof(void (*)()));
+    }
+
+    sha.process_bytes((unsigned char const*) rd_, sizeof(rd_));
+
+    unsigned int digest[5];
+    sha.get_digest(digest);
+
+    for (int i = 0; i < 5; ++i) {
+      // harmless data race
+      ps[i] ^= digest[i];
+      rd_[i] ^= digest[i];
+    }
+  }
 
 private:
-    unsigned int rd_[5];
-    int rd_index_;
+  unsigned int rd_[5];
+  int rd_index_;
 
 #if defined(BOOST_WINDOWS)
-    mars_boost::detail::winapi::HCRYPTPROV_ random_;
+  mars_boost::detail::winapi::HCRYPTPROV_ random_;
 #else
-    std::FILE * random_;
+  std::FILE* random_;
 #endif
 };
 
 // almost a copy of mars_boost::generator_iterator
 // but default constructor sets m_g to NULL
-template <class Generator>
+template<class Generator>
 class generator_iterator
-  : public iterator_facade<
-        generator_iterator<Generator>
-      , typename Generator::result_type
-      , single_pass_traversal_tag
-      , typename Generator::result_type const&
-    >
-{
-    typedef iterator_facade<
-        generator_iterator<Generator>
-      , typename Generator::result_type
-      , single_pass_traversal_tag
-      , typename Generator::result_type const&
-    > super_t;
+    : public iterator_facade<
+        generator_iterator<Generator>, typename Generator::result_type, single_pass_traversal_tag, typename Generator::result_type const&
+    > {
+  typedef iterator_facade<
+      generator_iterator<Generator>, typename Generator::result_type, single_pass_traversal_tag, typename Generator::result_type const&
+  > super_t;
 
- public:
-    generator_iterator() : m_g(NULL), m_value(0) {}
-    generator_iterator(Generator* g) : m_g(g), m_value((*m_g)()) {}
+public:
+  generator_iterator() : m_g(NULL), m_value(0) {}
 
-    void increment()
-    {
-        m_value = (*m_g)();
-    }
+  generator_iterator(Generator* g) : m_g(g), m_value((*m_g)()) {}
 
-    const typename Generator::result_type&
-    dereference() const
-    {
-        return m_value;
-    }
+  void increment() {
+    m_value = (*m_g)();
+  }
 
-    bool equal(generator_iterator const& y) const
-    {
-        return this->m_g == y.m_g && this->m_value == y.m_value;
-    }
+  const typename Generator::result_type&
+  dereference() const {
+    return m_value;
+  }
 
- private:
-    Generator* m_g;
-    typename Generator::result_type m_value;
+  bool equal(generator_iterator const& y) const {
+    return this->m_g == y.m_g && this->m_value == y.m_value;
+  }
+
+private:
+  Generator* m_g;
+  typename Generator::result_type m_value;
 };
 
 // seed() seeds a random number generator with good seed values
 
-template <typename UniformRandomNumberGenerator>
-inline void seed(UniformRandomNumberGenerator& rng)
-{
-    seed_rng seed_gen;
-    generator_iterator<seed_rng> begin(&seed_gen);
-    generator_iterator<seed_rng> end;
-    rng.seed(begin, end);
+template<typename UniformRandomNumberGenerator>
+inline void seed(UniformRandomNumberGenerator& rng) {
+  seed_rng seed_gen;
+  generator_iterator<seed_rng> begin(&seed_gen);
+  generator_iterator<seed_rng> end;
+  rng.seed(begin, end);
 }
 
 // random_device does not / can not be seeded
-template <>
+template<>
 inline void seed<mars_boost::random::random_device>(mars_boost::random::random_device&) {}
 
 // random_device does not / can not be seeded
-template <>
+template<>
 inline void seed<seed_rng>(seed_rng&) {}
 
-}}} //namespace mars_boost::uuids::detail
+}
+}
+} //namespace mars_boost::uuids::detail
 
 #if defined(_MSC_VER)
 #pragma warning(pop) // Restore warnings to previous state.

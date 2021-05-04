@@ -20,17 +20,19 @@
 #include <boost/mpl/aux_/config/typeof.hpp>
 #include <boost/mpl/aux_/config/ctps.hpp>
 
-namespace mars_boost {} namespace boost = mars_boost; namespace mars_boost { namespace mpl {
+namespace mars_boost {}
+namespace boost = mars_boost;
+namespace mars_boost {
+namespace mpl {
 
 #if defined(BOOST_MPL_CFG_TYPEOF_BASED_SEQUENCES)
 
 template<>
-struct clear_impl< aux::vector_tag >
-{
-    template< typename Vector > struct apply
-    {
-        typedef vector0<> type;
-    };
+struct clear_impl<aux::vector_tag> {
+  template<typename Vector>
+  struct apply {
+    typedef vector0<> type;
+  };
 };
 
 #else
@@ -50,6 +52,7 @@ struct clear_impl< aux::vector_tag<N> >
 
 #endif // BOOST_MPL_CFG_TYPEOF_BASED_SEQUENCES
 
-}}
+}
+}
 
 #endif // BOOST_MPL_VECTOR_AUX_CLEAR_HPP_INCLUDED

@@ -19,20 +19,22 @@
 #include <boost/mpl/aux_/na_spec.hpp>
 #include <boost/mpl/aux_/lambda_support.hpp>
 
-namespace mars_boost {} namespace boost = mars_boost; namespace mars_boost { namespace mpl {
+namespace mars_boost {}
+namespace boost = mars_boost;
+namespace mars_boost {
+namespace mpl {
 
 template<
-      typename BOOST_MPL_AUX_NA_PARAM(Sequence)
-    , typename BOOST_MPL_AUX_NA_PARAM(T)
-    >
+    typename BOOST_MPL_AUX_NA_PARAM(Sequence), typename BOOST_MPL_AUX_NA_PARAM(T)
+>
 struct find
-    : find_if< Sequence,same_as<T> >
-{
-    BOOST_MPL_AUX_LAMBDA_SUPPORT(2,find,(Sequence,T))
+    : find_if<Sequence, same_as<T>> {
+  BOOST_MPL_AUX_LAMBDA_SUPPORT(2, find, (Sequence, T))
 };
 
 BOOST_MPL_AUX_NA_SPEC(2, find)
 
-}}
+}
+}
 
 #endif // BOOST_MPL_FIND_HPP_INCLUDED

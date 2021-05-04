@@ -36,26 +36,27 @@
 #define MT_ARRAYCOUNT(_Array) (sizeof(_Array) / sizeof(_Array[0]))
 #else
 extern "C++" {
-    template <typename _CountofType, size_t _SizeOfArray>
-    char (*__countof_helper(_CountofType(&_Array)[_SizeOfArray]))[_SizeOfArray];
+template<typename _CountofType, size_t _SizeOfArray>
+char (* __countof_helper(_CountofType(& _Array)[_SizeOfArray]))[_SizeOfArray];
 #define MT_ARRAYCOUNT(_Array) sizeof(*__countof_helper(_Array))
 }
 #endif
 #endif
 
 #ifdef __cplusplus
+
 template<class T>
 inline T MT_MAX(const T& a, const T& b) {
-    if (a < b) return b;
+  if (a < b) return b;
 
-    return a;
+  return a;
 }
 
 template<class T>
 inline T MT_MIN(const T& a, const T& b) {
-    if (b < a) return b;
+  if (b < a) return b;
 
-    return a;
+  return a;
 }
 
 #else

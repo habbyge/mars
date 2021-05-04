@@ -24,7 +24,7 @@ extern "C" {
 *  ZSTDv06_DLL_EXPORT :
 *  Enable exporting of functions when building a Windows DLL
 */
-#if defined(_WIN32) && defined(ZSTDv06_DLL_EXPORT) && (ZSTDv06_DLL_EXPORT==1)
+#if defined(_WIN32) && defined(ZSTDv06_DLL_EXPORT) && (ZSTDv06_DLL_EXPORT == 1)
 #  define ZSTDLIBv06_API __declspec(dllexport)
 #else
 #  define ZSTDLIBv06_API
@@ -39,8 +39,8 @@ extern "C" {
     `dstCapacity` must be large enough, equal or larger than originalSize.
     @return : the number of bytes decompressed into `dst` (<= `dstCapacity`),
               or an errorCode if it fails (which can be tested using ZSTDv06_isError()) */
-ZSTDLIBv06_API size_t ZSTDv06_decompress( void* dst, size_t dstCapacity,
-                                    const void* src, size_t compressedSize);
+ZSTDLIBv06_API size_t ZSTDv06_decompress(void* dst, size_t dstCapacity,
+                                         const void* src, size_t compressedSize);
 
 /**
 ZSTDv06_findFrameSizeInfoLegacy() : get the source length and decompressed bound of a ZSTD frame compliant with v0.6.x format
@@ -52,16 +52,17 @@ ZSTDv06_findFrameSizeInfoLegacy() : get the source length and decompressed bound
 
     note : assumes `cSize` and `dBound` are _not_ NULL.
 */
-void ZSTDv06_findFrameSizeInfoLegacy(const void *src, size_t srcSize,
+void ZSTDv06_findFrameSizeInfoLegacy(const void* src, size_t srcSize,
                                      size_t* cSize, unsigned long long* dBound);
 
 /* *************************************
 *  Helper functions
 ***************************************/
-ZSTDLIBv06_API size_t      ZSTDv06_compressBound(size_t srcSize); /*!< maximum compressed size (worst case scenario) */
+ZSTDLIBv06_API size_t ZSTDv06_compressBound(size_t srcSize); /*!< maximum compressed size (worst case scenario) */
 
 /* Error Management */
-ZSTDLIBv06_API unsigned    ZSTDv06_isError(size_t code);          /*!< tells if a `size_t` function result is an error code */
+ZSTDLIBv06_API unsigned
+ZSTDv06_isError(size_t code);          /*!< tells if a `size_t` function result is an error code */
 ZSTDLIBv06_API const char* ZSTDv06_getErrorName(size_t code);     /*!< provides readable string for an error code */
 
 
@@ -71,11 +72,12 @@ ZSTDLIBv06_API const char* ZSTDv06_getErrorName(size_t code);     /*!< provides 
 /** Decompression context */
 typedef struct ZSTDv06_DCtx_s ZSTDv06_DCtx;
 ZSTDLIBv06_API ZSTDv06_DCtx* ZSTDv06_createDCtx(void);
-ZSTDLIBv06_API size_t     ZSTDv06_freeDCtx(ZSTDv06_DCtx* dctx);      /*!< @return : errorCode */
+ZSTDLIBv06_API size_t ZSTDv06_freeDCtx(ZSTDv06_DCtx* dctx);      /*!< @return : errorCode */
 
 /** ZSTDv06_decompressDCtx() :
 *   Same as ZSTDv06_decompress(), but requires an already allocated ZSTDv06_DCtx (see ZSTDv06_createDCtx()) */
-ZSTDLIBv06_API size_t ZSTDv06_decompressDCtx(ZSTDv06_DCtx* ctx, void* dst, size_t dstCapacity, const void* src, size_t srcSize);
+ZSTDLIBv06_API size_t
+ZSTDv06_decompressDCtx(ZSTDv06_DCtx* ctx, void* dst, size_t dstCapacity, const void* src, size_t srcSize);
 
 
 /*-***********************
@@ -87,23 +89,27 @@ ZSTDLIBv06_API size_t ZSTDv06_decompressDCtx(ZSTDv06_DCtx* ctx, void* dst, size_
 *   Note : dict can be NULL, in which case, it's equivalent to ZSTDv06_decompressDCtx() */
 ZSTDLIBv06_API size_t ZSTDv06_decompress_usingDict(ZSTDv06_DCtx* dctx,
                                                    void* dst, size_t dstCapacity,
-                                             const void* src, size_t srcSize,
-                                             const void* dict,size_t dictSize);
+                                                   const void* src, size_t srcSize,
+                                                   const void* dict, size_t dictSize);
 
 
 /*-************************
 *  Advanced Streaming API
 ***************************/
-struct ZSTDv06_frameParams_s { unsigned long long frameContentSize; unsigned windowLog; };
+struct ZSTDv06_frameParams_s {
+  unsigned long long frameContentSize;
+  unsigned windowLog;
+};
 typedef struct ZSTDv06_frameParams_s ZSTDv06_frameParams;
 
-ZSTDLIBv06_API size_t ZSTDv06_getFrameParams(ZSTDv06_frameParams* fparamsPtr, const void* src, size_t srcSize);   /**< doesn't consume input */
+ZSTDLIBv06_API size_t ZSTDv06_getFrameParams(ZSTDv06_frameParams* fparamsPtr, const void* src,
+                                             size_t srcSize);   /**< doesn't consume input */
 ZSTDLIBv06_API size_t ZSTDv06_decompressBegin_usingDict(ZSTDv06_DCtx* dctx, const void* dict, size_t dictSize);
-ZSTDLIBv06_API void   ZSTDv06_copyDCtx(ZSTDv06_DCtx* dctx, const ZSTDv06_DCtx* preparedDCtx);
+ZSTDLIBv06_API void ZSTDv06_copyDCtx(ZSTDv06_DCtx* dctx, const ZSTDv06_DCtx* preparedDCtx);
 
 ZSTDLIBv06_API size_t ZSTDv06_nextSrcSizeToDecompress(ZSTDv06_DCtx* dctx);
-ZSTDLIBv06_API size_t ZSTDv06_decompressContinue(ZSTDv06_DCtx* dctx, void* dst, size_t dstCapacity, const void* src, size_t srcSize);
-
+ZSTDLIBv06_API size_t
+ZSTDv06_decompressContinue(ZSTDv06_DCtx* dctx, void* dst, size_t dstCapacity, const void* src, size_t srcSize);
 
 
 /* *************************************
@@ -112,14 +118,14 @@ ZSTDLIBv06_API size_t ZSTDv06_decompressContinue(ZSTDv06_DCtx* dctx, void* dst, 
 
 typedef struct ZBUFFv06_DCtx_s ZBUFFv06_DCtx;
 ZSTDLIBv06_API ZBUFFv06_DCtx* ZBUFFv06_createDCtx(void);
-ZSTDLIBv06_API size_t         ZBUFFv06_freeDCtx(ZBUFFv06_DCtx* dctx);
+ZSTDLIBv06_API size_t ZBUFFv06_freeDCtx(ZBUFFv06_DCtx* dctx);
 
 ZSTDLIBv06_API size_t ZBUFFv06_decompressInit(ZBUFFv06_DCtx* dctx);
 ZSTDLIBv06_API size_t ZBUFFv06_decompressInitDictionary(ZBUFFv06_DCtx* dctx, const void* dict, size_t dictSize);
 
 ZSTDLIBv06_API size_t ZBUFFv06_decompressContinue(ZBUFFv06_DCtx* dctx,
                                                   void* dst, size_t* dstCapacityPtr,
-                                            const void* src, size_t* srcSizePtr);
+                                                  const void* src, size_t* srcSizePtr);
 
 /*-***************************************************************************
 *  Streaming decompression howto
@@ -162,7 +168,6 @@ ZSTDLIBv06_API size_t ZBUFFv06_recommendedDOutSize(void);
 *  Constants
 ***************************************/
 #define ZSTDv06_MAGICNUMBER 0xFD2FB526   /* v0.6 */
-
 
 
 #if defined (__cplusplus)

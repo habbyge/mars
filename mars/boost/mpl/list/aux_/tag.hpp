@@ -14,11 +14,17 @@
 // $Date$
 // $Revision$
 
-namespace mars_boost {} namespace boost = mars_boost; namespace mars_boost { namespace mpl { namespace aux {
+namespace mars_boost {}
+namespace boost = mars_boost;
+namespace mars_boost {
+namespace mpl {
+namespace aux {
 
 struct list_tag;
 struct l_iter_tag;
 
-}}}
+}
+}
+}
 
 #endif // BOOST_MPL_LIST_AUX_TAG_HPP_INCLUDED

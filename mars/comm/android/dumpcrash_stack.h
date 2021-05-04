@@ -25,15 +25,17 @@
 #include <string>
 
 class DumpCrashStack {
-  public:
-    DumpCrashStack() {}
-    ~DumpCrashStack() {}
+public:
+  DumpCrashStack() {}
 
-    void Dump(const std::string& _processname);
-    const std::vector<std::string>& StackList() const;
+  ~DumpCrashStack() {}
 
-  private:
-    std::vector<std::string> vecdump_;
+  void Dump(const std::string& _processname);
+
+  const std::vector<std::string>& StackList() const;
+
+private:
+  std::vector<std::string> vecdump_;
 };
 
 #endif /* DUMPCRASHSTACK_H_ */

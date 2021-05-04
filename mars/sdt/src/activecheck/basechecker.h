@@ -35,20 +35,24 @@ namespace mars {
 namespace sdt {
 
 class BaseChecker {
-  public:
-    BaseChecker();
-    virtual ~BaseChecker();
+public:
+  BaseChecker();
 
-  public:
-    virtual int StartDoCheck(CheckRequestProfile& _check_request) = 0;
-    int CancelDoCheck();
+  virtual ~BaseChecker();
 
-  protected:
-    virtual void __DoCheck(CheckRequestProfile& _check_request) = 0;
-  protected:
-    bool is_canceled_ = false;
+public:
+  virtual int StartDoCheck(CheckRequestProfile& _check_request) = 0;
+
+  int CancelDoCheck();
+
+protected:
+  virtual void __DoCheck(CheckRequestProfile& _check_request) = 0;
+
+protected:
+  bool is_canceled_ = false;
 };
 
-}}
+}
+}
 
-#endif	//SDT_SRC_ACTIVECHECK_BASECHEKCER_H_
+#endif  //SDT_SRC_ACTIVECHECK_BASECHEKCER_H_

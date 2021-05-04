@@ -29,399 +29,618 @@
 class CDetour /* add ": public CMember" to enable access to member variables... */
 {
 public:
-	bool Mine_IsActive();
+  bool Mine_IsActive();
 
-	static bool (CDetour::* Real_IsActive)();
+  static bool (CDetour::* Real_IsActive)();
 };
 
 static bool sg_active = false;
-bool CDetour::Mine_IsActive()
-{
-	return sg_active;
+
+bool CDetour::Mine_IsActive() {
+  return sg_active;
 }
 
-bool (CDetour::* CDetour::Real_IsActive)() = (bool (CDetour::*)())&ActiveLogic::IsActive;
+bool (CDetour::* CDetour::Real_IsActive)() = (bool (CDetour::*)()) &ActiveLogic::IsActive;
+
 static bool (CDetour::* Mine_Target1)() = &CDetour::Mine_IsActive;
 
 
-static void HookIsActive()
-{
-	DetourTransactionBegin();
-	DetourUpdateThread(GetCurrentThread());
-	DetourAttach(&(PVOID&)CDetour::Real_IsActive, *(PBYTE*)&Mine_Target1);
-	DetourTransactionCommit();
+static void HookIsActive() {
+  DetourTransactionBegin();
+  DetourUpdateThread(GetCurrentThread());
+  DetourAttach(&(PVOID&) CDetour::Real_IsActive, *(PBYTE * ) & Mine_Target1);
+  DetourTransactionCommit();
 }
 
-static void UnHookIsActive()
-{
-	DetourTransactionBegin();
-	DetourUpdateThread(GetCurrentThread());  
-	DetourDetach(&(PVOID&)CDetour::Real_IsActive, *(PBYTE*)&Mine_Target1);
-	DetourTransactionCommit();
+static void UnHookIsActive() {
+  DetourTransactionBegin();
+  DetourUpdateThread(GetCurrentThread());
+  DetourDetach(&(PVOID&) CDetour::Real_IsActive, *(PBYTE * ) & Mine_Target1);
+  DetourTransactionCommit();
 }
 
-PUBC_TEST(SmartHeartBeat, test0)
+PUBC_TEST(SmartHeartBeat, test0
+)
 {
-	UtilFunc::execute_cmd();
+UtilFunc::execute_cmd();
 
-	m_testCaseInfo->m_TestCaseName = "inactive, success three times continuously, hearbeat interval increase";
-	UtilFunc::del_files(getAppFilePath() + "/" + "config");
+m_testCaseInfo->
+m_TestCaseName = "inactive, success three times continuously, hearbeat interval increase";
 
-	//xlogger_SetLevel(ELevelDebug);
-	//appender_open(EAppednerSync, "C:\\log", "GTEST");
-	HookIsActive();
+UtilFunc::del_files (getAppFilePath()
 
-	sg_active = false;
-	SmartHeartBeat smartHeartbeat;
++ "/" + "config");
 
-	bool flag = false;
+//xlogger_SetLevel(ELevelDebug);
+//appender_open(EAppednerSync, "C:\\log", "GTEST");
+HookIsActive();
 
-	BaseScene scene;
-	PUBC_EXPECT_EQ((unsigned int)MinHeartInterval, smartHeartbeat.getNextHeartbeatInterval(flag), &scene);
+sg_active = false;
+SmartHeartBeat smartHeartbeat;
 
-	//smartHeartbeat.OnHeartbeatStart();
-	
-	for (int i=0;i<3;++i)
-	{
-		smartHeartbeat.getNextHeartbeatInterval(flag);
-		smartHeartbeat.OnHeartResult(true, false);
-	}
+bool flag = false;
 
-	scene.eventName = "OnHeartResult(true, false) three times continuously";
-	PUBC_EXPECT_EQ((unsigned int)(MinHeartInterval + HeartStep), smartHeartbeat.getNextHeartbeatInterval(flag), &scene);
+BaseScene scene;
+PUBC_EXPECT_EQ((unsigned int)MinHeartInterval, smartHeartbeat.
+getNextHeartbeatInterval(flag), & scene
+);
 
-	UnHookIsActive();
+//smartHeartbeat.OnHeartbeatStart();
+
+for (
+int i = 0;
+i<3;++i)
+{
+smartHeartbeat.
+getNextHeartbeatInterval(flag);
+smartHeartbeat.OnHeartResult(true, false);
 }
 
+scene.
+eventName = "OnHeartResult(true, false) three times continuously";
+PUBC_EXPECT_EQ((unsigned int)(MinHeartInterval + HeartStep), smartHeartbeat.
+getNextHeartbeatInterval(flag), & scene
+);
 
-PUBC_TEST(SmartHeartBeat, test1)
-{
-	m_testCaseInfo->m_TestCaseName = "inactive, fail three times continuously, heartbeat interval decrease";
-	UtilFunc::del_files(getAppFilePath() + "/" + "config");
+UnHookIsActive();
 
-	HookIsActive();
-
-	sg_active = false;
-	SmartHeartBeat smartHeartbeat;
-
-	bool flag = false;
-
-	BaseScene scene;
-
-	//smartHeartbeat.OnHeartbeatStart();
-
-	for (int i=0;i<6;++i)
-	{
-		smartHeartbeat.getNextHeartbeatInterval(flag);
-		smartHeartbeat.OnHeartResult(true, false);
-	}
-
-	scene.eventName = "OnHeartResult(true, false) six times continuously";
-	//printf("%d\n", smartHeartbeat.getNextHeartbeatInterval(flag));
-	PUBC_EXPECT_EQ((unsigned int)(MinHeartInterval + HeartStep * 2), smartHeartbeat.getNextHeartbeatInterval(flag), &scene);
-
-	for (int i=0;i<3;++i)
-	{
-		smartHeartbeat.getNextHeartbeatInterval(flag);
-		smartHeartbeat.OnHeartResult(false, false);
-	}
-	scene.eventName = "OnHeartResult(false, false) three times continuously";
-	PUBC_EXPECT_EQ((unsigned int)(MinHeartInterval + HeartStep - SuccessStep), smartHeartbeat.getNextHeartbeatInterval(flag), &scene);
-	UnHookIsActive();
 }
 
 
-PUBC_TEST(SmartHeartBeat, test2)
+PUBC_TEST(SmartHeartBeat, test1
+)
 {
-	m_testCaseInfo->m_TestCaseName = "inactive, fail six times continuously, use MinHeartInterval";
-	UtilFunc::del_files(getAppFilePath() + "/" + "config");
+m_testCaseInfo->
+m_TestCaseName = "inactive, fail three times continuously, heartbeat interval decrease";
+
+UtilFunc::del_files (getAppFilePath()
+
++ "/" + "config");
+
+HookIsActive();
+
+sg_active = false;
+SmartHeartBeat smartHeartbeat;
+
+bool flag = false;
+
+BaseScene scene;
+
+//smartHeartbeat.OnHeartbeatStart();
+
+for (
+int i = 0;
+i<6;++i)
+{
+smartHeartbeat.
+getNextHeartbeatInterval(flag);
+smartHeartbeat.OnHeartResult(true, false);
+}
+
+scene.
+eventName = "OnHeartResult(true, false) six times continuously";
+//printf("%d\n", smartHeartbeat.getNextHeartbeatInterval(flag));
+PUBC_EXPECT_EQ((unsigned int)(MinHeartInterval + HeartStep * 2), smartHeartbeat.
+getNextHeartbeatInterval(flag), & scene
+);
+
+for (
+int i = 0;
+i<3;++i)
+{
+smartHeartbeat.
+getNextHeartbeatInterval(flag);
+smartHeartbeat.OnHeartResult(false, false);
+}
+scene.
+eventName = "OnHeartResult(false, false) three times continuously";
+PUBC_EXPECT_EQ((unsigned int)(MinHeartInterval + HeartStep - SuccessStep), smartHeartbeat.
+getNextHeartbeatInterval(flag), & scene
+);
+
+UnHookIsActive();
+
+}
 
 
-	HookIsActive();
+PUBC_TEST(SmartHeartBeat, test2
+)
+{
+m_testCaseInfo->
+m_TestCaseName = "inactive, fail six times continuously, use MinHeartInterval";
 
-	sg_active = false;
-	SmartHeartBeat smartHeartbeat;
+UtilFunc::del_files (getAppFilePath()
 
-	bool flag = false;
++ "/" + "config");
 
-	BaseScene scene;
 
-	for (int i=0;i<6;++i)
-	{
-		smartHeartbeat.getNextHeartbeatInterval(flag);
-		smartHeartbeat.OnHeartResult(true, false);
-	}
+HookIsActive();
 
-	scene.eventName = "OnHeartResult(true, false) six times continuously";
+sg_active = false;
+SmartHeartBeat smartHeartbeat;
+
+bool flag = false;
+
+BaseScene scene;
+
+for (
+int i = 0;
+i<6;++i)
+{
+smartHeartbeat.
+getNextHeartbeatInterval(flag);
+smartHeartbeat.OnHeartResult(true, false);
+}
+
+scene.
+eventName = "OnHeartResult(true, false) six times continuously";
 //	printf("%d\n", smartHeartbeat.getNextHeartbeatInterval(flag));
-	PUBC_EXPECT_EQ((unsigned int)(MinHeartInterval + HeartStep * 2), smartHeartbeat.getNextHeartbeatInterval(flag), &scene);
+PUBC_EXPECT_EQ((unsigned int)(MinHeartInterval + HeartStep * 2), smartHeartbeat.
+getNextHeartbeatInterval(flag), & scene
+);
 
-	for (int i=0;i<6;++i)
-	{
-		smartHeartbeat.getNextHeartbeatInterval(flag);
-		smartHeartbeat.OnHeartResult(false, false);
-	}
-	scene.eventName = "OnHeartResult(false, false) six times continuously";
+for (
+int i = 0;
+i<6;++i)
+{
+smartHeartbeat.
+getNextHeartbeatInterval(flag);
+smartHeartbeat.OnHeartResult(false, false);
+}
+scene.
+eventName = "OnHeartResult(false, false) six times continuously";
 
-	PUBC_EXPECT_EQ((unsigned int)(MinHeartInterval), smartHeartbeat.getNextHeartbeatInterval(flag), &scene);
-	UnHookIsActive();
+PUBC_EXPECT_EQ((unsigned int)(MinHeartInterval), smartHeartbeat.
+getNextHeartbeatInterval(flag), & scene
+);
+
+UnHookIsActive();
+
 }
 
 
-PUBC_TEST(SmartHeartBeat, test3)
+PUBC_TEST(SmartHeartBeat, test3
+)
 {
-	m_testCaseInfo->m_TestCaseName = "inactive, heart beat the minimum is MinHeartInterval, the maximum is (MaxHeartInterval-SuccessStep)";
-	UtilFunc::del_files(getAppFilePath() + "/" + "config");
+m_testCaseInfo->
+m_TestCaseName = "inactive, heart beat the minimum is MinHeartInterval, the maximum is (MaxHeartInterval-SuccessStep)";
 
-	HookIsActive();
+UtilFunc::del_files (getAppFilePath()
 
-	sg_active = false;
-	SmartHeartBeat smartHeartbeat;
++ "/" + "config");
 
-	bool flag = false;
-	BaseScene scene;
+HookIsActive();
 
-	for (int i=0;i<300;++i)
-	{
-		smartHeartbeat.getNextHeartbeatInterval(flag);
-		smartHeartbeat.OnHeartResult(true, false);
-	}
+sg_active = false;
+SmartHeartBeat smartHeartbeat;
 
-	scene.eventName = "OnHeartResult(true, false) 300 times continuously";
-	PUBC_EXPECT_EQ((unsigned int)(MaxHeartInterval-SuccessStep), smartHeartbeat.getNextHeartbeatInterval(flag), &scene);
+bool flag = false;
+BaseScene scene;
 
-	for (int i=0;i<600;++i)
-	{
-		smartHeartbeat.getNextHeartbeatInterval(flag);
-		smartHeartbeat.OnHeartResult(false, false);
-	}
+for (
+int i = 0;
+i<300;++i)
+{
+smartHeartbeat.
+getNextHeartbeatInterval(flag);
+smartHeartbeat.OnHeartResult(true, false);
+}
 
-	scene.eventName = "OnHeartResult(false, false) 600 times continuously";
+scene.
+eventName = "OnHeartResult(true, false) 300 times continuously";
+PUBC_EXPECT_EQ((unsigned int)(MaxHeartInterval-SuccessStep), smartHeartbeat.
+getNextHeartbeatInterval(flag), & scene
+);
+
+for (
+int i = 0;
+i<600;++i)
+{
+smartHeartbeat.
+getNextHeartbeatInterval(flag);
+smartHeartbeat.OnHeartResult(false, false);
+}
+
+scene.
+eventName = "OnHeartResult(false, false) 600 times continuously";
 
 
-	//printf("%d\n", smartHeartbeat.getNextHeartbeatInterval(flag));
+//printf("%d\n", smartHeartbeat.getNextHeartbeatInterval(flag));
 
-	PUBC_EXPECT_EQ((unsigned int)(MinHeartInterval), smartHeartbeat.getNextHeartbeatInterval(flag), &scene);
-	UnHookIsActive();
+PUBC_EXPECT_EQ((unsigned int)(MinHeartInterval), smartHeartbeat.
+getNextHeartbeatInterval(flag), & scene
+);
+
+UnHookIsActive();
+
 }
 
 
-PUBC_TEST(SmartHeartBeat, test4)
+PUBC_TEST(SmartHeartBeat, test4
+)
 {
-	m_testCaseInfo->m_TestCaseName = "inactive, after MMSmartHeartbeat::OnLongLinkEstablished(), use MinHeartInterval, if success, use the previous value";
-	UtilFunc::del_files(getAppFilePath() + "/" + "config");
+m_testCaseInfo->
+m_TestCaseName = "inactive, after MMSmartHeartbeat::OnLongLinkEstablished(), use MinHeartInterval, if success, use the previous value";
 
-	HookIsActive();
+UtilFunc::del_files (getAppFilePath()
 
-	sg_active = false;
-	SmartHeartBeat smartHeartbeat;
++ "/" + "config");
 
-	bool flag = false;
+HookIsActive();
 
-	BaseScene scene;
+sg_active = false;
+SmartHeartBeat smartHeartbeat;
 
-	for (int i=0;i<5;++i)
-	{
-		smartHeartbeat.getNextHeartbeatInterval(flag);
-		smartHeartbeat.OnHeartResult(true, false);
-	}
+bool flag = false;
 
-	scene.eventName = "OnHeartResult(true, false) 5 times continuously";
-	//printf("%d\n", smartHeartbeat.getNextHeartbeatInterval(flag));
-	PUBC_EXPECT_EQ((unsigned int)(MinHeartInterval + HeartStep), smartHeartbeat.getNextHeartbeatInterval(flag), &scene);
+BaseScene scene;
 
-
-	scene.eventName = "smartHeartbeat.OnLongLinkEstablished()";
-	smartHeartbeat.OnLongLinkEstablished();
-	PUBC_EXPECT_EQ((unsigned int)(MinHeartInterval), smartHeartbeat.getNextHeartbeatInterval(flag), &scene);
-
-	scene.eventName = "OnHeartResult(true, false) 1 times";
-	smartHeartbeat.OnHeartResult(true, false);
-	PUBC_EXPECT_EQ((unsigned int)(MinHeartInterval + HeartStep), smartHeartbeat.getNextHeartbeatInterval(flag), &scene);
-
-	scene.eventName = "OnHeartResult(true, false) 1 times";
-	
-	smartHeartbeat.OnHeartResult(true, false);
-	PUBC_EXPECT_EQ((unsigned int)(MinHeartInterval + HeartStep * 2), smartHeartbeat.getNextHeartbeatInterval(flag), &scene);
-	UnHookIsActive();
+for (
+int i = 0;
+i<5;++i)
+{
+smartHeartbeat.
+getNextHeartbeatInterval(flag);
+smartHeartbeat.OnHeartResult(true, false);
 }
 
-PUBC_TEST(SmartHeartBeat, test5)
-{
-	m_testCaseInfo->m_TestCaseName = "inactive, after MMSmartHeartbeat::OnLongLinkEstablished(), use MinHeartInterval, if fail three times continuously, use MinHeartInterval, or use the previous value";
-	UtilFunc::del_files(getAppFilePath() + "/" + "config");
-
-	HookIsActive();
-
-	sg_active = false;
-	SmartHeartBeat smartHeartbeat;
-
-	bool flag = false;
-
-	BaseScene scene;
-
-	for (int i=0;i<6;++i)
-	{
-		smartHeartbeat.getNextHeartbeatInterval(flag);
-		smartHeartbeat.OnHeartResult(true, false);
-	}
-
-	scene.eventName = "OnHeartResult(true, false) 6 times continuously";
-	//printf("%d\n", smartHeartbeat.getNextHeartbeatInterval(flag));
-	PUBC_EXPECT_EQ((unsigned int)(MinHeartInterval + HeartStep * 2), smartHeartbeat.getNextHeartbeatInterval(flag), &scene);
-
-	scene.eventName = "smartHeartbeat.OnLongLinkEstablished()";
-	smartHeartbeat.OnLongLinkEstablished();
-	PUBC_EXPECT_EQ((unsigned int)(MinHeartInterval), smartHeartbeat.getNextHeartbeatInterval(flag), &scene);
-	
-	for (int i=0;i<2;++i)
-	{
-		smartHeartbeat.OnHeartResult(false, false);
-	}
-
-	scene.eventName = "OnHeartResult(false, false) 2 times";
-	
-	PUBC_EXPECT_EQ((unsigned int)(MinHeartInterval), smartHeartbeat.getNextHeartbeatInterval(flag), &scene);
-
-	scene.eventName = "OnHeartResult(true, false) 1 times";
-	smartHeartbeat.OnHeartResult(true, false);
-	PUBC_EXPECT_EQ((unsigned int)(MinHeartInterval + HeartStep * 2), smartHeartbeat.getNextHeartbeatInterval(flag), &scene);
+scene.
+eventName = "OnHeartResult(true, false) 5 times continuously";
+//printf("%d\n", smartHeartbeat.getNextHeartbeatInterval(flag));
+PUBC_EXPECT_EQ((unsigned int)(MinHeartInterval + HeartStep), smartHeartbeat.
+getNextHeartbeatInterval(flag), & scene
+);
 
 
-	smartHeartbeat.OnLongLinkEstablished();
-	for (int i=0;i<3;++i)
-	{
-		smartHeartbeat.getNextHeartbeatInterval(flag);
-		smartHeartbeat.OnHeartResult(false, false);
-	}
-	scene.eventName = "smartHeartbeat.OnLongLinkEstablished(), OnHeartResult(false, false) 3 times";
+scene.
+eventName = "smartHeartbeat.OnLongLinkEstablished()";
+smartHeartbeat.
 
-	PUBC_EXPECT_EQ((unsigned int)(MinHeartInterval), smartHeartbeat.getNextHeartbeatInterval(flag), &scene);
-	UnHookIsActive();
+OnLongLinkEstablished();
+
+PUBC_EXPECT_EQ((unsigned int)(MinHeartInterval), smartHeartbeat.
+getNextHeartbeatInterval(flag), & scene
+);
+
+scene.
+eventName = "OnHeartResult(true, false) 1 times";
+smartHeartbeat.OnHeartResult(true, false);
+PUBC_EXPECT_EQ((unsigned int)(MinHeartInterval + HeartStep), smartHeartbeat.
+getNextHeartbeatInterval(flag), & scene
+);
+
+scene.
+eventName = "OnHeartResult(true, false) 1 times";
+
+smartHeartbeat.OnHeartResult(true, false);
+PUBC_EXPECT_EQ((unsigned int)(MinHeartInterval + HeartStep * 2), smartHeartbeat.
+getNextHeartbeatInterval(flag), & scene
+);
+
+UnHookIsActive();
+
 }
 
-PUBC_TEST(SmartHeartBeat, test6)
+PUBC_TEST(SmartHeartBeat, test5
+)
 {
-	m_testCaseInfo->m_TestCaseName = "inactive, after MMSmartHeartbeat::OnLongLinkDisconnect(), use MinHeartInterval, if success, use the previous value";
-	UtilFunc::del_files(getAppFilePath() + "/" + "config");
+m_testCaseInfo->
+m_TestCaseName = "inactive, after MMSmartHeartbeat::OnLongLinkEstablished(), use MinHeartInterval, if fail three times continuously, use MinHeartInterval, or use the previous value";
 
-	HookIsActive();
+UtilFunc::del_files (getAppFilePath()
 
-	sg_active = false;
-	SmartHeartBeat smartHeartbeat;
++ "/" + "config");
 
-	bool flag = false;
+HookIsActive();
 
-	BaseScene scene;
+sg_active = false;
+SmartHeartBeat smartHeartbeat;
 
-	for (int i=0;i<5;++i)
-	{
-		smartHeartbeat.getNextHeartbeatInterval(flag);
-		smartHeartbeat.OnHeartResult(true, false);
-	}
+bool flag = false;
 
-	scene.eventName = "OnHeartResult(true, false) 5 times continuously";
-	PUBC_EXPECT_EQ((unsigned int)(MinHeartInterval + HeartStep), smartHeartbeat.getNextHeartbeatInterval(flag), &scene);
+BaseScene scene;
 
-
-	scene.eventName = "smartHeartbeat.OnLongLinkDisconnect()";
-	smartHeartbeat.OnLongLinkDisconnect();
-	PUBC_EXPECT_EQ((unsigned int)(MinHeartInterval), smartHeartbeat.getNextHeartbeatInterval(flag), &scene);
-
-	scene.eventName = "OnHeartResult(true, false) 1 times";
-	smartHeartbeat.OnHeartResult(true, false);
-	PUBC_EXPECT_EQ((unsigned int)(MinHeartInterval + HeartStep), smartHeartbeat.getNextHeartbeatInterval(flag), &scene);
-
-	scene.eventName = "OnHeartResult(true, false) 3 times";
-	for (int i=0;i<3;++i) {
-		smartHeartbeat.OnHeartResult(true, false);
-	}
-	PUBC_EXPECT_EQ((unsigned int)(MinHeartInterval + HeartStep * 2), smartHeartbeat.getNextHeartbeatInterval(flag), &scene);
-	UnHookIsActive();
+for (
+int i = 0;
+i<6;++i)
+{
+smartHeartbeat.
+getNextHeartbeatInterval(flag);
+smartHeartbeat.OnHeartResult(true, false);
 }
 
-PUBC_TEST(SmartHeartBeat, test7)
+scene.
+eventName = "OnHeartResult(true, false) 6 times continuously";
+//printf("%d\n", smartHeartbeat.getNextHeartbeatInterval(flag));
+PUBC_EXPECT_EQ((unsigned int)(MinHeartInterval + HeartStep * 2), smartHeartbeat.
+getNextHeartbeatInterval(flag), & scene
+);
+
+scene.
+eventName = "smartHeartbeat.OnLongLinkEstablished()";
+smartHeartbeat.
+
+OnLongLinkEstablished();
+
+PUBC_EXPECT_EQ((unsigned int)(MinHeartInterval), smartHeartbeat.
+getNextHeartbeatInterval(flag), & scene
+);
+
+for (
+int i = 0;
+i<2;++i)
 {
-	m_testCaseInfo->m_TestCaseName = "inactive, after MMSmartHeartbeat::OnLongLinkDisconnect(), use MinHeartInterval, if fail three times continuously, use MinHeartInterval, or use the previous value";
-	UtilFunc::del_files(getAppFilePath() + "/" + "config");
-
-	HookIsActive();
-
-	sg_active = false;
-	SmartHeartBeat smartHeartbeat;
-
-	bool flag = false;
-
-	BaseScene scene;
-
-	for (int i=0;i<6;++i)
-	{
-		smartHeartbeat.getNextHeartbeatInterval(flag);
-		smartHeartbeat.OnHeartResult(true, false);
-	}
-
-	scene.eventName = "OnHeartResult(true, false) 6 times continuously";
-	//printf("%d\n", smartHeartbeat.getNextHeartbeatInterval(flag));
-	PUBC_EXPECT_EQ((unsigned int)(MinHeartInterval + HeartStep * 2), smartHeartbeat.getNextHeartbeatInterval(flag), &scene);
-
-	scene.eventName = "smartHeartbeat.OnLongLinkDisconnect()";
-	smartHeartbeat.OnLongLinkDisconnect();
-	PUBC_EXPECT_EQ((unsigned int)(MinHeartInterval), smartHeartbeat.getNextHeartbeatInterval(flag), &scene);
-
-	for (int i=0;i<2;++i)
-	{
-		smartHeartbeat.OnHeartResult(false, false);
-	}
-
-	scene.eventName = "OnHeartResult(false, false) 2 times";
-
-	PUBC_EXPECT_EQ((unsigned int)(MinHeartInterval), smartHeartbeat.getNextHeartbeatInterval(flag), &scene);
-
-	scene.eventName = "OnHeartResult(true, false) 1 times";
-	smartHeartbeat.OnHeartResult(true, false);
-	PUBC_EXPECT_EQ((unsigned int)(MinHeartInterval + HeartStep * 2), smartHeartbeat.getNextHeartbeatInterval(flag), &scene);
-
-
-	smartHeartbeat.OnLongLinkDisconnect();
-	for (int i=0;i<3;++i)
-	{
-		smartHeartbeat.getNextHeartbeatInterval(flag);
-		smartHeartbeat.OnHeartResult(false, false);
-	}
-	scene.eventName = "smartHeartbeat.OnLongLinkDisconnect(), OnHeartResult(false, false) 3 times";
-
-	PUBC_EXPECT_EQ((unsigned int)(MinHeartInterval), smartHeartbeat.getNextHeartbeatInterval(flag), &scene);
-	UnHookIsActive();
+smartHeartbeat.OnHeartResult(false, false);
 }
 
-PUBC_TEST(SmartHeartBeat, test8)
+scene.
+eventName = "OnHeartResult(false, false) 2 times";
+
+PUBC_EXPECT_EQ((unsigned int)(MinHeartInterval), smartHeartbeat.
+getNextHeartbeatInterval(flag), & scene
+);
+
+scene.
+eventName = "OnHeartResult(true, false) 1 times";
+smartHeartbeat.OnHeartResult(true, false);
+PUBC_EXPECT_EQ((unsigned int)(MinHeartInterval + HeartStep * 2), smartHeartbeat.
+getNextHeartbeatInterval(flag), & scene
+);
+
+
+smartHeartbeat.
+
+OnLongLinkEstablished();
+
+for (
+int i = 0;
+i<3;++i)
 {
-	m_testCaseInfo->m_TestCaseName = "active, heart beat use MinHeartInterval";
-	UtilFunc::del_files(getAppFilePath() + "/" + "config");
+smartHeartbeat.
+getNextHeartbeatInterval(flag);
+smartHeartbeat.OnHeartResult(false, false);
+}
+scene.
+eventName = "smartHeartbeat.OnLongLinkEstablished(), OnHeartResult(false, false) 3 times";
 
-	HookIsActive();
+PUBC_EXPECT_EQ((unsigned int)(MinHeartInterval), smartHeartbeat.
+getNextHeartbeatInterval(flag), & scene
+);
 
-	sg_active = true;
-	SmartHeartBeat smartHeartbeat;
+UnHookIsActive();
 
-	bool flag = false;
-	BaseScene scene;
+}
 
-	for (int i=0;i<300;++i)
-	{
-		smartHeartbeat.getNextHeartbeatInterval(flag);
-		smartHeartbeat.OnHeartResult(true, false);
-	}
+PUBC_TEST(SmartHeartBeat, test6
+)
+{
+m_testCaseInfo->
+m_TestCaseName = "inactive, after MMSmartHeartbeat::OnLongLinkDisconnect(), use MinHeartInterval, if success, use the previous value";
 
-	scene.eventName = "OnHeartResult(true, false) 300 times continuously";
-	PUBC_EXPECT_EQ((unsigned int)(MinHeartInterval), smartHeartbeat.getNextHeartbeatInterval(flag), &scene);
+UtilFunc::del_files (getAppFilePath()
 
-	UnHookIsActive();
-	//for coverage
-	smartHeartbeat.m_currentNetHeartInfo.m_isStable = true;
-	smartHeartbeat.OnHeartbeatStart();
-	smartHeartbeat.judgeMIUIStyle();
-	smartHeartbeat.reportSuccRate();
-	smartHeartbeat.OnNetworkChanged();
++ "/" + "config");
+
+HookIsActive();
+
+sg_active = false;
+SmartHeartBeat smartHeartbeat;
+
+bool flag = false;
+
+BaseScene scene;
+
+for (
+int i = 0;
+i<5;++i)
+{
+smartHeartbeat.
+getNextHeartbeatInterval(flag);
+smartHeartbeat.OnHeartResult(true, false);
+}
+
+scene.
+eventName = "OnHeartResult(true, false) 5 times continuously";
+PUBC_EXPECT_EQ((unsigned int)(MinHeartInterval + HeartStep), smartHeartbeat.
+getNextHeartbeatInterval(flag), & scene
+);
+
+
+scene.
+eventName = "smartHeartbeat.OnLongLinkDisconnect()";
+smartHeartbeat.
+
+OnLongLinkDisconnect();
+
+PUBC_EXPECT_EQ((unsigned int)(MinHeartInterval), smartHeartbeat.
+getNextHeartbeatInterval(flag), & scene
+);
+
+scene.
+eventName = "OnHeartResult(true, false) 1 times";
+smartHeartbeat.OnHeartResult(true, false);
+PUBC_EXPECT_EQ((unsigned int)(MinHeartInterval + HeartStep), smartHeartbeat.
+getNextHeartbeatInterval(flag), & scene
+);
+
+scene.
+eventName = "OnHeartResult(true, false) 3 times";
+for (
+int i = 0;
+i<3;++i) {
+smartHeartbeat.OnHeartResult(true, false);
+}
+PUBC_EXPECT_EQ((unsigned int)(MinHeartInterval + HeartStep * 2), smartHeartbeat.
+getNextHeartbeatInterval(flag), & scene
+);
+
+UnHookIsActive();
+
+}
+
+PUBC_TEST(SmartHeartBeat, test7
+)
+{
+m_testCaseInfo->
+m_TestCaseName = "inactive, after MMSmartHeartbeat::OnLongLinkDisconnect(), use MinHeartInterval, if fail three times continuously, use MinHeartInterval, or use the previous value";
+
+UtilFunc::del_files (getAppFilePath()
+
++ "/" + "config");
+
+HookIsActive();
+
+sg_active = false;
+SmartHeartBeat smartHeartbeat;
+
+bool flag = false;
+
+BaseScene scene;
+
+for (
+int i = 0;
+i<6;++i)
+{
+smartHeartbeat.
+getNextHeartbeatInterval(flag);
+smartHeartbeat.OnHeartResult(true, false);
+}
+
+scene.
+eventName = "OnHeartResult(true, false) 6 times continuously";
+//printf("%d\n", smartHeartbeat.getNextHeartbeatInterval(flag));
+PUBC_EXPECT_EQ((unsigned int)(MinHeartInterval + HeartStep * 2), smartHeartbeat.
+getNextHeartbeatInterval(flag), & scene
+);
+
+scene.
+eventName = "smartHeartbeat.OnLongLinkDisconnect()";
+smartHeartbeat.
+
+OnLongLinkDisconnect();
+
+PUBC_EXPECT_EQ((unsigned int)(MinHeartInterval), smartHeartbeat.
+getNextHeartbeatInterval(flag), & scene
+);
+
+for (
+int i = 0;
+i<2;++i)
+{
+smartHeartbeat.OnHeartResult(false, false);
+}
+
+scene.
+eventName = "OnHeartResult(false, false) 2 times";
+
+PUBC_EXPECT_EQ((unsigned int)(MinHeartInterval), smartHeartbeat.
+getNextHeartbeatInterval(flag), & scene
+);
+
+scene.
+eventName = "OnHeartResult(true, false) 1 times";
+smartHeartbeat.OnHeartResult(true, false);
+PUBC_EXPECT_EQ((unsigned int)(MinHeartInterval + HeartStep * 2), smartHeartbeat.
+getNextHeartbeatInterval(flag), & scene
+);
+
+
+smartHeartbeat.
+
+OnLongLinkDisconnect();
+
+for (
+int i = 0;
+i<3;++i)
+{
+smartHeartbeat.
+getNextHeartbeatInterval(flag);
+smartHeartbeat.OnHeartResult(false, false);
+}
+scene.
+eventName = "smartHeartbeat.OnLongLinkDisconnect(), OnHeartResult(false, false) 3 times";
+
+PUBC_EXPECT_EQ((unsigned int)(MinHeartInterval), smartHeartbeat.
+getNextHeartbeatInterval(flag), & scene
+);
+
+UnHookIsActive();
+
+}
+
+PUBC_TEST(SmartHeartBeat, test8
+)
+{
+m_testCaseInfo->
+m_TestCaseName = "active, heart beat use MinHeartInterval";
+
+UtilFunc::del_files (getAppFilePath()
+
++ "/" + "config");
+
+HookIsActive();
+
+sg_active = true;
+SmartHeartBeat smartHeartbeat;
+
+bool flag = false;
+BaseScene scene;
+
+for (
+int i = 0;
+i<300;++i)
+{
+smartHeartbeat.
+getNextHeartbeatInterval(flag);
+smartHeartbeat.OnHeartResult(true, false);
+}
+
+scene.
+eventName = "OnHeartResult(true, false) 300 times continuously";
+PUBC_EXPECT_EQ((unsigned int)(MinHeartInterval), smartHeartbeat.
+getNextHeartbeatInterval(flag), & scene
+);
+
+UnHookIsActive();
+
+//for coverage
+smartHeartbeat.m_currentNetHeartInfo.
+m_isStable = true;
+smartHeartbeat.
+
+OnHeartbeatStart();
+
+smartHeartbeat.
+
+judgeMIUIStyle();
+
+smartHeartbeat.
+
+reportSuccRate();
+
+smartHeartbeat.
+
+OnNetworkChanged();
+
 }
 #endif

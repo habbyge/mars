@@ -34,34 +34,31 @@
 #define snprintf _snprintf
 #endif
 
-namespace strutil
-{
+namespace strutil {
 
 
-    
 std::string& URLEncode(const std::string& _url, std::string& _encode_url) {
-    std::string::const_iterator iter = _url.begin();
-    
-    char transferr[4] = {0};
-    
-    for (; iter != _url.end(); ++iter) {
-          char ch = *iter;
-        if ((('A'<=ch) && (ch<='Z')) ||
-            (('a'<=ch) && (ch<='z')) ||
-            (('0'<=ch) && (ch<='9')) ||
-            ch == '.' || ch == '-' || ch == '_' || ch == '*') {
-            _encode_url += ch;
-        } else if (ch == ' ') {
-            _encode_url += '+';
-        } else {
-            snprintf(transferr, sizeof(transferr), "%%%02X", (unsigned char)ch);
-            _encode_url.append(transferr);
-        }
-    }
-    
-    return _encode_url;
-}
+  std::string::const_iterator iter = _url.begin();
 
+  char transferr[4] = {0};
+
+  for (; iter != _url.end(); ++iter) {
+    char ch = *iter;
+    if ((('A' <= ch) && (ch <= 'Z')) ||
+        (('a' <= ch) && (ch <= 'z')) ||
+        (('0' <= ch) && (ch <= '9')) ||
+        ch == '.' || ch == '-' || ch == '_' || ch == '*') {
+      _encode_url += ch;
+    } else if (ch == ' ') {
+      _encode_url += '+';
+    } else {
+      snprintf(transferr, sizeof(transferr), "%%%02X", (unsigned char) ch);
+      _encode_url.append(transferr);
+    }
+  }
+
+  return _encode_url;
+}
 
 
 #define TRIMLEFT(T) T& TrimLeft(T& str)\
@@ -194,30 +191,38 @@ std::string& URLEncode(const std::string& _url, std::string& _encode_url) {
 }
 //
 TRIMLEFT(std::string)
+
 TRIMLEFT(std::wstring)
 
 TRIMRIGHT(std::string)
+
 TRIMRIGHT(std::wstring)
 
 TRIM(std::string)
+
 TRIM(std::wstring)
 
 TOLOWER(std::string)
+
 TOLOWER(std::wstring)
 
 TOUPPER(std::string)
+
 TOUPPER(std::wstring)
 
 STARTSWITH(std::string)
+
 STARTSWITH(std::wstring)
 
 ENDSWITH(std::string)
+
 ENDSWITH(std::wstring)
 //
 //EQUALSIGNORECASE(string)
 //EQUALSIGNORECASE(wstring)
 //
 SPLITTOKEN(std::string)
+
 SPLITTOKEN(std::wstring)
 
 #ifdef WIN32
@@ -237,117 +242,122 @@ std::wstring UTF8String2Wstring(const std::string& _src) {
     return String2WString(_src, CP_UTF8);
 }
 #endif
+
 std::string Hex2Str(const char* _str, unsigned int _len) {
-    std::string outstr = "";
-    static const char* HEX = "0123456789abcdef";
-    const uint8_t* input = (const uint8_t*)_str;
-    uint8_t t, a, b;
-    for (unsigned int i = 0; i < _len; i++) {
-        t = input[i];
-        // byte a = t / 16;
-        a = t >> 4;
-        // byte b = t % 16;
-        b = t & 0x0f;
-        outstr.append(1, HEX[a]);
-        outstr.append(1, HEX[b]);
-    }
-    return outstr;
+  std::string outstr = "";
+  static const char* HEX = "0123456789abcdef";
+  const uint8_t* input = (const uint8_t*) _str;
+  uint8_t t, a, b;
+  for (unsigned int i = 0; i < _len; i++) {
+    t = input[i];
+    // byte a = t / 16;
+    a = t >> 4;
+    // byte b = t % 16;
+    b = t & 0x0f;
+    outstr.append(1, HEX[a]);
+    outstr.append(1, HEX[b]);
+  }
+  return outstr;
 }
 
 std::string Str2Hex(const char* _str, unsigned int _len) {
-    if (_len > 1024) {
-        xassert2(false, TSF"string length %_ too long.", _len);
-        return "";
-    }
-    char outbuffer[512];
-    
-    unsigned int outoffset = 0;
-    const char * ptr = _str;
-    unsigned int  length = _len/2;
-    
-    if (length > sizeof(outbuffer))
-        length = sizeof(outbuffer);
-    
-    for(unsigned int i = 0; i< length;i++) {
-        char tmp[4];
-        
-        memset(tmp, 0, sizeof(tmp));
-        tmp[0] = ptr[i*2];
-        tmp[1] = ptr[i*2+1];
-        char *p = NULL;
-        outbuffer[outoffset] = (char)strtol(tmp,&p,16);
-        outoffset++;
-    }
-    std::string ret ;
-    ret.assign(outbuffer,outoffset);
-    return ret;
+  if (_len > 1024) {
+    xassert2(false, TSF"string length %_ too long.", _len);
+    return "";
+  }
+  char outbuffer[512];
+
+  unsigned int outoffset = 0;
+  const char* ptr = _str;
+  unsigned int length = _len / 2;
+
+  if (length > sizeof(outbuffer))
+    length = sizeof(outbuffer);
+
+  for (unsigned int i = 0; i < length; i++) {
+    char tmp[4];
+
+    memset(tmp, 0, sizeof(tmp));
+    tmp[0] = ptr[i * 2];
+    tmp[1] = ptr[i * 2 + 1];
+    char* p = NULL;
+    outbuffer[outoffset] = (char) strtol(tmp, &p, 16);
+    outoffset++;
+  }
+  std::string ret;
+  ret.assign(outbuffer, outoffset);
+  return ret;
 }
-    
+
 
 std::string ReplaceChar(const char* const input_str, char be_replaced, char replace_with) {
-    std::string output_str(input_str);
-    size_t len = output_str.size();
-    xassert2(len<16*1024, TSF"input_str:%_", input_str);
-    for(size_t i=0; i<len; ++i) {
-        if (be_replaced == output_str[i]) {
-            output_str[i] = replace_with;
-        }
+  std::string output_str(input_str);
+  size_t len = output_str.size();
+  xassert2(len < 16 * 1024, TSF"input_str:%_", input_str);
+  for (size_t i = 0; i < len; ++i) {
+    if (be_replaced == output_str[i]) {
+      output_str[i] = replace_with;
     }
-    return output_str;
+  }
+  return output_str;
 }
+
 std::string GetFileNameFromPath(const char* _path) {
-    if (NULL == _path) return "";
-    
-    const char* pos = strrchr(_path, '\\');
-    
-    if (NULL == pos) {
-        pos = strrchr(_path, '/');
-    }
-    
-    if (NULL == pos || '\0' == *(pos + 1)) {
-        return _path;
-    } else {
-        return pos + 1;
-    }
+  if (NULL == _path) return "";
+
+  const char* pos = strrchr(_path, '\\');
+
+  if (NULL == pos) {
+    pos = strrchr(_path, '/');
+  }
+
+  if (NULL == pos || '\0' == *(pos + 1)) {
+    return _path;
+  } else {
+    return pos + 1;
+  }
 }
-    
+
 template<typename charT>
 struct my_equal {
-    my_equal(const std::locale& loc) : loc_(loc) {}
-    bool operator()(charT ch1, charT ch2) {
-        return std::toupper(ch1, loc_) == std::toupper(ch2, loc_);
-    }
+  my_equal(const std::locale& loc) : loc_(loc) {}
+
+  bool operator()(charT ch1, charT ch2) {
+    return std::toupper(ch1, loc_) == std::toupper(ch2, loc_);
+  }
+
 private:
-    const std::locale& loc_;
+  const std::locale& loc_;
 };
 
 // find substring (case insensitive)
-size_t ci_find_substr(const std::string& str, const std::string& sub, size_t pos){
-    const std::locale& loc = std::locale();
-    typename std::string::const_iterator it = std::search(str.begin() + pos, str.end(),
-                                                sub.begin(), sub.end(), my_equal<typename std::string::value_type>(loc));
-    
-    if (it != str.end()) return it - str.begin();
-    else return std::string::npos;  // not found
-}
-    
-std::string MD5DigestToBase16(const uint8_t digest[16]){
-    return DigestToBase16(&digest[0], 16);
+size_t ci_find_substr(const std::string& str, const std::string& sub, size_t pos) {
+  const std::locale& loc = std::locale();
+  typename std::string::const_iterator it = std::search(str.begin() + pos, str.end(),
+                                                        sub.begin(), sub.end(),
+                                                        my_equal<typename std::string::value_type>(loc));
+
+  if (it != str.end()) return it - str.begin();
+  else return std::string::npos;  // not found
 }
 
-std::string DigestToBase16(const uint8_t *digest, size_t length){
-    assert(length % 2 == 0);
-    static char const zEncode[] = "0123456789abcdef";
-    
-    std::string ret;
-    ret.resize(length * 2);
-    
-    for (size_t i = 0, j = 0; i < length; i++, j += 2) {
-        uint8_t a = digest[i];
-        ret[j] = zEncode[(a >> 4) & 0xf];
-        ret[j + 1] = zEncode[a & 0xf];
-    }
-    return ret;
+std::string MD5DigestToBase16(const uint8_t digest[16]) {
+  return DigestToBase16(&digest[0], 16);
+}
+
+std::string DigestToBase16(const uint8_t* digest, size_t length) {
+  assert(length % 2 == 0);
+  static char const zEncode[] = "0123456789abcdef";
+
+  std::string ret;
+  ret.resize(length * 2);
+
+  for (size_t i = 0, j = 0; i < length; i++, j += 2) {
+    uint8_t a = digest[i];
+    ret[j] = zEncode[(a >> 4) & 0xf];
+    ret[j + 1] = zEncode[a & 0xf];
+  }
+  return ret;
 }
 
 }

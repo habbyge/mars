@@ -54,7 +54,7 @@
 
 #   define AUX778076_FIRST_BACKWARD_STATE_TYPEDEF(n_) \
     typedef typename nested_chunk::state BOOST_PP_CAT(bkwd_state,n_);
-    /**/
+/**/
 
 #   define AUX778076_FOLD_IMPL_NAME \
     BOOST_PP_CAT(AUX778076_FOLD_IMPL_NAME_PREFIX,_impl) \
@@ -64,105 +64,79 @@
     BOOST_PP_CAT(AUX778076_FOLD_IMPL_NAME_PREFIX,_chunk) \
     /**/
 
-namespace mars_boost {} namespace boost = mars_boost; namespace mars_boost { namespace mpl { namespace aux {
+namespace mars_boost {}
+namespace boost = mars_boost;
+namespace mars_boost {
+namespace mpl {
+namespace aux {
 
 /// forward declaration
 template<
-      BOOST_MPL_AUX_NTTP_DECL(long, N)
-    , typename First
-    , typename Last
-    , typename State
-    , typename BackwardOp
-    , typename ForwardOp
-    > 
+    BOOST_MPL_AUX_NTTP_DECL(long,
+                            N), typename First, typename Last, typename State, typename BackwardOp, typename ForwardOp
+>
 struct AUX778076_FOLD_IMPL_NAME;
 
 #if !defined(BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION) \
-    && !defined(BOOST_MPL_CFG_NO_NONTYPE_TEMPLATE_PARTIAL_SPEC)
+ && !defined(BOOST_MPL_CFG_NO_NONTYPE_TEMPLATE_PARTIAL_SPEC)
 
 #   define BOOST_PP_ITERATION_PARAMS_1 \
     (3,(0, BOOST_MPL_LIMIT_UNROLLING, <boost/mpl/aux_/reverse_fold_impl_body.hpp>))
+
 #   include BOOST_PP_ITERATE()
 
 // implementation for N that exceeds BOOST_MPL_LIMIT_UNROLLING
 template<
-      BOOST_MPL_AUX_NTTP_DECL(long, N)
-    , typename First
-    , typename Last
-    , typename State
-    , typename BackwardOp
-    , typename ForwardOp
-    > 
-struct AUX778076_FOLD_IMPL_NAME
-{
-    typedef First iter0;
-    typedef State fwd_state0;
+    BOOST_MPL_AUX_NTTP_DECL(long,
+                            N), typename First, typename Last, typename State, typename BackwardOp, typename ForwardOp
+>
+struct AUX778076_FOLD_IMPL_NAME {
+  typedef First iter0;
+  typedef State fwd_state0;
 
-    BOOST_MPL_PP_REPEAT(
-          BOOST_MPL_LIMIT_UNROLLING
-        , AUX778076_ITER_FOLD_FORWARD_STEP
-        , unused
-        )
+  BOOST_MPL_PP_REPEAT(
+      BOOST_MPL_LIMIT_UNROLLING, AUX778076_ITER_FOLD_FORWARD_STEP, unused
+  )
 
-    typedef AUX778076_FOLD_IMPL_NAME<
-          ( (N - BOOST_MPL_LIMIT_UNROLLING) < 0 ? 0 : N - BOOST_MPL_LIMIT_UNROLLING )
-        , BOOST_PP_CAT(iter,BOOST_MPL_LIMIT_UNROLLING)
-        , Last
-        , BOOST_PP_CAT(fwd_state,BOOST_MPL_LIMIT_UNROLLING)
-        , BackwardOp
-        , ForwardOp
-        > nested_chunk;
-        
-    AUX778076_FIRST_BACKWARD_STATE_TYPEDEF(BOOST_MPL_LIMIT_UNROLLING)
+  typedef AUX778076_FOLD_IMPL_NAME<
+      ((N - BOOST_MPL_LIMIT_UNROLLING) < 0 ? 0 : N - BOOST_MPL_LIMIT_UNROLLING), BOOST_PP_CAT(iter,
+                                                                                              BOOST_MPL_LIMIT_UNROLLING), Last, BOOST_PP_CAT(
+          fwd_state, BOOST_MPL_LIMIT_UNROLLING), BackwardOp, ForwardOp
+  > nested_chunk;
 
-    BOOST_MPL_PP_REPEAT(
-          BOOST_MPL_LIMIT_UNROLLING
-        , AUX778076_ITER_FOLD_BACKWARD_STEP
-        , BOOST_MPL_LIMIT_UNROLLING
-        )
+  AUX778076_FIRST_BACKWARD_STATE_TYPEDEF(BOOST_MPL_LIMIT_UNROLLING)
 
-    typedef bkwd_state0 state;
-    typedef typename nested_chunk::iterator iterator;
+  BOOST_MPL_PP_REPEAT(
+      BOOST_MPL_LIMIT_UNROLLING, AUX778076_ITER_FOLD_BACKWARD_STEP, BOOST_MPL_LIMIT_UNROLLING
+  )
+
+  typedef bkwd_state0 state;
+  typedef typename nested_chunk::iterator iterator;
 };
 
 // fallback implementation for sequences of unknown size
 template<
-      typename First
-    , typename Last
-    , typename State
-    , typename BackwardOp
-    , typename ForwardOp
-    > 
-struct AUX778076_FOLD_IMPL_NAME<-1,First,Last,State,BackwardOp,ForwardOp>
-{
-    typedef AUX778076_FOLD_IMPL_NAME<
-          -1
-        , typename mpl::next<First>::type
-        , Last
-        , typename apply2<ForwardOp,State,AUX778076_FOLD_IMPL_OP(First)>::type
-        , BackwardOp
-        , ForwardOp
-        > nested_step;
+    typename First, typename Last, typename State, typename BackwardOp, typename ForwardOp
+>
+struct AUX778076_FOLD_IMPL_NAME<-1, First, Last, State, BackwardOp, ForwardOp> {
+  typedef AUX778076_FOLD_IMPL_NAME<
+      -1, typename mpl::next<First>::type, Last, typename apply2<ForwardOp, State, AUX778076_FOLD_IMPL_OP(
+          First)>::type, BackwardOp, ForwardOp
+  > nested_step;
 
-    typedef typename apply2<
-          BackwardOp
-        , typename nested_step::state
-        , AUX778076_FOLD_IMPL_OP(First)
-        >::type state;
+  typedef typename apply2<
+      BackwardOp, typename nested_step::state, AUX778076_FOLD_IMPL_OP(First)
+  >::type state;
 
-    typedef typename nested_step::iterator iterator;
+  typedef typename nested_step::iterator iterator;
 };
 
 template<
-      typename Last
-    , typename State
-    , typename BackwardOp
-    , typename ForwardOp
-    > 
-struct AUX778076_FOLD_IMPL_NAME<-1,Last,Last,State,BackwardOp,ForwardOp>
-{
-    typedef State state;
-    typedef Last iterator;
+    typename Last, typename State, typename BackwardOp, typename ForwardOp
+>
+struct AUX778076_FOLD_IMPL_NAME<-1, Last, Last, State, BackwardOp, ForwardOp> {
+  typedef State state;
+  typedef Last iterator;
 };
 
 #else // BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION

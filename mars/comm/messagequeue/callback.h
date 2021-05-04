@@ -20,6 +20,7 @@
 
 #ifndef callback_h
 #define callback_h
+
 #include "mars/comm/thread/thread.h"
 #include "message_queue.h"
 #include "mars/comm/xlogger/xlogger.h"
@@ -27,65 +28,67 @@
 
 namespace mars {
 
-    using namespace MessageQueue;
+using namespace MessageQueue;
 
 template<class T>
 class CallBack {
 public:
-    typedef boost::function<void ()> invoke_function;
+  typedef boost::function<void()> invoke_function;
 
-    //if MessageQueue::KNullHandler, will callback in worker thread
-    CallBack(const T& _func, MessageHandler_t _handler=MessageQueue::KNullHandler):cb_handler_(_handler), cb_func_(_func), valid_(true) {}
+  //if MessageQueue::KNullHandler, will callback in worker thread
+  CallBack(const T& _func, MessageHandler_t _handler = MessageQueue::KNullHandler) : cb_handler_(_handler),
+                                                                                     cb_func_(_func), valid_(true) {}
 
-    CallBack(const T& _func, MessageTitle_t _title, MessageHandler_t _handler=MessageQueue::KNullHandler):cb_handler_(_handler), title_(_title), cb_func_(_func), valid_(true) {}
-    
-    CallBack():cb_handler_(MessageQueue::KNullHandler), valid_(false) {}
-    
-    void set(const T& _func, MessageTitle_t _title = 0, MessageHandler_t _handler=MessageQueue::KNullHandler) {
-        ScopedLock lock(mutex_);
-        cb_handler_ = _handler;
-        cb_func_ = _func;
-        valid_ = true;
-        title_ = _title;
-    }
-    
-    operator bool() {
-        ScopedLock lock(mutex_);
-        return valid_;
+  CallBack(const T& _func, MessageTitle_t _title, MessageHandler_t _handler = MessageQueue::KNullHandler) : cb_handler_(
+      _handler), title_(_title), cb_func_(_func), valid_(true) {}
+
+  CallBack() : cb_handler_(MessageQueue::KNullHandler), valid_(false) {}
+
+  void set(const T& _func, MessageTitle_t _title = 0, MessageHandler_t _handler = MessageQueue::KNullHandler) {
+    ScopedLock lock(mutex_);
+    cb_handler_ = _handler;
+    cb_func_ = _func;
+    valid_ = true;
+    title_ = _title;
+  }
+
+  operator bool() {
+    ScopedLock lock(mutex_);
+    return valid_;
+  }
+
+  void invalidate() {
+    //should call in messagequeue of cb_handler_
+    xassert2(MessageQueue::CurrentThreadMessageQueue() == MessageQueue::Handler2Queue(cb_handler_));
+    ScopedLock lock(mutex_);
+    valid_ = false;
+  }
+
+  template<typename... Args>
+  void operator()(const Args& ... rest) {
+    ScopedLock lock(mutex_);
+    if (!valid_) {
+      return;
     }
 
-    void invalidate() {
-        //should call in messagequeue of cb_handler_
-        xassert2(MessageQueue::CurrentThreadMessageQueue() == MessageQueue::Handler2Queue(cb_handler_));
-        ScopedLock lock(mutex_);
-        valid_ = false;
+    boost::function<void()> func = boost::bind(cb_func_, rest...);
+    if (MessageQueue::KNullHandler == cb_handler_) {
+      func();
+      return;
     }
-    
-    template<typename... Args>
-    void operator()(const Args&... rest) {
-        ScopedLock lock(mutex_);
-        if(!valid_) {
-            return;
-        }
-        
-        boost::function<void ()> func = boost::bind(cb_func_, rest...);
-        if(MessageQueue::KNullHandler == cb_handler_) {
-            func();
-            return;
-        }
-        if(title_ != 0) {
-            MessageQueue::AsyncInvoke(func, title_, cb_handler_);
-        } else {
-            MessageQueue::AsyncInvoke(func, cb_handler_);
-        }
+    if (title_ != 0) {
+      MessageQueue::AsyncInvoke(func, title_, cb_handler_);
+    } else {
+      MessageQueue::AsyncInvoke(func, cb_handler_);
     }
+  }
 
 private:
-    MessageHandler_t cb_handler_;
-    MessageTitle_t title_;
-    T cb_func_;
-    Mutex mutex_;
-    bool valid_;
+  MessageHandler_t cb_handler_;
+  MessageTitle_t title_;
+  T cb_func_;
+  Mutex mutex_;
+  bool valid_;
 };
 
 }

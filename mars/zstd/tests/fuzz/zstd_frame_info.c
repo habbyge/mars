@@ -18,22 +18,21 @@
 #include "fuzz_helpers.h"
 #include "zstd_helpers.h"
 
-int LLVMFuzzerTestOneInput(const uint8_t *src, size_t size)
-{
-    ZSTD_frameHeader zfh;
-    /* You can fuzz any helper functions here that are fast, and take zstd
-     * compressed data as input. E.g. don't expect the input to be a dictionary,
-     * so don't fuzz ZSTD_getDictID_fromDict().
-     */
-    ZSTD_getFrameContentSize(src, size);
-    ZSTD_getDecompressedSize(src, size);
-    ZSTD_findFrameCompressedSize(src, size);
-    ZSTD_getDictID_fromFrame(src, size);
-    ZSTD_findDecompressedSize(src, size);
-    ZSTD_decompressBound(src, size);
-    ZSTD_frameHeaderSize(src, size);
-    ZSTD_isFrame(src, size);
-    ZSTD_getFrameHeader(&zfh, src, size);
-    ZSTD_getFrameHeader_advanced(&zfh, src, size, ZSTD_f_zstd1);
-    return 0;
+int LLVMFuzzerTestOneInput(const uint8_t* src, size_t size) {
+  ZSTD_frameHeader zfh;
+  /* You can fuzz any helper functions here that are fast, and take zstd
+   * compressed data as input. E.g. don't expect the input to be a dictionary,
+   * so don't fuzz ZSTD_getDictID_fromDict().
+   */
+  ZSTD_getFrameContentSize(src, size);
+  ZSTD_getDecompressedSize(src, size);
+  ZSTD_findFrameCompressedSize(src, size);
+  ZSTD_getDictID_fromFrame(src, size);
+  ZSTD_findDecompressedSize(src, size);
+  ZSTD_decompressBound(src, size);
+  ZSTD_frameHeaderSize(src, size);
+  ZSTD_isFrame(src, size);
+  ZSTD_getFrameHeader(&zfh, src, size);
+  ZSTD_getFrameHeader_advanced(&zfh, src, size, ZSTD_f_zstd1);
+  return 0;
 }

@@ -19,7 +19,7 @@
 #if !defined(BOOST_MPL_CFG_NO_FULL_LAMBDA_SUPPORT)
 
 #   define BOOST_MPL_AUX_LAMBDA_SUPPORT_SPEC(i, name, params) /**/
-#   define BOOST_MPL_AUX_LAMBDA_SUPPORT(i,name,params) /**/
+#   define BOOST_MPL_AUX_LAMBDA_SUPPORT(i, name, params) /**/
 
 #else
 

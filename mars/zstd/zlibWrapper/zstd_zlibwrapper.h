@@ -22,12 +22,12 @@ extern "C" {
 #include <zlib.h>
 
 #if !defined(z_const)
-    #define z_const
+#define z_const
 #endif
 
 
 /* returns a string with version of zstd library */
-const char * zstdVersion(void);
+const char* zstdVersion(void);
 
 
 /*** COMPRESSION ***/
@@ -57,9 +57,10 @@ int ZWRAP_setPledgedSrcSize(z_streamp strm, unsigned long long pledgedSrcSize);
 int ZWRAP_deflateReset_keepDict(z_streamp strm);
 
 
-
 /*** DECOMPRESSION ***/
-typedef enum { ZWRAP_FORCE_ZLIB, ZWRAP_AUTO } ZWRAP_decompress_type;
+typedef enum {
+  ZWRAP_FORCE_ZLIB, ZWRAP_AUTO
+} ZWRAP_decompress_type;
 
 /* ZWRAP_setDecompressionType() enables/disables automatic recognition of zstd/zlib compressed data during runtime.
    By default auto-detection of zstd and zlib streams in enabled (ZWRAP_AUTO).

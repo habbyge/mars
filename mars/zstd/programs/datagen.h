@@ -15,6 +15,7 @@
 #include <stddef.h>   /* size_t */
 
 void RDG_genStdout(unsigned long long size, double matchProba, double litProba, unsigned seed);
+
 void RDG_genBuffer(void* buffer, size_t size, double matchProba, double litProba, unsigned seed);
 /*!RDG_genBuffer
    Generate 'size' bytes of compressible data into 'buffer'.

@@ -22,27 +22,29 @@
 #   include <boost/mpl/vector/aux_/iterator.hpp>
 #   include <boost/mpl/vector/aux_/tag.hpp>
 
-namespace mars_boost {} namespace boost = mars_boost; namespace mars_boost { namespace mpl {
+namespace mars_boost {}
+namespace boost = mars_boost;
+namespace mars_boost {
+namespace mpl {
 
 template<>
-struct begin_impl< aux::vector_tag >
-{
-    template< typename Vector > struct apply
-    {
-        typedef v_iter<Vector,0> type;
-    };
+struct begin_impl<aux::vector_tag> {
+  template<typename Vector>
+  struct apply {
+    typedef v_iter<Vector, 0> type;
+  };
 };
 
 template<>
-struct end_impl< aux::vector_tag >
-{
-    template< typename Vector > struct apply
-    {
-        typedef v_iter<Vector,Vector::size::value> type;
-    };
+struct end_impl<aux::vector_tag> {
+  template<typename Vector>
+  struct apply {
+    typedef v_iter<Vector, Vector::size::value> type;
+  };
 };
 
-}}
+}
+}
 
 #endif // BOOST_MPL_CFG_TYPEOF_BASED_SEQUENCES
 

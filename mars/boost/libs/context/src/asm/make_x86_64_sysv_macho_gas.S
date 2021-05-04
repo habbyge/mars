@@ -27,36 +27,51 @@
 #if defined(__x86_64__)
 
 .text
-.globl _make_fcontext
+.
+globl _make_fcontext
 .align 8
 _make_fcontext:
-    /* first arg of make_fcontext() == top of context-stack */
-    movq  %rdi, %rax
+/* first arg of make_fcontext() == top of context-stack */
+movq  %rdi, %
+rax
 
-    /* shift address in RAX to lower 16 byte boundary */
-    movabs  $-16,           %r8
-    andq    %r8,            %rax
+/* shift address in RAX to lower 16 byte boundary */
+movabs
+$-16,           %
+r8
+    andq
+%r8,            %
+rax
 
-    /* reserve space for context-data on context-stack */
-    /* on context-function entry: (RSP -0x8) % 16 == 0 */
-    leaq  -0x40(%rax), %rax
+/* reserve space for context-data on context-stack */
+/* on context-function entry: (RSP -0x8) % 16 == 0 */
+leaq
+-0x40(%rax), %
+rax
 
-    /* third arg of make_fcontext() == address of context-function */
-    movq  %rdx, 0x30(%rax)
+/* third arg of make_fcontext() == address of context-function */
+movq
+%rdx, 0x30(%rax)
 
-    /* compute abs address of label finish */
-    leaq  finish(%rip), %rcx
-    /* save address of finish as return-address for context-function */
-    /* will be entered after context-function returns */
-    movq  %rcx, 0x38(%rax)
+/* compute abs address of label finish */
+leaq finish(
+%rip), %
+rcx
+/* save address of finish as return-address for context-function */
+/* will be entered after context-function returns */
+movq
+%rcx, 0x38(%rax)
 
-    ret /* return pointer to context-data */
+ret /* return pointer to context-data */
 
-finish:
-    /* exit code is zero */
-    xorq  %rdi, %rdi
-    /* exit application */
-    call  __exit
+finish
+:
+/* exit code is zero */
+xorq  %rdi, %
+rdi
+/* exit application */
+call
+__exit
     hlt
 
 #endif

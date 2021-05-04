@@ -18,6 +18,7 @@
 // $Revision$
 
 #if !defined(BOOST_MPL_PREPROCESSING_MODE)
+
 #   include <boost/mpl/numeric_cast.hpp>
 #   include <boost/mpl/apply_wrap.hpp>
 #   include <boost/mpl/if.hpp>
@@ -30,12 +31,13 @@
 #   include <boost/mpl/aux_/value_wknd.hpp>
 #   include <boost/mpl/aux_/config/eti.hpp>
 #   include <boost/mpl/aux_/nttp_decl.hpp>
+
 #endif
 
 #include <boost/mpl/aux_/config/static_constant.hpp>
 
 #if defined(BOOST_MPL_CFG_NO_PREPROCESSED_HEADERS) \
-    || defined(BOOST_MPL_PREPROCESSING_MODE)
+ || defined(BOOST_MPL_PREPROCESSING_MODE)
 
 #   include <boost/mpl/limits/arity.hpp>
 #   include <boost/mpl/aux_/preprocessor/partial_spec_params.hpp>

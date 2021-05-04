@@ -29,25 +29,34 @@ namespace mars {
 namespace app {
 
 struct AccountInfo {
-	AccountInfo():uin(0), is_logoned(false){}
-	int64_t uin;
-	std::string username;
-	bool is_logoned;
+  AccountInfo() : uin(0), is_logoned(false) {}
+
+  int64_t uin;
+  std::string username;
+  bool is_logoned;
 };
 
 struct DeviceInfo {
-	std::string devicename;
-	std::string devicetype;
+  std::string devicename;
+  std::string devicetype;
 };
-    
+
 extern mars::comm::ProxyInfo GetProxyInfo(const std::string& _host);
+
 extern std::string GetAppFilePath();
+
 extern AccountInfo GetAccountInfo();
+
 extern std::string GetUserName();
+
 extern std::string GetRecentUserName();
+
 extern unsigned int GetClientVersion();
+
 extern DeviceInfo GetDeviceInfo();
+
 extern double GetOsVersion();
-}}
+}
+}
 
 #endif /* APPCOMM_INTERFACE_APPCOMM_H_ */

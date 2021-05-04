@@ -27,50 +27,48 @@
 #include <boost/mpl/aux_/na_spec.hpp>
 #include <boost/mpl/aux_/nttp_decl.hpp>
 
-namespace mars_boost {} namespace boost = mars_boost; namespace mars_boost { namespace mpl {
+namespace mars_boost {}
+namespace boost = mars_boost;
+namespace mars_boost {
+namespace mpl {
 
 // default implementation for forward/bidirectional iterators
-template< typename Tag >
-struct advance_impl
-{
-    template< typename Iterator, typename N > struct apply
-    {
-        typedef typename less< N,long_<0> >::type backward_;
-        typedef typename if_< backward_, negate<N>, N >::type offset_;
+template<typename Tag>
+struct advance_impl {
+  template<typename Iterator, typename N>
+  struct apply {
+    typedef typename less<N, long_<0>>::type backward_;
+    typedef typename if_<backward_, negate<N>, N>::type offset_;
 
-        typedef typename if_<
-              backward_
-            , aux::advance_backward< BOOST_MPL_AUX_VALUE_WKND(offset_)::value >
-            , aux::advance_forward< BOOST_MPL_AUX_VALUE_WKND(offset_)::value >
-            >::type f_;
+    typedef typename if_<
+        backward_, aux::advance_backward<BOOST_MPL_AUX_VALUE_WKND(
+            offset_)::value>, aux::advance_forward<BOOST_MPL_AUX_VALUE_WKND(offset_)::value>
+    >::type f_;
 
-        typedef typename apply_wrap1<f_,Iterator>::type type;
-    };
+    typedef typename apply_wrap1<f_, Iterator>::type type;
+  };
 };
 
 
 template<
-      typename BOOST_MPL_AUX_NA_PARAM(Iterator)
-    , typename BOOST_MPL_AUX_NA_PARAM(N)
-    >
+    typename BOOST_MPL_AUX_NA_PARAM(Iterator), typename BOOST_MPL_AUX_NA_PARAM(N)
+>
 struct advance
-    : advance_impl< typename tag<Iterator>::type >
-        ::template apply<Iterator,N>
-{
+    : advance_impl<typename tag<Iterator>::type>
+      ::template apply<Iterator, N> {
 };
 
 template<
-      typename Iterator
-    , BOOST_MPL_AUX_NTTP_DECL(long, N)
-    >
+    typename Iterator, BOOST_MPL_AUX_NTTP_DECL(long, N)
+>
 struct advance_c
-    : advance_impl< typename tag<Iterator>::type >
-        ::template apply<Iterator,long_<N> >
-{
+    : advance_impl<typename tag<Iterator>::type>
+      ::template apply<Iterator, long_<N>> {
 };
 
 BOOST_MPL_AUX_NA_SPEC(2, advance)
 
-}}
+}
+}
 
 #endif // BOOST_MPL_ADVANCE_HPP_INCLUDED

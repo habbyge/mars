@@ -8,6 +8,7 @@
 
 #ifndef routequery_hpp
 #define routequery_hpp
+
 #include <string>
 
 std::string get_local_route_table();

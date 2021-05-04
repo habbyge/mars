@@ -38,8 +38,9 @@
 
 
 namespace PublicComponent {
-public ref class Cs2Runtime_Comm sealed {
-  public:
+public
+ref class Cs2Runtime_Comm sealed{
+    public:
     static void OnCreate();
     static void OnDestroy();
 
@@ -51,18 +52,21 @@ public ref class Cs2Runtime_Comm sealed {
     static void OnAlarm(int id);
 };
 
-public ref struct ProxyInfo sealed {
+public
+ref struct ProxyInfo sealed{
     property Platform::String^ strProxy;
     property Platform::String^ _host;
     property int port;
 };
 
-public ref struct CurWifiInfo sealed {
+public
+ref struct CurWifiInfo sealed{
     property Platform::String^ ssid;
     property Platform::String^ bssid;
 };
 
-public ref struct RuntimeNewNetInterfaceInfo sealed {
+public
+ref struct RuntimeNewNetInterfaceInfo sealed{
     property int netType;
 
     property int ispCode;
@@ -75,23 +79,31 @@ public ref struct RuntimeNewNetInterfaceInfo sealed {
 
 
 public interface class ICallback_Comm {
-    bool startAlarm(int id, int after);
-    bool stopAlarm(int id);
+  bool startAlarm(int id, int after);
 
-    int getNetInfo();
-    int getStatisticsNetType();
+  bool stopAlarm(int id);
 
-    ProxyInfo^ getProxyInfo();
-    bool isNetworkConnected();
-    unsigned int getSignal(bool bIsWifi/*isWifi*/);
-    CurWifiInfo^ getCurWifiInfo();
-    RuntimeNewNetInterfaceInfo^ getNewNetInferfaceInfo();
+  int getNetInfo();
 
-    void ConsoleLog(int logLevel, Platform::String^ tag, Platform::String^ filename, Platform::String^ funcname, int line, Platform::String^ log);
+  int getStatisticsNetType();
+
+  ProxyInfo ^ getProxyInfo();
+
+  bool isNetworkConnected();
+
+  unsigned int getSignal(bool bIsWifi/*isWifi*/);
+
+  CurWifiInfo ^ getCurWifiInfo();
+
+  RuntimeNewNetInterfaceInfo ^ getNewNetInferfaceInfo();
+
+  void ConsoleLog(int logLevel, Platform::String^tag, Platform::String^filename, Platform::String^funcname, int line,
+                  Platform::String^log);
 };
 
-public ref class Runtime2Cs_Comm sealed {
-  public:
+public
+ref class Runtime2Cs_Comm sealed{
+    public:
     static Runtime2Cs_Comm^ Singleton();
 
     void SetCallback(ICallback_Comm^ _callback);
@@ -110,16 +122,14 @@ public ref class Runtime2Cs_Comm sealed {
 
     void ConsoleLog(int logLevel, Platform::String^ tag, Platform::String^ filename, Platform::String^ funcname, int line, Platform::String^ log);
 
-  private:
+    private:
     Runtime2Cs_Comm(void);
 
 
-  private:
+    private:
     static Runtime2Cs_Comm^ instance;
     ICallback_Comm^ m_callback;
 };
-
-
 
 
 }

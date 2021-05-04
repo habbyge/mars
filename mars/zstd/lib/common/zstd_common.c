@@ -31,6 +31,7 @@ const char* ZSTD_versionString(void) { return ZSTD_VERSION_STRING; }
 *  ZSTD Error Management
 ******************************************/
 #undef ZSTD_isError   /* defined within zstd_internal.h */
+
 /*! ZSTD_isError() :
  *  tells if a return value is an error code
  *  symbol is required for external callers */
@@ -49,35 +50,31 @@ ZSTD_ErrorCode ZSTD_getErrorCode(size_t code) { return ERR_getErrorCode(code); }
 const char* ZSTD_getErrorString(ZSTD_ErrorCode code) { return ERR_getErrorString(code); }
 
 
-
 /*=**************************************************************
 *  Custom allocator
 ****************************************************************/
-void* ZSTD_malloc(size_t size, ZSTD_customMem customMem)
-{
-    if (customMem.customAlloc)
-        return customMem.customAlloc(customMem.opaque, size);
-    return malloc(size);
+void* ZSTD_malloc(size_t size, ZSTD_customMem customMem) {
+  if (customMem.customAlloc)
+    return customMem.customAlloc(customMem.opaque, size);
+  return malloc(size);
 }
 
-void* ZSTD_calloc(size_t size, ZSTD_customMem customMem)
-{
-    if (customMem.customAlloc) {
-        /* calloc implemented as malloc+memset;
-         * not as efficient as calloc, but next best guess for custom malloc */
-        void* const ptr = customMem.customAlloc(customMem.opaque, size);
-        memset(ptr, 0, size);
-        return ptr;
-    }
-    return calloc(1, size);
+void* ZSTD_calloc(size_t size, ZSTD_customMem customMem) {
+  if (customMem.customAlloc) {
+    /* calloc implemented as malloc+memset;
+     * not as efficient as calloc, but next best guess for custom malloc */
+    void* const ptr = customMem.customAlloc(customMem.opaque, size);
+    memset(ptr, 0, size);
+    return ptr;
+  }
+  return calloc(1, size);
 }
 
-void ZSTD_free(void* ptr, ZSTD_customMem customMem)
-{
-    if (ptr!=NULL) {
-        if (customMem.customFree)
-            customMem.customFree(customMem.opaque, ptr);
-        else
-            free(ptr);
-    }
+void ZSTD_free(void* ptr, ZSTD_customMem customMem) {
+  if (ptr != NULL) {
+    if (customMem.customFree)
+      customMem.customFree(customMem.opaque, ptr);
+    else
+      free(ptr);
+  }
 }

@@ -126,7 +126,8 @@ void SdtCore::__RunOn() {
   }
 
   xinfo2(TSF
-  "all checkers end! cancel_=%_, check_request_.check_status_=%_, check_list__size=%_", cancel_, check_request_.check_status, check_list_.size());
+             "all checkers end! cancel_=%_, check_request_.check_status_=%_, check_list__size=%_", cancel_,
+         check_request_.check_status, check_list_.size());
 
   __DumpCheckResult();
   __Reset();
@@ -140,19 +141,23 @@ void SdtCore::__DumpCheckResult() {
     switch (iter->netcheck_type) {
       case kTcpCheck:
         xinfo2(TSF
-        "tcp check result, error_code:%_, ip:%_, port:%_, network_type:%_, rtt:%_", iter->error_code, iter->ip, iter->port, iter->network_type, iter->rtt);
+                   "tcp check result, error_code:%_, ip:%_, port:%_, network_type:%_, rtt:%_", iter->error_code,
+               iter->ip, iter->port, iter->network_type, iter->rtt);
         break;
       case kHttpCheck:
         xinfo2(TSF
-        "http check result, status_code:%_, url:%_, ip:%_, port:%_, network_type:%_, rtt:%_", iter->status_code, iter->url, iter->ip, iter->port, iter->network_type, iter->rtt);
+                   "http check result, status_code:%_, url:%_, ip:%_, port:%_, network_type:%_, rtt:%_",
+               iter->status_code, iter->url, iter->ip, iter->port, iter->network_type, iter->rtt);
         break;
       case kPingCheck:
         xinfo2(TSF
-        "ping check result, error_code:%_, ip:%_, network_type:%_, loss_rate:%_, rtt:%_", iter->error_code, iter->ip, iter->network_type, iter->loss_rate, iter->rtt_str);
+                   "ping check result, error_code:%_, ip:%_, network_type:%_, loss_rate:%_, rtt:%_", iter->error_code,
+               iter->ip, iter->network_type, iter->loss_rate, iter->rtt_str);
         break;
       case kDnsCheck:
         xinfo2(TSF
-        "dns check result, error_code:%_, domain_name:%_, network_type:%_, ip1:%_, rtt:%_", iter->error_code, iter->domain_name, iter->network_type, iter->ip1, iter->rtt);
+                   "dns check result, error_code:%_, domain_name:%_, network_type:%_, ip1:%_, rtt:%_", iter->error_code,
+               iter->domain_name, iter->network_type, iter->ip1, iter->rtt);
         break;
     }
   }

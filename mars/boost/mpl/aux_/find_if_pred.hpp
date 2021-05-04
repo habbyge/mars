@@ -14,18 +14,22 @@
 #include <boost/mpl/aux_/iter_apply.hpp>
 #include <boost/mpl/not.hpp>
 
-namespace mars_boost {} namespace boost = mars_boost; namespace mars_boost { namespace mpl { namespace aux {
+namespace mars_boost {}
+namespace boost = mars_boost;
+namespace mars_boost {
+namespace mpl {
+namespace aux {
 
-template< typename Predicate >
-struct find_if_pred
-{
-    template< typename Iterator >
-    struct apply
-    {
-        typedef not_< aux::iter_apply1<Predicate,Iterator> > type;
-    };
+template<typename Predicate>
+struct find_if_pred {
+  template<typename Iterator>
+  struct apply {
+    typedef not_<aux::iter_apply1<Predicate, Iterator>> type;
+  };
 };
 
-}}}
+}
+}
+}
 
 #endif // BOOST_MPL_AUX_FIND_IF_PRED_HPP_INCLUDED

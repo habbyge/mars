@@ -17,7 +17,11 @@
 #include <boost/mpl/aux_/config/eti.hpp>
 #include <boost/mpl/aux_/is_msvc_eti_arg.hpp>
 
-namespace mars_boost {} namespace boost = mars_boost; namespace mars_boost { namespace mpl { namespace aux {
+namespace mars_boost {}
+namespace boost = mars_boost;
+namespace mars_boost {
+namespace mpl {
+namespace aux {
 
 #if defined(BOOST_MPL_CFG_MSVC_70_ETI_BUG)
 
@@ -45,18 +49,20 @@ template< typename T > struct msvc_type
 
 #else // BOOST_MPL_CFG_MSVC_70_ETI_BUG
 
-template< typename T > struct msvc_type 
-{
-    typedef typename T::type type;
+template<typename T>
+struct msvc_type {
+  typedef typename T::type type;
 };
 
-template<> struct msvc_type<int>
-{
-    typedef int type;
+template<>
+struct msvc_type<int> {
+  typedef int type;
 };
 
 #endif
 
-}}}
+}
+}
+}
 
 #endif // BOOST_MPL_AUX_MSVC_TYPE_HPP_INCLUDED

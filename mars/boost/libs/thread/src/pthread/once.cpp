@@ -4,8 +4,11 @@
 //  file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 
 #include <boost/thread/detail/config.hpp>
+
 #ifdef BOOST_THREAD_ONCE_ATOMIC
+
 #include "./once_atomic.cpp"
+
 #else
 #define __STDC_CONSTANT_MACROS
 #include <boost/thread/pthread/pthread_mutex_scoped_lock.hpp>

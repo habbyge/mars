@@ -27,30 +27,35 @@ namespace stn {
 struct Task;
 
 class FrequencyLimit;
+
 class FlowLimit;
 
 enum {
-	kFrequencyLimit = 1,
-	kFlowLimit = 2
+  kFrequencyLimit = 1,
+  kFlowLimit = 2
 };
 
 class AntiAvalanche {
-  public:
-    AntiAvalanche(bool _isactive);
-    virtual ~AntiAvalanche();
+public:
+  AntiAvalanche(bool _isactive);
 
-    bool Check(const Task& _task, const void* _buffer, int _len);
-    void OnSignalActive(bool _isactive);
+  virtual ~AntiAvalanche();
 
-  public:
-    AntiAvalanche(const AntiAvalanche&);
-    AntiAvalanche& operator=(const AntiAvalanche&);
+  bool Check(const Task& _task, const void* _buffer, int _len);
 
-  private:
-    FrequencyLimit* frequency_limit_;
-    FlowLimit* flow_limit_;
+  void OnSignalActive(bool _isactive);
+
+public:
+  AntiAvalanche(const AntiAvalanche&);
+
+  AntiAvalanche& operator=(const AntiAvalanche&);
+
+private:
+  FrequencyLimit* frequency_limit_;
+  FlowLimit* flow_limit_;
 };
 
-}}
+}
+}
 
 #endif // STN_SRC_ANTI_AVALANCHE_H_

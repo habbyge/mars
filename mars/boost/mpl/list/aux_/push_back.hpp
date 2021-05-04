@@ -18,19 +18,23 @@
 #include <boost/mpl/bool.hpp>
 #include <boost/mpl/list/aux_/tag.hpp>
 
-namespace mars_boost {} namespace boost = mars_boost; namespace mars_boost { namespace mpl {
+namespace mars_boost {}
+namespace boost = mars_boost;
+namespace mars_boost {
+namespace mpl {
 
-template< typename Tag > struct has_push_back_impl;
+template<typename Tag>
+struct has_push_back_impl;
 
 template<>
-struct has_push_back_impl< aux::list_tag >
-{
-    template< typename Seq > struct apply
-        : false_
-    {
-    };
+struct has_push_back_impl<aux::list_tag> {
+  template<typename Seq>
+  struct apply
+      : false_ {
+  };
 };
 
-}}
+}
+}
 
 #endif // BOOST_MPL_LIST_AUX_PUSH_BACK_HPP_INCLUDED

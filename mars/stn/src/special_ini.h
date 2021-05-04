@@ -32,31 +32,28 @@
  */
 class SpecialINI : public INI {
 public:
-	SpecialINI(const std::string& fileName, bool parse = true) : INI(fileName, parse){
-        
-	}
-    
-	bool Create(const std::string& section) {
+  SpecialINI(const std::string& fileName, bool parse = true) : INI(fileName, parse) {
+  }
 
-		unsigned char sig[MD5_DIGEST_LENGTH] = {0};
-		MD5((const unsigned char*)section.c_str(), (unsigned int)section.length(), sig);
-        
-        std::string des = strutil::MD5DigestToBase16(sig);
-		if (INI::Create(des)) {
-			Set<std::string>("name", section);
-			return true;
-		}
-        
-		return false;
-	}
-    
-	bool Select(const std::string& section) {
-        
-		unsigned char sig[16] = {0};
-		MD5((const unsigned char*)section.c_str(), (unsigned int)section.length(), sig);
-        std::string des = strutil::MD5DigestToBase16(sig);
-		return INI::Select(des);
-	}
+  bool Create(const std::string& section) {
+    unsigned char sig[MD5_DIGEST_LENGTH] = {0};
+    MD5((const unsigned char*) section.c_str(), (unsigned int) section.length(), sig);
+
+    std::string des = strutil::MD5DigestToBase16(sig);
+    if (INI::Create(des)) {
+      Set<std::string>("name", section);
+      return true;
+    }
+
+    return false;
+  }
+
+  bool Select(const std::string& section) {
+    unsigned char sig[16] = {0};
+    MD5((const unsigned char*) section.c_str(), (unsigned int) section.length(), sig);
+    std::string des = strutil::MD5DigestToBase16(sig);
+    return INI::Select(des);
+  }
 };
 
-#endif	// MMCOMM_SRC_SPECIAL_INI_H_
+#endif  // MMCOMM_SRC_SPECIAL_INI_H_

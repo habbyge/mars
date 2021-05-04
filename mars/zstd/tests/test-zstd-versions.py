@@ -15,8 +15,8 @@ import glob
 import hashlib
 import os
 import shutil
-import sys
 import subprocess
+import sys
 from subprocess import Popen, PIPE
 
 repo_url = 'https://github.com/facebook/zstd.git'
@@ -75,9 +75,13 @@ def create_dict(tag, dict_source_path):
         cFiles = glob.glob(dict_source_path + "/*.c")
         hFiles = glob.glob(dict_source_path + "/*.h")
         if tag == 'v0.5.0':
-            result = execute('./dictBuilder.' + tag + ' ' + ' '.join(cFiles) + ' ' + ' '.join(hFiles) + ' -o ' + dict_name, print_output=False, param_shell=True)
+            result = execute(
+                './dictBuilder.' + tag + ' ' + ' '.join(cFiles) + ' ' + ' '.join(hFiles) + ' -o ' + dict_name,
+                print_output=False, param_shell=True)
         else:
-            result = execute('./zstd.' + tag + ' -f --train ' + ' '.join(cFiles) + ' ' + ' '.join(hFiles) + ' -o ' + dict_name, print_output=False, param_shell=True)
+            result = execute(
+                './zstd.' + tag + ' -f --train ' + ' '.join(cFiles) + ' ' + ' '.join(hFiles) + ' -o ' + dict_name,
+                print_output=False, param_shell=True)
         if result == 0:
             print(dict_name + ' created')
         else:
@@ -89,11 +93,11 @@ def create_dict(tag, dict_source_path):
 def dict_compress_sample(tag, sample):
     dict_name = 'dict.' + tag
     DEVNULL = open(os.devnull, 'wb')
-    if subprocess.call(['./zstd.' + tag, '-D', dict_name, '-f',   sample], stderr=DEVNULL) == 0:
+    if subprocess.call(['./zstd.' + tag, '-D', dict_name, '-f', sample], stderr=DEVNULL) == 0:
         os.rename(sample + '.zst', sample + '_01_64_' + tag + '_dictio.zst')
-    if subprocess.call(['./zstd.' + tag, '-D', dict_name, '-5f',  sample], stderr=DEVNULL) == 0:
+    if subprocess.call(['./zstd.' + tag, '-D', dict_name, '-5f', sample], stderr=DEVNULL) == 0:
         os.rename(sample + '.zst', sample + '_05_64_' + tag + '_dictio.zst')
-    if subprocess.call(['./zstd.' + tag, '-D', dict_name, '-9f',  sample], stderr=DEVNULL) == 0:
+    if subprocess.call(['./zstd.' + tag, '-D', dict_name, '-9f', sample], stderr=DEVNULL) == 0:
         os.rename(sample + '.zst', sample + '_09_64_' + tag + '_dictio.zst')
     if subprocess.call(['./zstd.' + tag, '-D', dict_name, '-15f', sample], stderr=DEVNULL) == 0:
         os.rename(sample + '.zst', sample + '_15_64_' + tag + '_dictio.zst')
@@ -106,11 +110,11 @@ def dict_compress_sample(tag, sample):
 
 def compress_sample(tag, sample):
     DEVNULL = open(os.devnull, 'wb')
-    if subprocess.call(['./zstd.' + tag, '-f',   sample], stderr=DEVNULL) == 0:
+    if subprocess.call(['./zstd.' + tag, '-f', sample], stderr=DEVNULL) == 0:
         os.rename(sample + '.zst', sample + '_01_64_' + tag + '_nodict.zst')
-    if subprocess.call(['./zstd.' + tag, '-5f',  sample], stderr=DEVNULL) == 0:
+    if subprocess.call(['./zstd.' + tag, '-5f', sample], stderr=DEVNULL) == 0:
         os.rename(sample + '.zst', sample + '_05_64_' + tag + '_nodict.zst')
-    if subprocess.call(['./zstd.' + tag, '-9f',  sample], stderr=DEVNULL) == 0:
+    if subprocess.call(['./zstd.' + tag, '-9f', sample], stderr=DEVNULL) == 0:
         os.rename(sample + '.zst', sample + '_09_64_' + tag + '_nodict.zst')
     if subprocess.call(['./zstd.' + tag, '-15f', sample], stderr=DEVNULL) == 0:
         os.rename(sample + '.zst', sample + '_15_64_' + tag + '_nodict.zst')
@@ -168,8 +172,8 @@ def decompress_dict(tag):
     dec_error = 0
     list_zst = sorted(glob.glob('*_dictio.zst'))
     for file_zst in list_zst:
-        dict_tag = file_zst[0:len(file_zst)-11]  # remove "_dictio.zst"
-        if head in dict_tag: # find vdevel
+        dict_tag = file_zst[0:len(file_zst) - 11]  # remove "_dictio.zst"
+        if head in dict_tag:  # find vdevel
             dict_tag = head
         else:
             dict_tag = dict_tag[dict_tag.rfind('v'):]
@@ -196,11 +200,11 @@ def decompress_dict(tag):
 
 if __name__ == '__main__':
     error_code = 0
-    base_dir = os.getcwd() + '/..'                  # /path/to/zstd
-    tmp_dir = base_dir + '/' + tmp_dir_name         # /path/to/zstd/tests/versionsTest
-    clone_dir = tmp_dir + '/' + 'zstd'              # /path/to/zstd/tests/versionsTest/zstd
+    base_dir = os.getcwd() + '/..'  # /path/to/zstd
+    tmp_dir = base_dir + '/' + tmp_dir_name  # /path/to/zstd/tests/versionsTest
+    clone_dir = tmp_dir + '/' + 'zstd'  # /path/to/zstd/tests/versionsTest/zstd
     dict_source_path = tmp_dir + '/' + dict_source  # /path/to/zstd/tests/versionsTest/dict_source
-    programs_dir = base_dir + '/programs'           # /path/to/zstd/programs
+    programs_dir = base_dir + '/programs'  # /path/to/zstd/programs
     os.makedirs(tmp_dir, exist_ok=True)
 
     # since Travis clones limited depth, we should clone full repository
@@ -235,7 +239,7 @@ if __name__ == '__main__':
             else:
                 os.chdir(programs_dir)
                 make(['zstd'], False)
-            shutil.copy2('zstd',   dst_zstd)
+            shutil.copy2('zstd', dst_zstd)
 
     # remove any remaining *.zst and *.dec from previous test
     os.chdir(tmp_dir)

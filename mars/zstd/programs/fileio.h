@@ -13,6 +13,7 @@
 #define FILEIO_H_23981798732
 
 #define ZSTD_STATIC_LINKING_ONLY   /* ZSTD_compressionParameters */
+
 #include "zstd.h"                  /* ZSTD_* */
 
 #if defined (__cplusplus)
@@ -52,7 +53,9 @@ extern "C" {
 /*-*************************************
 *  Types
 ***************************************/
-typedef enum { FIO_zstdCompression, FIO_gzipCompression, FIO_xzCompression, FIO_lzmaCompression, FIO_lz4Compression } FIO_compressionType_t;
+typedef enum {
+  FIO_zstdCompression, FIO_gzipCompression, FIO_xzCompression, FIO_lzmaCompression, FIO_lz4Compression
+} FIO_compressionType_t;
 
 typedef struct FIO_prefs_s FIO_prefs_t;
 
@@ -81,15 +84,16 @@ void FIO_setMemLimit(FIO_prefs_t* const prefs, unsigned memLimit);
 void FIO_setNbWorkers(FIO_prefs_t* const prefs, int nbWorkers);
 void FIO_setOverlapLog(FIO_prefs_t* const prefs, int overlapLog);
 void FIO_setRemoveSrcFile(FIO_prefs_t* const prefs, unsigned flag);
-void FIO_setSparseWrite(FIO_prefs_t* const prefs, unsigned sparse);  /**< 0: no sparse; 1: disable on stdout; 2: always enabled */
+void FIO_setSparseWrite(FIO_prefs_t* const prefs,
+                        unsigned sparse);  /**< 0: no sparse; 1: disable on stdout; 2: always enabled */
 void FIO_setRsyncable(FIO_prefs_t* const prefs, int rsyncable);
 void FIO_setStreamSrcSize(FIO_prefs_t* const prefs, size_t streamSrcSize);
 void FIO_setTargetCBlockSize(FIO_prefs_t* const prefs, size_t targetCBlockSize);
 void FIO_setSrcSizeHint(FIO_prefs_t* const prefs, size_t srcSizeHint);
 void FIO_setTestMode(FIO_prefs_t* const prefs, int testMode);
 void FIO_setLiteralCompressionMode(
-        FIO_prefs_t* const prefs,
-        ZSTD_literalCompressionMode_e mode);
+    FIO_prefs_t* const prefs,
+    ZSTD_literalCompressionMode_e mode);
 
 void FIO_setNoProgress(unsigned noProgress);
 void FIO_setNotificationLevel(int level);
@@ -100,15 +104,15 @@ void FIO_setExcludeCompressedFile(FIO_prefs_t* const prefs, int excludeCompresse
 ***************************************/
 /** FIO_compressFilename() :
  * @return : 0 == ok;  1 == pb with src file. */
-int FIO_compressFilename (FIO_prefs_t* const prefs,
-                          const char* outfilename, const char* infilename,
-                          const char* dictFileName, int compressionLevel,
-                          ZSTD_compressionParameters comprParams);
+int FIO_compressFilename(FIO_prefs_t* const prefs,
+                         const char* outfilename, const char* infilename,
+                         const char* dictFileName, int compressionLevel,
+                         ZSTD_compressionParameters comprParams);
 
 /** FIO_decompressFilename() :
  * @return : 0 == ok;  1 == pb with src file. */
-int FIO_decompressFilename (FIO_prefs_t* const prefs,
-                            const char* outfilename, const char* infilename, const char* dictFileName);
+int FIO_decompressFilename(FIO_prefs_t* const prefs,
+                           const char* outfilename, const char* infilename, const char* dictFileName);
 
 int FIO_listMultipleFiles(unsigned numFiles, const char** filenameTable, int displayLevel);
 
@@ -146,7 +150,6 @@ int FIO_checkFilenameCollisions(const char** filenameTable, unsigned nbFiles);
 
 /* custom crash signal handler */
 void FIO_addAbortHandler(void);
-
 
 
 #if defined (__cplusplus)

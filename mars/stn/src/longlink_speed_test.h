@@ -33,65 +33,76 @@
 #include "net_source.h"
 
 enum ELongLinkSpeedTestState {
-    kLongLinkSpeedTestConnecting,
-    kLongLinkSpeedTestReq,
-    kLongLinkSpeedTestResp,
-    kLongLinkSpeedTestOOB,
-    kLongLinkSpeedTestSuc,
-    kLongLinkSpeedTestFail,
+  kLongLinkSpeedTestConnecting,
+  kLongLinkSpeedTestReq,
+  kLongLinkSpeedTestResp,
+  kLongLinkSpeedTestOOB,
+  kLongLinkSpeedTestSuc,
+  kLongLinkSpeedTestFail,
 };
 
 namespace mars {
-    namespace stn {
+namespace stn {
 
 class LongLinkSpeedTestItem {
-  public:
-    LongLinkSpeedTestItem(const std::string& _ip, uint16_t _port);
-    ~LongLinkSpeedTestItem();
+public:
+  LongLinkSpeedTestItem(const std::string& _ip, uint16_t _port);
 
-    void HandleFDISSet(SocketSelect& _sel);
-    void HandleSetFD(SocketSelect& _sel);
+  ~LongLinkSpeedTestItem();
 
-    int GetSocket();
-    std::string GetIP();
-    unsigned int GetPort();
-    unsigned long GetConnectTime();
-    int GetState();
+  void HandleFDISSet(SocketSelect& _sel);
 
-    void CloseSocket();
+  void HandleSetFD(SocketSelect& _sel);
 
-  private:
-    int __HandleSpeedTestReq();
-    int __HandleSpeedTestResp();
+  int GetSocket();
 
-  private:
-    std::string ip_;
-    unsigned int port_;
-    SOCKET socket_;
-    int state_;
+  std::string GetIP();
 
-    uint64_t before_connect_time_;
-    uint64_t after_connect_time_;
+  unsigned int GetPort();
 
-    AutoBuffer req_ab_;
-    AutoBuffer resp_ab_;
+  unsigned long GetConnectTime();
+
+  int GetState();
+
+  void CloseSocket();
+
+private:
+  int __HandleSpeedTestReq();
+
+  int __HandleSpeedTestResp();
+
+private:
+  std::string ip_;
+  unsigned int port_;
+  SOCKET socket_;
+  int state_;
+
+  uint64_t before_connect_time_;
+  uint64_t after_connect_time_;
+
+  AutoBuffer req_ab_;
+  AutoBuffer resp_ab_;
 };
 
 class LongLinkSpeedTest {
-  public:
-    LongLinkSpeedTest(const boost::shared_ptr<NetSource>& _netsource);
-    ~LongLinkSpeedTest();
+public:
+  LongLinkSpeedTest(const boost::shared_ptr<NetSource>& _netsource);
 
-    bool GetFastestSocket(int& _fdSocket, std::string& _strIp, unsigned int& _port, IPSourceType& _type, unsigned long& _connectMillSec);
+  ~LongLinkSpeedTest();
 
-    boost::shared_ptr<NetSource> GetNetSource();
-  private:
-    boost::shared_ptr<NetSource> netsource_;
-    SocketBreaker breaker_;
-    SocketSelect selector_;
+  bool GetFastestSocket(int& _fdSocket, std::string& _strIp,
+                        unsigned int& _port, IPSourceType& _type,
+                        unsigned long& _connectMillSec);
+
+  boost::shared_ptr<NetSource> GetNetSource();
+
+private:
+  boost::shared_ptr<NetSource> netsource_;
+  SocketBreaker breaker_;
+  SocketSelect selector_;
 };
-        
-    }
+
+}
 }
 
 

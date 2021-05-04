@@ -17,172 +17,169 @@
 #include <boost/math/special_functions/math_fwd.hpp>
 #include <boost/math/special_functions/detail/fp_traits.hpp>
 
-namespace mars_boost {} namespace boost = mars_boost; namespace mars_boost{ namespace math{ 
+namespace mars_boost {}
+namespace boost = mars_boost;
+namespace mars_boost {
+namespace math {
 
 namespace detail {
 
-  // signbit
+// signbit
 
 #ifdef BOOST_MATH_USE_STD_FPCLASSIFY
-    template<class T> 
-    inline int signbit_impl(T x, native_tag const&)
-    {
-        return (std::signbit)(x);
-    }
+
+template<class T>
+inline int signbit_impl(T x, native_tag const&) {
+  return (std::signbit)(x);
+}
+
 #endif
 
-    // Generic versions first, note that these do not handle
-    // signed zero or NaN.
+// Generic versions first, note that these do not handle
+// signed zero or NaN.
 
-    template<class T>
-    inline int signbit_impl(T x, generic_tag<true> const&)
-    {
-        return x < 0;
-    }
+template<class T>
+inline int signbit_impl(T x, generic_tag<true> const&) {
+  return x < 0;
+}
 
-    template<class T> 
-    inline int signbit_impl(T x, generic_tag<false> const&)
-    {
-        return x < 0;
-    }
+template<class T>
+inline int signbit_impl(T x, generic_tag<false> const&) {
+  return x < 0;
+}
 
 #if defined(__GNUC__) && (LDBL_MANT_DIG == 106)
-    //
-    // Special handling for GCC's "double double" type, 
-    // in this case the sign is the same as the sign we
-    // get by casting to double, no overflow/underflow
-    // can occur since the exponents are the same magnitude
-    // for the two types:
-    //
-    inline int signbit_impl(long double x, generic_tag<true> const&)
-    {
-       return (mars_boost::math::signbit)(static_cast<double>(x));
-    }
-    inline int signbit_impl(long double x, generic_tag<false> const&)
-    {
-       return (mars_boost::math::signbit)(static_cast<double>(x));
-    }
+//
+// Special handling for GCC's "double double" type,
+// in this case the sign is the same as the sign we
+// get by casting to double, no overflow/underflow
+// can occur since the exponents are the same magnitude
+// for the two types:
+//
+inline int signbit_impl(long double x, generic_tag<true> const&)
+{
+   return (mars_boost::math::signbit)(static_cast<double>(x));
+}
+inline int signbit_impl(long double x, generic_tag<false> const&)
+{
+   return (mars_boost::math::signbit)(static_cast<double>(x));
+}
 #endif
 
-    template<class T>
-    inline int signbit_impl(T x, ieee_copy_all_bits_tag const&)
-    {
-        typedef BOOST_DEDUCED_TYPENAME fp_traits<T>::type traits;
+template<class T>
+inline int signbit_impl(T x, ieee_copy_all_bits_tag const&) {
+  typedef BOOST_DEDUCED_TYPENAME fp_traits<T>::type traits;
 
-        BOOST_DEDUCED_TYPENAME traits::bits a;
-        traits::get_bits(x,a);
-        return a & traits::sign ? 1 : 0;
-    }
+  BOOST_DEDUCED_TYPENAME traits::bits a;
+  traits::get_bits(x, a);
+  return a & traits::sign ? 1 : 0;
+}
 
-    template<class T> 
-    inline int signbit_impl(T x, ieee_copy_leading_bits_tag const&)
-    {
-        typedef BOOST_DEDUCED_TYPENAME fp_traits<T>::type traits;
+template<class T>
+inline int signbit_impl(T x, ieee_copy_leading_bits_tag const&) {
+  typedef BOOST_DEDUCED_TYPENAME fp_traits<T>::type traits;
 
-        BOOST_DEDUCED_TYPENAME traits::bits a;
-        traits::get_bits(x,a);
+  BOOST_DEDUCED_TYPENAME traits::bits a;
+  traits::get_bits(x, a);
 
-        return a & traits::sign ? 1 : 0;
-    }
+  return a & traits::sign ? 1 : 0;
+}
 
-    // Changesign
-    
-    // Generic versions first, note that these do not handle
-    // signed zero or NaN.
+// Changesign
 
-    template<class T>
-    inline T (changesign_impl)(T x, generic_tag<true> const&)
-    {
-        return -x;
-    }
+// Generic versions first, note that these do not handle
+// signed zero or NaN.
 
-    template<class T>
-    inline T (changesign_impl)(T x, generic_tag<false> const&)
-    {
-        return -x;
-    }
+template<class T>
+inline T (changesign_impl)(T x, generic_tag<true> const&) {
+  return -x;
+}
+
+template<class T>
+inline T (changesign_impl)(T x, generic_tag<false> const&) {
+  return -x;
+}
+
 #if defined(__GNUC__) && (LDBL_MANT_DIG == 106)
-    //
-    // Special handling for GCC's "double double" type, 
-    // in this case we need to change the sign of both
-    // components of the "double double":
-    //
-    inline long double (changesign_impl)(long double x, generic_tag<true> const&)
-    {
-       double* pd = reinterpret_cast<double*>(&x);
-       pd[0] = mars_boost::math::changesign(pd[0]);
-       pd[1] = mars_boost::math::changesign(pd[1]);
-       return x;
-    }
-    inline long double (changesign_impl)(long double x, generic_tag<false> const&)
-    {
-       double* pd = reinterpret_cast<double*>(&x);
-       pd[0] = mars_boost::math::changesign(pd[0]);
-       pd[1] = mars_boost::math::changesign(pd[1]);
-       return x;
-    }
+//
+// Special handling for GCC's "double double" type,
+// in this case we need to change the sign of both
+// components of the "double double":
+//
+inline long double (changesign_impl)(long double x, generic_tag<true> const&)
+{
+   double* pd = reinterpret_cast<double*>(&x);
+   pd[0] = mars_boost::math::changesign(pd[0]);
+   pd[1] = mars_boost::math::changesign(pd[1]);
+   return x;
+}
+inline long double (changesign_impl)(long double x, generic_tag<false> const&)
+{
+   double* pd = reinterpret_cast<double*>(&x);
+   pd[0] = mars_boost::math::changesign(pd[0]);
+   pd[1] = mars_boost::math::changesign(pd[1]);
+   return x;
+}
 #endif
 
-    template<class T>
-    inline T changesign_impl(T x, ieee_copy_all_bits_tag const&)
-    {
-        typedef BOOST_DEDUCED_TYPENAME fp_traits<T>::sign_change_type traits;
+template<class T>
+inline T changesign_impl(T x, ieee_copy_all_bits_tag const&) {
+  typedef BOOST_DEDUCED_TYPENAME fp_traits<T>::sign_change_type traits;
 
-        BOOST_DEDUCED_TYPENAME traits::bits a;
-        traits::get_bits(x,a);
-        a ^= traits::sign;
-        traits::set_bits(x,a);
-        return x;
-    }
+  BOOST_DEDUCED_TYPENAME traits::bits a;
+  traits::get_bits(x, a);
+  a ^= traits::sign;
+  traits::set_bits(x, a);
+  return x;
+}
 
-    template<class T>
-    inline T (changesign_impl)(T x, ieee_copy_leading_bits_tag const&)
-    {
-        typedef BOOST_DEDUCED_TYPENAME fp_traits<T>::sign_change_type traits;
+template<class T>
+inline T (changesign_impl)(T x, ieee_copy_leading_bits_tag const&) {
+  typedef BOOST_DEDUCED_TYPENAME fp_traits<T>::sign_change_type traits;
 
-        BOOST_DEDUCED_TYPENAME traits::bits a;
-        traits::get_bits(x,a);
-        a ^= traits::sign;
-        traits::set_bits(x,a);
-        return x;
-    }
+  BOOST_DEDUCED_TYPENAME traits::bits a;
+  traits::get_bits(x, a);
+  a ^= traits::sign;
+  traits::set_bits(x, a);
+  return x;
+}
 
 
 }   // namespace detail
 
-template<class T> int (signbit)(T x)
-{ 
-   typedef typename detail::fp_traits<T>::type traits;
-   typedef typename traits::method method;
-   // typedef typename mars_boost::is_floating_point<T>::type fp_tag;
-   typedef typename tools::promote_args_permissive<T>::type result_type;
-   return detail::signbit_impl(static_cast<result_type>(x), method());
+template<class T>
+int (signbit)(T x) {
+  typedef typename detail::fp_traits<T>::type traits;
+  typedef typename traits::method method;
+  // typedef typename mars_boost::is_floating_point<T>::type fp_tag;
+  typedef typename tools::promote_args_permissive<T>::type result_type;
+  return detail::signbit_impl(static_cast<result_type>(x), method());
 }
 
-template <class T>
-inline int sign BOOST_NO_MACRO_EXPAND(const T& z)
-{
-   return (z == 0) ? 0 : (mars_boost::math::signbit)(z) ? -1 : 1;
+template<class T>
+inline int sign BOOST_NO_MACRO_EXPAND(const T& z) {
+  return (z == 0) ? 0 : (mars_boost::math::signbit) (z) ? -1 : 1;
 }
 
-template <class T> typename tools::promote_args_permissive<T>::type (changesign)(const T& x)
-{ //!< \brief return unchanged binary pattern of x, except for change of sign bit. 
-   typedef typename detail::fp_traits<T>::sign_change_type traits;
-   typedef typename traits::method method;
-   // typedef typename mars_boost::is_floating_point<T>::type fp_tag;
-   typedef typename tools::promote_args_permissive<T>::type result_type;
+template<class T>
+typename tools::promote_args_permissive<T>::type
+(changesign)(const T& x) { //!< \brief return unchanged binary pattern of x, except for change of sign bit.
+  typedef typename detail::fp_traits<T>::sign_change_type traits;
+  typedef typename traits::method method;
+  // typedef typename mars_boost::is_floating_point<T>::type fp_tag;
+  typedef typename tools::promote_args_permissive<T>::type result_type;
 
-   return detail::changesign_impl(static_cast<result_type>(x), method());
+  return detail::changesign_impl(static_cast<result_type>(x), method());
 }
 
-template <class T, class U>
-inline typename tools::promote_args_permissive<T, U>::type 
-   copysign BOOST_NO_MACRO_EXPAND(const T& x, const U& y)
-{
-   BOOST_MATH_STD_USING
-   typedef typename tools::promote_args_permissive<T, U>::type result_type;
-   return (mars_boost::math::signbit)(static_cast<result_type>(x)) != (mars_boost::math::signbit)(static_cast<result_type>(y)) 
-      ? (mars_boost::math::changesign)(static_cast<result_type>(x)) : static_cast<result_type>(x);
+template<class T, class U>
+inline typename tools::promote_args_permissive<T, U>::type
+copysign BOOST_NO_MACRO_EXPAND(const T& x, const U& y) {
+  BOOST_MATH_STD_USING
+  typedef typename tools::promote_args_permissive<T, U>::type result_type;
+  return (mars_boost::math::signbit) (static_cast<result_type>(x)) !=
+         (mars_boost::math::signbit) (static_cast<result_type>(y))
+         ? (mars_boost::math::changesign) (static_cast<result_type>(x)) : static_cast<result_type>(x);
 }
 
 } // namespace math

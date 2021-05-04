@@ -18,68 +18,60 @@
 #include <boost/range/iterator.hpp>
 #include <boost/range/detail/common.hpp>
 
-namespace mars_boost {} namespace boost = mars_boost; namespace mars_boost
-{
-    namespace range_detail
-    {
-        template< typename T >
-        struct range_end;
+namespace mars_boost {}
+namespace boost = mars_boost;
+namespace mars_boost {
+namespace range_detail {
+template<typename T>
+struct range_end;
 
-        //////////////////////////////////////////////////////////////////////
-        // default
-        //////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////
+// default
+//////////////////////////////////////////////////////////////////////
 
-        template<>
-        struct range_end<std_container_>
-        {
-            template< typename C >
-            static BOOST_RANGE_DEDUCED_TYPENAME range_iterator<C>::type
-            fun( C& c )
-            {
-                return c.end();
-            };
-        };
+template<>
+struct range_end<std_container_> {
+  template<typename C>
+  static BOOST_RANGE_DEDUCED_TYPENAME range_iterator<C>::type
+  fun(C& c) {
+    return c.end();
+  };
+};
 
-        //////////////////////////////////////////////////////////////////////
-        // pair
-        //////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////
+// pair
+//////////////////////////////////////////////////////////////////////
 
-        template<>
-        struct range_end<std_pair_>
-        {
-            template< typename P >
-            static BOOST_RANGE_DEDUCED_TYPENAME range_iterator<P>::type
-            fun( const P& p )
-            {
-                return p.second;
-            }
-        };
+template<>
+struct range_end<std_pair_> {
+  template<typename P>
+  static BOOST_RANGE_DEDUCED_TYPENAME range_iterator<P>::type
+  fun(const P& p) {
+    return p.second;
+  }
+};
 
-        //////////////////////////////////////////////////////////////////////
-        // array
-        //////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////
+// array
+//////////////////////////////////////////////////////////////////////
 
-        template<>
-        struct range_end<array_>
-        {
-            template<typename T>
-            static BOOST_RANGE_DEDUCED_TYPENAME remove_extent<T>::type* fun(T& t)
-            {
-                return t + remove_extent<T>::size;
-            }
-        };
+template<>
+struct range_end<array_> {
+  template<typename T>
+  static BOOST_RANGE_DEDUCED_TYPENAME remove_extent<T>::type* fun(T& t) {
+    return t + remove_extent<T>::size;
+  }
+};
 
-    } // namespace 'range_detail'
+} // namespace 'range_detail'
 
-    namespace range_adl_barrier
-    {
-        template< typename C >
-        inline BOOST_RANGE_DEDUCED_TYPENAME range_iterator<C>::type
-        end( C& c )
-        {
-            return range_detail::range_end< BOOST_RANGE_DEDUCED_TYPENAME range_detail::range<C>::type >::fun( c );
-        }
-    } // namespace range_adl_barrier
+namespace range_adl_barrier {
+template<typename C>
+inline BOOST_RANGE_DEDUCED_TYPENAME range_iterator<C>::type
+end(C& c) {
+  return range_detail::range_end<BOOST_RANGE_DEDUCED_TYPENAME range_detail::range<C>::type>::fun(c);
+}
+} // namespace range_adl_barrier
 
 } // namespace 'boost'
 

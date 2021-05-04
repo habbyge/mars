@@ -1,7 +1,7 @@
 
 
-#ifndef	_SYS_CDEFS_H_
-#define	_SYS_CDEFS_H_
+#ifndef  _SYS_CDEFS_H_
+#define  _SYS_CDEFS_H_
 
 
 /* our implementation of wchar_t is only 8-bit - die die non-portable code */
@@ -21,9 +21,9 @@
  *	#endif
  */
 #ifdef __GNUC__
-#define	__GNUC_PREREQ__(x, y)						\
-	((__GNUC__ == (x) && __GNUC_MINOR__ >= (y)) ||			\
-	 (__GNUC__ > (x)))
+#define  __GNUC_PREREQ__(x, y)            \
+  ((__GNUC__ == (x) && __GNUC_MINOR__ >= (y)) ||      \
+   (__GNUC__ > (x)))
 #else
 #define	__GNUC_PREREQ__(x, y)	0
 #endif
@@ -31,9 +31,9 @@
 //#include <sys/cdefs_elf.h>
 
 #if defined(__cplusplus)
-#define	__BEGIN_DECLS		extern "C" {
-#define	__END_DECLS		}
-#define	__static_cast(x,y)	static_cast<x>(y)
+#define  __BEGIN_DECLS    extern "C" {
+#define  __END_DECLS    }
+#define  __static_cast(x, y)  static_cast<x>(y)
 #else
 #define	__BEGIN_DECLS
 #define	__END_DECLS
@@ -48,25 +48,25 @@
  * strings produced by the __STRING macro, but this only works with ANSI C.
  */
 
-#define	___STRING(x)	__STRING(x)
-#define	___CONCAT(x,y)	__CONCAT(x,y)
+#define  ___STRING(x)  __STRING(x)
+#define  ___CONCAT(x, y)  __CONCAT(x,y)
 
 #if defined(__STDC__) || defined(__cplusplus)
-#define	__P(protos)	protos		/* full-blown ANSI C */
-#define	__CONCAT(x,y)	x ## y
-#define	__STRING(x)	#x
+#define  __P(protos)  protos    /* full-blown ANSI C */
+#define  __CONCAT(x, y)  x ## y
+#define  __STRING(x)  #x
 
 #ifndef __const
-#define	__const		const		/* define reserved names to standard */
+#define  __const    const    /* define reserved names to standard */
 #endif
 #ifndef __signed
-#define	__signed	signed
+#define  __signed  signed
 #endif
 //#ifndef __volatile
 //#define	__volatile	volatile
 //#endif
 #if defined(__cplusplus)
-#define	__inline	inline		/* convert to C++ keyword */
+#define  __inline  inline    /* convert to C++ keyword */
 #else
 #if !defined(__GNUC__) && !defined(__lint__)
 #define	__inline			/* delete GCC keyword */
@@ -97,7 +97,7 @@
 //#define	signed		__signed
 //#define	volatile	__volatile
 #endif /* !NO_ANSI_KEYWORDS */
-#endif	/* !(__STDC__ || __cplusplus) */
+#endif  /* !(__STDC__ || __cplusplus) */
 
 /*
  * Used for internal auditing of the NetBSD source tree.
@@ -105,7 +105,7 @@
 #ifdef __AUDIT__
 #define	__aconst	__const
 #else
-#define	__aconst
+#define  __aconst
 #endif
 
 /*
@@ -117,7 +117,7 @@
  * explicit about unsigned long so that we don't have additional
  * dependencies.
  */
-#define __UNCONST(a)	((void *)(unsigned long)(const void *)(a))
+#define __UNCONST(a)  ((void *)(unsigned long)(const void *)(a))
 
 /*
  * GCC2 provides __extension__ to suppress warnings for various GNU C
@@ -145,26 +145,26 @@
 
 /* Delete pseudo-keywords wherever they are not available or needed. */
 #ifndef __dead
-#define	__dead
-#define	__pure
+#define  __dead
+#define  __pure
 #endif
 
 #if __GNUC_PREREQ__(2, 7)
-#define	__unused	__attribute__((__unused__))
+#define  __unused  __attribute__((__unused__))
 #else
 #define	__unused	/* delete */
 #endif
 
 #if __GNUC_PREREQ__(3, 1)
-#define	__used		__attribute__((__used__))
+#define  __used    __attribute__((__used__))
 #else
 #define	__used		/* delete */
 #endif
 
 #if __GNUC_PREREQ__(2, 7)
-#define	__packed	__attribute__((__packed__))
-#define	__aligned(x)	__attribute__((__aligned__(x)))
-#define	__section(x)	__attribute__((__section__(x)))
+#define  __packed  __attribute__((__packed__))
+#define  __aligned(x)  __attribute__((__aligned__(x)))
+#define  __section(x)  __attribute__((__section__(x)))
 #elif defined(__lint__)
 #define	__packed	/* delete */
 #define	__aligned(x)	/* delete */
@@ -180,7 +180,7 @@
 #endif
 
 #if __GNUC_PREREQ__(2, 8)
-#define __statement(x)	__extension__(x)
+#define __statement(x)  __extension__(x)
 #elif defined(lint)
 #define __statement(x)	(0)
 #else
@@ -205,7 +205,7 @@
  */
 #if !defined(__STDC_VERSION__) || !(__STDC_VERSION__ >= 199901L)
 #if __GNUC_PREREQ__(2, 6)
-#define	__func__	__PRETTY_FUNCTION__
+#define  __func__  __PRETTY_FUNCTION__
 #elif __GNUC_PREREQ__(2, 4)
 #define	__func__	__FUNCTION__
 #else
@@ -222,7 +222,7 @@
 
 #if !defined(_STANDALONE) && !defined(_KERNEL)
 #ifdef __GNUC__
-#define	__RENAME(x)	___RENAME(x)
+#define  __RENAME(x)  ___RENAME(x)
 #else
 #ifdef __lint__
 #define	__RENAME(x)	__symbolrename(x)
@@ -240,7 +240,7 @@
  * arbitrary, might work with older compilers.
  */
 #if __GNUC_PREREQ__(2, 95)
-#define	__insn_barrier()	__asm __volatile("":::"memory")
+#define  __insn_barrier()  __asm __volatile("":::"memory")
 #else
 #define	__insn_barrier()	/* */
 #endif
@@ -274,8 +274,8 @@
  *	  larger code.
  */
 #if __GNUC_PREREQ__(2, 96)
-#define	__predict_true(exp)	__builtin_expect((exp) != 0, 1)
-#define	__predict_false(exp)	__builtin_expect((exp) != 0, 0)
+#define  __predict_true(exp)  __builtin_expect((exp) != 0, 1)
+#define  __predict_false(exp)  __builtin_expect((exp) != 0, 0)
 #else
 #define	__predict_true(exp)	(exp)
 #define	__predict_false(exp)	(exp)
@@ -333,17 +333,17 @@
  *	__link_set_entry(set, idx)
  *		Access the link set entry at index `idx' from set `set'.
  */
-#define	__link_set_foreach(pvar, set)					\
-	for (pvar = __link_set_start(set); pvar < __link_set_end(set); pvar++)
+#define  __link_set_foreach(pvar, set)          \
+  for (pvar = __link_set_start(set); pvar < __link_set_end(set); pvar++)
 
-#define	__link_set_entry(set, idx)	(__link_set_begin(set)[idx])
+#define  __link_set_entry(set, idx)  (__link_set_begin(set)[idx])
 
 /*
  * Some of the recend FreeBSD sources used in Bionic need this.
  * Originally, this is used to embed the rcs versions of each source file
  * in the generated binary. We certainly don't want this in Bionic.
  */
-#define	__FBSDID(s)	struct __hack
+#define  __FBSDID(s)  struct __hack
 
 /*-
  * The following definitions are an extension of the behavior originally
@@ -440,21 +440,21 @@
  * _POSIX_C_SOURCE, we will assume that it wants the broader compilation
  * environment (and in fact we will never get here).
  */
-#if defined(_ANSI_SOURCE)	/* Hide almost everything. */
+#if defined(_ANSI_SOURCE)  /* Hide almost everything. */
 #define	__POSIX_VISIBLE		0
 #define	__XSI_VISIBLE		0
 #define	__BSD_VISIBLE		0
 #define	__ISO_C_VISIBLE		1990
-#elif defined(_C99_SOURCE)	/* Localism to specify strict C99 env. */
+#elif defined(_C99_SOURCE)  /* Localism to specify strict C99 env. */
 #define	__POSIX_VISIBLE		0
 #define	__XSI_VISIBLE		0
 #define	__BSD_VISIBLE		0
 #define	__ISO_C_VISIBLE		1999
 #else				/* Default environment: show everything. */
-#define	__POSIX_VISIBLE		200809
-#define	__XSI_VISIBLE		700
-#define	__BSD_VISIBLE		1
-#define	__ISO_C_VISIBLE		1999
+#define  __POSIX_VISIBLE    200809
+#define  __XSI_VISIBLE    700
+#define  __BSD_VISIBLE    1
+#define  __ISO_C_VISIBLE    1999
 #endif
 #endif
 

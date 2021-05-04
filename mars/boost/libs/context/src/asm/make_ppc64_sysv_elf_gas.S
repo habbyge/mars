@@ -66,109 +66,130 @@
  *                                                     *
  *******************************************************/
 
-.globl make_fcontext
+.
+globl make_fcontext
 #if _CALL_ELF == 2
-	.text
-	.align 2
+.text
+.align 2
 make_fcontext:
-	addis	%r2, %r12, .TOC.-make_fcontext@ha
-	addi	%r2, %r2, .TOC.-make_fcontext@l
-	.localentry make_fcontext, . - make_fcontext
+addis	%r2, %r12, .TOC.-make_fcontext@ha
+addi	%r2, %r2, .TOC.-make_fcontext@l
+.localentry make_fcontext, . - make_fcontext
 #else
-	.section ".opd","aw"
-	.align 3
+.section ".opd","aw"
+.align 3
 make_fcontext:
 # ifdef _CALL_LINUX
-	.quad	.L.make_fcontext,.TOC.@tocbase,0
-	.type	make_fcontext,@function
-	.text
-	.align 2
+.quad	.L.make_fcontext,.TOC.@tocbase,0
+.type	make_fcontext,@function
+.text
+.align 2
 .L.make_fcontext:
 # else
-	.hidden	.make_fcontext
-	.globl	.make_fcontext
-	.quad	.make_fcontext,.TOC.@tocbase,0
-	.size	make_fcontext,24
-	.type	.make_fcontext,@function
-	.text
-	.align 2
+.hidden  .make_fcontext
+.globl  .make_fcontext
+.quad  .make_fcontext,.TOC.@tocbase,0
+.
+size make_fcontext,
+24
+.type  .make_fcontext,@function
+.text
+.align 2
 .make_fcontext:
 # endif
 #endif
-    # save return address into R6
-    mflr  %r6
+# save return address into R6
+mflr  %
+r6
 
-    # first arg of make_fcontext() == top address of context-stack
-    # shift address in R3 to lower 16 byte boundary
-    clrrdi  %r3, %r3, 4
+# first arg of make_fcontext() == top address of context-stack
+# shift address in R3 to lower 16 byte boundary
+    clrrdi
+%r3, %r3, 4
 
-    # reserve space for context-data on context-stack
-    # including 64 byte of linkage + parameter area (R1 % 16 == 0)
-    subi  %r3, %r3, 248
+# reserve space for context-data on context-stack
+# including 64 byte of linkage + parameter area (R1 % 16 == 0)
+subi  %r3, %r3, 248
 
-    # third arg of make_fcontext() == address of context-function
-    # entry point (ELFv2) or descriptor (ELFv1)
+# third arg of make_fcontext() == address of context-function
+# entry point (ELFv2) or descriptor (ELFv1)
 #if _CALL_ELF == 2
-    # save address of context-function entry point
-    std  %r5, 176(%r3)
+# save address of context-function entry point
+std  %r5, 176(%r3)
 #else
-    # save address of context-function entry point
-    ld   %r4, 0(%r5)
-    std  %r4, 176(%r3)
-    # save TOC of context-function
-    ld   %r4, 8(%r5)
-    std  %r4, 0(%r3)
+# save address of context-function entry point
+ld   %r4, 0(%r5)
+std  %r4, 176(%r3)
+# save TOC of context-function
+ld   %r4, 8(%r5)
+std  %r4, 0(%r3)
 #endif
 
-    # set back-chain to zero
-    li   %r0, 0
-    std  %r0, 184(%r3)
+# set back-chain to zero
+li   %r0, 0
+std  %r0, 184(%r3)
 
-    # compute address of returned transfer_t
-    addi %r0, %r3, 232
-    mr   %r4, %r0
-    std  %r4, 152(%r3)
+# compute address of returned transfer_t
+addi %r0, %r3, 232
+mr   %r4, %
+r0
+    std
+%r4, 152(%r3)
 
-    # load LR
-    mflr  %r0
-    # jump to label 1
-    bl  1f
+# load LR
+mflr  %
+r0
+# jump to label 1
+    bl
+1f
 1:
-    # load LR into R4
-    mflr  %r4
-    # compute abs address of label finish
-    addi  %r4, %r4, finish - 1b
-    # restore LR
-    mtlr  %r0
-    # save address of finish as return-address for context-function
-    # will be entered after context-function returns
-    std  %r4, 168(%r3)
+# load LR into R4
+mflr  %
+r4
+# compute abs address of label finish
+    addi
+%r4, %r4, finish - 1b
+# restore LR
+mtlr  %
+r0
+# save address of finish as return-address for context-function
+# will be entered after context-function returns
+    std
+%r4, 168(%r3)
 
-    # restore return address from R6
-    mtlr  %r6
+# restore return address from R6
+mtlr  %
+r6
 
-    blr  # return pointer to context-data
+    blr
+# return
+pointer to
+context-
+data
 
-finish:
-    # save return address into R0
-    mflr  %r0
-    # save return address on stack, set up stack frame
-    std  %r0, 8(%r1)
-    # allocate stack space, R1 % 16 == 0
-    stdu  %r1, -32(%r1)
+    finish
+:
+# save return address into R0
+mflr  %
+r0
+# save return address on stack, set up stack frame
+    std
+%r0, 8(%r1)
+# allocate stack space, R1 % 16 == 0
+stdu  %r1, -32(%r1)
 
-    # exit code is zero
-    li  %r3, 0
-    # exit application
-    bl  _exit
-    nop
+# exit code is zero
+li  %r3, 0
+# exit application
+bl _exit
+nop
 #if _CALL_ELF == 2
-	.size make_fcontext, .-make_fcontext
+.size make_fcontext, .-make_fcontext
 #else
 # ifdef _CALL_LINUX
-	.size .make_fcontext, .-.L.make_fcontext
+.size .make_fcontext, .-.L.make_fcontext
 # else
-	.size .make_fcontext, .-.make_fcontext
+.size .make_fcontext, .-.make_fcontext
 # endif
 #endif
 

@@ -16,12 +16,22 @@
 
 #include <boost/mpl/int.hpp>
 
-namespace mars_boost {} namespace boost = mars_boost; namespace mars_boost { namespace mpl {
+namespace mars_boost {}
+namespace boost = mars_boost;
+namespace mars_boost {
+namespace mpl {
 
-struct forward_iterator_tag       : int_<0> { typedef forward_iterator_tag type; };
-struct bidirectional_iterator_tag : int_<1> { typedef bidirectional_iterator_tag type; };
-struct random_access_iterator_tag : int_<2> { typedef random_access_iterator_tag type; };
+struct forward_iterator_tag : int_<0> {
+  typedef forward_iterator_tag type;
+};
+struct bidirectional_iterator_tag : int_<1> {
+  typedef bidirectional_iterator_tag type;
+};
+struct random_access_iterator_tag : int_<2> {
+  typedef random_access_iterator_tag type;
+};
 
-}}
+}
+}
 
 #endif // BOOST_MPL_ITERATOR_TAG_HPP_INCLUDED

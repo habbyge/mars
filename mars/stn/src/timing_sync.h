@@ -32,28 +32,31 @@
 #include "longlink.h"
 
 namespace mars {
-    namespace stn {
+namespace stn {
 
 class TimingSync {
-  public:
-    TimingSync(ActiveLogic& _active_logic);
-    ~TimingSync();
+public:
+  TimingSync(ActiveLogic& _active_logic);
 
-    void OnLongLinkStatuChanged(LongLink::TLongLinkStatus _status, const std::string& _channel_id);
-    void OnActiveChanged(bool _is_actived);
-    void OnNetworkChange();
+  ~TimingSync();
 
-  private:
-    void __OnAlarm();
+  void OnLongLinkStatuChanged(LongLink::TLongLinkStatus _status, const std::string& _channel_id);
 
-  private:
-    Alarm alarm_;
+  void OnActiveChanged(bool _is_actived);
 
-    ActiveLogic& active_logic_;
-    boost::signals2::scoped_connection timing_sync_active_connection_;
+  void OnNetworkChange();
+
+private:
+  void __OnAlarm();
+
+private:
+  Alarm alarm_;
+
+  ActiveLogic& active_logic_;
+  boost::signals2::scoped_connection timing_sync_active_connection_;
 };
 
-    }
+}
 }
 
 #endif // STN_SRC_TIMING_SYNC_H_

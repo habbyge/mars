@@ -30,29 +30,30 @@ struct Task;
 struct STAvalancheRecord;
 
 struct STAvalancheRecord {
-    unsigned long hash_;
-    int count_;
-    unsigned long time_last_update_;
+  unsigned long hash_;
+  int count_;
+  unsigned long time_last_update_;
 };
 
 class FrequencyLimit {
-  public:
-    FrequencyLimit();
-    virtual ~FrequencyLimit();
+public:
+  FrequencyLimit();
+  virtual ~FrequencyLimit();
 
-    bool Check(const mars::stn::Task& _task, const void* _buffer, int _len, unsigned int& _span);
+  bool Check(const mars::stn::Task& _task, const void* _buffer, int _len, unsigned int& _span);
 
-  private:
-    void __ClearRecord();
-    void __InsertRecord(unsigned long _hash);
-    bool __CheckRecord(int _index) const;
-    void __UpdateRecord(int _index);
-    unsigned int __GetLastUpdateTillNow(int _index);
-    int __LocateIndex(unsigned long _hash) const;
+private:
+  void __ClearRecord();
+  void __InsertRecord(unsigned long _hash);
+  bool __CheckRecord(int _index) const;
+  void __UpdateRecord(int _index);
 
-  private:
-    std::vector<STAvalancheRecord> iarr_record_;
-    unsigned long itime_record_clear_;
+  unsigned int __GetLastUpdateTillNow(int _index);
+  int __LocateIndex(unsigned long _hash) const;
+
+private:
+  std::vector<STAvalancheRecord> iarr_record_;
+  unsigned long itime_record_clear_;
 };
 
 }

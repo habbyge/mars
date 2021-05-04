@@ -81,7 +81,7 @@
 
 /* target attribute */
 #ifndef __has_attribute
-  #define __has_attribute(x) 0  /* Compatibility with non-clang compilers. */
+#define __has_attribute(x) 0  /* Compatibility with non-clang compilers. */
 #endif
 #if defined(__GNUC__) || defined(__ICCARM__)
 #  define TARGET_ATTRIBUTE(target) __attribute__((__target__(target)))
@@ -93,15 +93,15 @@
  * Enabled for clang & gcc >=4.8 on x86 when BMI2 isn't enabled by default.
  */
 #ifndef DYNAMIC_BMI2
-  #if ((defined(__clang__) && __has_attribute(__target__)) \
-      || (defined(__GNUC__) \
-          && (__GNUC__ >= 5 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 8)))) \
-      && (defined(__x86_64__) || defined(_M_X86)) \
-      && !defined(__BMI2__)
-  #  define DYNAMIC_BMI2 1
-  #else
-  #  define DYNAMIC_BMI2 0
-  #endif
+#if ((defined(__clang__) && __has_attribute(__target__)) \
+ || (defined(__GNUC__) \
+ && (__GNUC__ >= 5 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 8)))) \
+ && (defined(__x86_64__) || defined(_M_X86)) \
+ && !defined(__BMI2__)
+#  define DYNAMIC_BMI2 1
+#else
+#  define DYNAMIC_BMI2 0
+#endif
 #endif
 
 /* prefetch
@@ -114,7 +114,7 @@
 #    include <mmintrin.h>   /* https://msdn.microsoft.com/fr-fr/library/84szxsww(v=vs.90).aspx */
 #    define PREFETCH_L1(ptr)  _mm_prefetch((const char*)(ptr), _MM_HINT_T0)
 #    define PREFETCH_L2(ptr)  _mm_prefetch((const char*)(ptr), _MM_HINT_T1)
-#  elif defined(__GNUC__) && ( (__GNUC__ >= 4) || ( (__GNUC__ == 3) && (__GNUC_MINOR__ >= 1) ) )
+#  elif defined(__GNUC__) && ((__GNUC__ >= 4) || ((__GNUC__ == 3) && (__GNUC_MINOR__ >= 1)))
 #    define PREFETCH_L1(ptr)  __builtin_prefetch((ptr), 0 /* rw==read */, 3 /* locality */)
 #    define PREFETCH_L2(ptr)  __builtin_prefetch((ptr), 0 /* rw==read */, 2 /* locality */)
 #  else

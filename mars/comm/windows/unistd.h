@@ -31,8 +31,11 @@
 #include <sys/cdefs.h>
 #include <io.h>
 #include <dirent.h>
+
 #ifndef WP8
+
 #include <process.h>
+
 #endif
 
 __BEGIN_DECLS
@@ -62,7 +65,8 @@ extern int getpid(void);
 
 #define ftruncate _chsize
 
-typedef unsigned __int64 uint64_t;
+typedef unsigned __int64
+uint64_t;
 
 __END_DECLS
 

@@ -16,76 +16,74 @@
 #pragma once
 #endif
 
-namespace mars_boost {} namespace boost = mars_boost; namespace mars_boost
-{
+namespace mars_boost {}
+namespace boost = mars_boost;
+namespace mars_boost {
 
 #ifdef BOOST_NO_CXX11_SCOPED_ENUMS
 
+/**
+ * Meta-function to get the native enum type associated to an enum class or its emulation.
+ */
+template <typename EnumType>
+struct native_type
+{
   /**
-   * Meta-function to get the native enum type associated to an enum class or its emulation.
+   * The member typedef type names the native enum type associated to the scoped enum,
+   * which is it self if the compiler supports scoped enums or EnumType::enum_type if it is an emulated scoped enum.
    */
-  template <typename EnumType>
-  struct native_type
-  {
-    /**
-     * The member typedef type names the native enum type associated to the scoped enum,
-     * which is it self if the compiler supports scoped enums or EnumType::enum_type if it is an emulated scoped enum.
-     */
-    typedef typename EnumType::enum_type type;
-  };
+  typedef typename EnumType::enum_type type;
+};
 
-  /**
-   * Casts a scoped enum to its underlying type.
-   *
-   * This function is useful when working with scoped enum classes, which doens't implicitly convert to the underlying type.
-   * @param v A scoped enum.
-   * @returns The underlying type.
-   * @throws No-throws.
-   */
-  template <typename UnderlyingType, typename EnumType>
-  UnderlyingType underlying_cast(EnumType v)
-  {
-    return v.get_underlying_value_();
-  }
+/**
+ * Casts a scoped enum to its underlying type.
+ *
+ * This function is useful when working with scoped enum classes, which doens't implicitly convert to the underlying type.
+ * @param v A scoped enum.
+ * @returns The underlying type.
+ * @throws No-throws.
+ */
+template <typename UnderlyingType, typename EnumType>
+UnderlyingType underlying_cast(EnumType v)
+{
+  return v.get_underlying_value_();
+}
 
-  /**
-   * Casts a scoped enum to its native enum type.
-   *
-   * This function is useful to make programs portable when the scoped enum emulation can not be use where native enums can.
-   *
-   * EnumType the scoped enum type
-   *
-   * @param v A scoped enum.
-   * @returns The native enum value.
-   * @throws No-throws.
-   */
-  template <typename EnumType>
-  inline
-  typename EnumType::enum_type native_value(EnumType e)
-  {
-    return e.get_native_value_();
-  }
+/**
+ * Casts a scoped enum to its native enum type.
+ *
+ * This function is useful to make programs portable when the scoped enum emulation can not be use where native enums can.
+ *
+ * EnumType the scoped enum type
+ *
+ * @param v A scoped enum.
+ * @returns The native enum value.
+ * @throws No-throws.
+ */
+template <typename EnumType>
+inline
+typename EnumType::enum_type native_value(EnumType e)
+{
+  return e.get_native_value_();
+}
 
 #else  // BOOST_NO_CXX11_SCOPED_ENUMS
 
-  template <typename EnumType>
-  struct native_type
-  {
-    typedef EnumType type;
-  };
+template<typename EnumType>
+struct native_type {
+  typedef EnumType type;
+};
 
-  template <typename UnderlyingType, typename EnumType>
-  UnderlyingType underlying_cast(EnumType v)
-  {
-    return static_cast<UnderlyingType>(v);
-  }
+template<typename UnderlyingType, typename EnumType>
+UnderlyingType underlying_cast(EnumType v) {
+  return static_cast<UnderlyingType>(v);
+}
 
-  template <typename EnumType>
-  inline
-  EnumType native_value(EnumType e)
-  {
-    return e;
-  }
+template<typename EnumType>
+inline
+EnumType native_value(EnumType e) {
+  return e;
+}
 
 #endif // BOOST_NO_CXX11_SCOPED_ENUMS
 }
@@ -174,7 +172,7 @@ namespace mars_boost {} namespace boost = mars_boost; namespace mars_boost
 
 #else  // BOOST_NO_CXX11_SCOPED_ENUMS
 
-#define BOOST_SCOPED_ENUM_UT_DECLARE_BEGIN(EnumType,UnderlyingType) enum class EnumType : UnderlyingType
+#define BOOST_SCOPED_ENUM_UT_DECLARE_BEGIN(EnumType, UnderlyingType) enum class EnumType : UnderlyingType
 #define BOOST_SCOPED_ENUM_DECLARE_BEGIN(EnumType) enum class EnumType
 #define BOOST_SCOPED_ENUM_DECLARE_END2()
 #define BOOST_SCOPED_ENUM_DECLARE_END(EnumType) ;

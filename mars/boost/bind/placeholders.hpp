@@ -23,11 +23,11 @@
 #include <boost/bind/arg.hpp>
 #include <boost/config.hpp>
 
-namespace mars_boost {} namespace boost = mars_boost; namespace mars_boost
-{
+namespace mars_boost {}
+namespace boost = mars_boost;
+namespace mars_boost {
 
-namespace placeholders
-{
+namespace placeholders {
 
 #if defined(__BORLANDC__) || defined(__GNUC__) && (__GNUC__ < 4)
 

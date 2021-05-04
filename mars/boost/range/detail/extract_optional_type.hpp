@@ -23,7 +23,7 @@
 // Defines extract_some_typedef<T> which exposes T::some_typedef as
 // extract_some_typedef<T>::type if T::some_typedef exists. Otherwise
 // extract_some_typedef<T> is empty.
-#define BOOST_RANGE_EXTRACT_OPTIONAL_TYPE( a_typedef )                          \
+#define BOOST_RANGE_EXTRACT_OPTIONAL_TYPE(a_typedef)                          \
     BOOST_MPL_HAS_XXX_TRAIT_DEF(a_typedef)                                      \
     template< typename  C, bool B = BOOST_PP_CAT(has_, a_typedef)<C>::value >   \
     struct BOOST_PP_CAT(extract_, a_typedef)                                    \

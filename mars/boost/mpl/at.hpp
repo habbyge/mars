@@ -22,31 +22,31 @@
 #include <boost/mpl/aux_/lambda_support.hpp>
 #include <boost/mpl/aux_/nttp_decl.hpp>
 
-namespace mars_boost {} namespace boost = mars_boost; namespace mars_boost { namespace mpl {
+namespace mars_boost {}
+namespace boost = mars_boost;
+namespace mars_boost {
+namespace mpl {
 
 template<
-      typename BOOST_MPL_AUX_NA_PARAM(Sequence)
-    , typename BOOST_MPL_AUX_NA_PARAM(N)
-    >
+    typename BOOST_MPL_AUX_NA_PARAM(Sequence), typename BOOST_MPL_AUX_NA_PARAM(N)
+>
 struct at
-    : at_impl< typename sequence_tag<Sequence>::type >
-        ::template apply< Sequence,N >
-{
-    BOOST_MPL_AUX_LAMBDA_SUPPORT(2,at,(Sequence,N))
+    : at_impl<typename sequence_tag<Sequence>::type>
+      ::template apply<Sequence, N> {
+  BOOST_MPL_AUX_LAMBDA_SUPPORT(2, at, (Sequence, N))
 };
 
 template<
-      typename Sequence
-    , BOOST_MPL_AUX_NTTP_DECL(long, N)
-    >
+    typename Sequence, BOOST_MPL_AUX_NTTP_DECL(long, N)
+>
 struct at_c
-    : at_impl< typename sequence_tag<Sequence>::type >
-        ::template apply< Sequence,mpl::long_<N> >
-{
+    : at_impl<typename sequence_tag<Sequence>::type>
+      ::template apply<Sequence, mpl::long_<N>> {
 };
 
 BOOST_MPL_AUX_NA_SPEC(2, at)
 
-}}
+}
+}
 
 #endif // BOOST_MPL_AT_HPP_INCLUDED

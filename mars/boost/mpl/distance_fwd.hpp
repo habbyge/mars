@@ -16,13 +16,19 @@
 
 #include <boost/mpl/aux_/common_name_wknd.hpp>
 
-namespace mars_boost {} namespace boost = mars_boost; namespace mars_boost { namespace mpl {
+namespace mars_boost {}
+namespace boost = mars_boost;
+namespace mars_boost {
+namespace mpl {
 
 BOOST_MPL_AUX_COMMON_NAME_WKND(distance)
 
-template< typename Tag > struct distance_impl;
-template< typename First, typename Last > struct distance;
+template<typename Tag>
+struct distance_impl;
+template<typename First, typename Last>
+struct distance;
 
-}}
+}
+}
 
 #endif // BOOST_MPL_DISTANCE_FWD_HPP_INCLUDED

@@ -20,9 +20,9 @@ namespace pzstd {
 class ThreadPool {
   std::vector<std::thread> threads_;
 
-  WorkQueue<std::function<void()>> tasks_;
+  WorkQueue <std::function<void()>> tasks_;
 
- public:
+public:
   /// Constructs a thread pool with `numThreads` threads.
   explicit ThreadPool(std::size_t numThreads) {
     threads_.reserve(numThreads);

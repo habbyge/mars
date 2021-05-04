@@ -19,23 +19,26 @@
 #include <boost/mpl/deref.hpp>
 #include <boost/mpl/aux_/traits_lambda_spec.hpp>
 
-namespace mars_boost {} namespace boost = mars_boost; namespace mars_boost { namespace mpl {
+namespace mars_boost {}
+namespace boost = mars_boost;
+namespace mars_boost {
+namespace mpl {
 
 // default implementation; conrete sequences might override it by 
 // specializing either the 'front_impl' or the primary 'front' template
 
-template< typename Tag >
-struct front_impl
-{
-    template< typename Sequence > struct apply
-    {
-        typedef typename begin<Sequence>::type iter_;
-        typedef typename deref<iter_>::type type;
-    };
+template<typename Tag>
+struct front_impl {
+  template<typename Sequence>
+  struct apply {
+    typedef typename begin<Sequence>::type iter_;
+    typedef typename deref<iter_>::type type;
+  };
 };
 
-BOOST_MPL_ALGORITM_TRAITS_LAMBDA_SPEC(1,front_impl)
+BOOST_MPL_ALGORITM_TRAITS_LAMBDA_SPEC(1, front_impl)
 
-}}
+}
+}
 
 #endif // BOOST_MPL_AUX_FRONT_IMPL_HPP_INCLUDED
