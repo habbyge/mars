@@ -55,8 +55,8 @@ struct xlogger_static_assert_test {
 
 
 #define XLOGGER_STATIC_ASSERT(...) typedef ::xlogger_static_assert_test<\
-                                        sizeof(::XLOGGER_STATIC_ASSERTION_FAILURE< ((__VA_ARGS__) == 0 ? false : true) >)>\
-                                        PP_CAT(boost_static_assert_typedef_, __LINE__)
+    sizeof(::XLOGGER_STATIC_ASSERTION_FAILURE< ((__VA_ARGS__) == 0 ? false : true) >)>\
+    PP_CAT(boost_static_assert_typedef_, __LINE__)
 
 
 // const struct TypeSafeFormat {TypeSafeFormat(){}} __tsf__;
@@ -174,9 +174,15 @@ private:
 
 class XLogger {
 public:
-  XLogger(TLogLevel _level, const char* _tag, const char* _file, const char* _func, int _line, bool _trace = false,
+  XLogger(TLogLevel _level,
+          const char* _tag,
+          const char* _file,
+          const char* _func,
+          int _line,
+          bool _trace = false,
           bool (* _hook)(XLoggerInfo& _info, std::string& _log) = NULL)
       : m_info(), m_message(), m_isassert(false), m_exp(NULL), m_hook(_hook), m_isinfonull(false) {
+
     m_info.level = _level;
     m_info.tag = _tag;
     m_info.filename = _file;
@@ -314,9 +320,15 @@ private:
 
 class XScopeTracer {
 public:
-  XScopeTracer(TLogLevel _level, const char* _tag, const char* _name, const char* _file, const char* _func, int _line,
+  XScopeTracer(TLogLevel _level,
+               const char* _tag,
+               const char* _name,
+               const char* _file,
+               const char* _func,
+               int _line,
                const char* _log)
       : m_enable(xlogger_IsEnabledFor(_level)), m_info(), m_tv() {
+
     m_info.level = _level;
 
     if (m_enable) {
@@ -421,13 +433,18 @@ inline XMessage& XMessage::operator()(const char* _format, ...) {
 #define XLOGGER_VARIANT_ARGS(n) PP_ENUM_PARAMS(n, &a)
 #define XLOGGER_VARIANT_ARGS_NULL(n) PP_ENUM(n, NULL)
 #define XLOGGER_TYPESAFE_FORMAT_IMPLEMENT(n, m) \
-        inline XMessage& XMessage::operator()(const TypeSafeFormat&, const char* _format XLOGGER_FORMAT_ARGS(n)) { \
-        if (_format != NULL) { \
-            const string_cast* args[16] = { XLOGGER_VARIANT_ARGS(n) PP_COMMA_IF(PP_AND(n, m)) XLOGGER_VARIANT_ARGS_NULL(m) }; \
-            DoTypeSafeFormat(_format, args); \
-        } \
-        return *this;\
-    }
+    inline XMessage& XMessage::operator()(const TypeSafeFormat&, \
+                                          const char* _format XLOGGER_FORMAT_ARGS(n)) { \
+    if (_format != NULL) { \
+        const string_cast* args[16] = {         \
+            XLOGGER_VARIANT_ARGS(n)             \
+            PP_COMMA_IF(PP_AND(n, m))           \
+            XLOGGER_VARIANT_ARGS_NULL(m)        \
+        }; \
+        DoTypeSafeFormat(_format, args); \
+    } \
+    return *this;\
+  }
 
 XLOGGER_TYPESAFE_FORMAT_IMPLEMENT(0, 16)
 
@@ -469,7 +486,6 @@ XLOGGER_TYPESAFE_FORMAT_IMPLEMENT(16, 0)
 #undef XLOGGER_TYPESAFE_FORMAT_IMPLEMENT
 
 inline void XMessage::DoTypeSafeFormat(const char* _format, const string_cast** _args) {
-
   const char* current = _format;
   int count = 0;
   while ('\0' != *current) {
@@ -510,13 +526,18 @@ inline void XMessage::DoTypeSafeFormat(const char* _format, const string_cast** 
 #define XLOGGER_VARIANT_ARGS(n) PP_ENUM_PARAMS(n, &a)
 #define XLOGGER_VARIANT_ARGS_NULL(n) PP_ENUM(n, NULL)
 #define XLOGGER_TYPESAFE_FORMAT_IMPLEMENT(n, m) \
-        inline XLogger& XLogger::operator()(const TypeSafeFormat&, const char* _format XLOGGER_FORMAT_ARGS(n)) { \
-        if (_format != NULL) { \
-            const string_cast* args[16] = { XLOGGER_VARIANT_ARGS(n) PP_COMMA_IF(PP_AND(n, m)) XLOGGER_VARIANT_ARGS_NULL(m) }; \
-            DoTypeSafeFormat(_format, args); \
-        } \
-        return *this;\
-    }
+      inline XLogger& XLogger::operator()(const TypeSafeFormat&, \
+                                          const char* _format XLOGGER_FORMAT_ARGS(n)) { \
+      if (_format != NULL) { \
+          const string_cast* args[16] = {       \
+              XLOGGER_VARIANT_ARGS(n)           \
+              PP_COMMA_IF(PP_AND(n, m))         \
+              XLOGGER_VARIANT_ARGS_NULL(m)      \
+          }; \
+          DoTypeSafeFormat(_format, args); \
+      } \
+      return *this;\
+  }
 
 XLOGGER_TYPESAFE_FORMAT_IMPLEMENT(0, 16)
 
@@ -603,10 +624,12 @@ __attribute__((__format__ (printf, 2, 3)))
 #endif
 __inline void  __xlogger_c_write(const XLoggerInfo* _info, const char* _log, ...) { xlogger_Write(_info, _log); }
 
-#define xlogger2(level, tag, file, func, line, ...)		 if ((!xlogger_IsEnabledFor(level)));\
-                                                              else { XLoggerInfo info= {level, tag, file, func, line,\
-                                                                     {0, 0}, -1, -1, -1, false};\ gettimeofday(&info.m_tv, NULL);\
-                                                                     XLOGGER_ROUTER_OUTPUT(__xlogger_c_write(&info, __VA_ARGS__),xlogger_Print(&info, __VA_ARGS__), __VA_ARGS__);}
+#define xlogger2(level, tag, file, func, line, ...)   \
+    if ((!xlogger_IsEnabledFor(level)));\
+    else { XLoggerInfo info= {level, tag, file, func, line,\
+           {0, 0}, -1, -1, -1, false};\ gettimeofday(&info.m_tv, NULL);\
+           XLOGGER_ROUTER_OUTPUT(__xlogger_c_write(&info, __VA_ARGS__),\
+           xlogger_Print(&info, __VA_ARGS__), __VA_ARGS__);}
 
 #define xlogger2_if(exp, level, tag, file, func, line, ...)    if (!(exp) || !xlogger_IsEnabledFor(level));\
                                                                     else { XLoggerInfo info= {level, tag, file, func, line,\

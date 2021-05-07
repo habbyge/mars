@@ -40,8 +40,7 @@ FrequencyLimit::FrequencyLimit() : itime_record_clear_(::gettickcount()) {}
 FrequencyLimit::~FrequencyLimit() {}
 
 bool FrequencyLimit::Check(const mars::stn::Task& _task,
-                           const void* _buffer,
-                           int _len,
+                           const void* _buffer, int _len,
                            unsigned int& _span) {
 
   xverbose_function();
@@ -101,10 +100,13 @@ void FrequencyLimit::__ClearRecord() {
     if (interval <= NOT_CLEAR_INTERCEPT_INTERVAL_MINUTE && NOT_CLEAR_INTERCEPT_COUNT <= first->count_) {
       int oldcount = first->count_;
 
-      if (NOT_CLEAR_INTERCEPT_COUNT_RETRY < first->count_) first->count_ = NOT_CLEAR_INTERCEPT_COUNT_RETRY;
+      if (NOT_CLEAR_INTERCEPT_COUNT_RETRY < first->count_) {
+        first->count_ = NOT_CLEAR_INTERCEPT_COUNT_RETRY;
+      }
 
-      xwarn2(TSF"timeCur:%_,  first->timeLastUpdate:%_, interval:%_, Hash:%_, oldcount:%_, Count:%_", time_cur,
-             first->time_last_update_, interval, first->hash_, oldcount, first->count_);
+      xwarn2(TSF"timeCur:%_,  first->timeLastUpdate:%_, interval:%_, Hash:%_, oldcount:%_, Count:%_",
+             time_cur, first->time_last_update_, interval, first->hash_, oldcount, first->count_);
+
       ++first;
     } else {
       first = iarr_record_.erase(first);
